@@ -1,0 +1,80 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.region;
+
+import server.zone.objects.area.ActiveArea;
+import server.zone.objects.region.CityRegion;
+import server.zone.objects.scene.SceneObject;
+
+@json
+class Region extends ActiveArea {
+	@weakReference
+	protected CityRegion cityRegion;
+
+	public Region() {
+		super();
+	}
+
+	@preLocked
+	public void setCityRegion(CityRegion city) {
+		cityRegion = city;
+	}
+
+	@weakReference
+	@read
+	public CityRegion getCityRegion() {
+		return cityRegion;
+	}
+
+	public native void notifyLoadFromDatabase();
+
+	public void enqueueEnterEvent(SceneObject obj) {
+		notifyEnter(obj);
+	}
+
+	public void enqueueExitEvent(SceneObject obj) {
+		notifyExit(obj);
+	}
+
+	public void notifyEnter(SceneObject object) {
+		super.notifyEnter(object);
+
+		CityRegion strongReference = cityRegion;
+
+		if (!strongReference) {
+			return;
+		}
+
+		synchronized (strongReference) {
+			strongReference.notifyEnter(object);
+		}
+	}
+
+	public void notifyExit(SceneObject object) {
+		super.notifyExit(object);
+
+		CityRegion strongReference = cityRegion;
+
+		if (!strongReference)
+			return;
+
+		synchronized (strongReference) {
+			strongReference.notifyExit(object);
+		}
+	}
+
+	@dirty
+	public boolean isRegion() {
+		return true;
+	}
+
+	public boolean isSpawnAreaObject() {
+		return false;
+	}
+
+	public boolean isPlayerCity() {
+		return cityRegion != null;
+	}
+}

@@ -1,0 +1,2308 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature;
+
+import server.zone.objects.tangible.TangibleObject;
+import server.chat.StringIdChatParameter;
+include server.zone.objects.group.GroupObject;
+import server.zone.objects.guild.GuildObject;
+import server.zone.objects.tangible.weapon.WeaponObject;
+import server.zone.objects.player.PlayerObject;
+import server.zone.objects.scene.SceneObject;
+include server.zone.objects.intangible.ControlDevice;
+import server.zone.objects.area.CampSiteActiveArea;
+import system.util.VectorMap;
+import system.lang.Time;
+import server.zone.objects.creature.events.DizzyFallDownEvent;
+include templates.SharedObjectTemplate;
+import server.zone.objects.creature.buffs.Buff;
+import server.zone.ZoneClientSession;
+include server.zone.objects.creature.variables.CooldownTimerMap;
+include server.zone.objects.creature.buffs.BuffList;
+include server.zone.objects.creature.damageovertime.DamageOverTimeList;
+include server.zone.objects.scene.variables.DeltaVector;
+include server.zone.objects.creature.variables.SkillList;
+include server.zone.objects.creature.variables.SkillModList;
+include templates.params.creature.CreaturePosture;
+include templates.params.creature.CreatureState;
+include server.zone.objects.creature.SpeedMultiplierModChanges;
+include server.zone.objects.creature.variables.Skill;
+include server.zone.objects.creature.variables.WearablesDeltaVector;
+import system.lang.Long;
+import engine.service.proto.BasePacket;
+import system.thread.Mutex;
+import system.thread.ReadWriteLock;
+import server.zone.objects.creature.credits.CreditObject;
+include engine.util.u3d.Vector3;
+include system.util.SortedVector;
+include system.lang.ref.WeakReference;
+include engine.log.Logger;
+include server.zone.CloseObjectsVector;
+include server.zone.QuadTreeEntry;
+import system.util.SynchronizedVectorMap;
+import server.zone.managers.auction.AuctionSearchTask;
+import server.zone.objects.tangible.Instrument;
+include server.zone.objects.creature.CommandQueue;
+
+@mock
+@json
+class CreatureObject extends TangibleObject {
+	@rawTemplate(value = "ZoneClientSession*")
+	@dereferenced
+	protected transient WeakReference owner;
+
+    	protected CreditObject creditObject;
+
+    	// deprectated
+	protected int bankCredits;
+	protected int cashCredits;
+
+	protected int hueValue;
+
+	@dereferenced
+	protected DeltaVector<int> baseHAM;
+
+	protected byte posture;
+	protected byte locomotion;
+	protected byte factionRank;
+
+	@weakReference
+	protected CreatureObject linkedCreature;
+
+	@weakReference
+	protected ControlDevice controlDevice;
+
+	protected float shockWounds;
+
+	@dereferenced
+	protected DeltaVector<int> wounds;
+
+	protected unsigned long stateBitmask;
+
+	@dereferenced
+	protected DeltaVector<int> encumbrances;
+
+	@dereferenced
+	protected WearablesDeltaVector wearablesVector;
+
+	@weakReference
+	protected transient AuctionSearchTask auctionSearch;
+
+	protected float accelerationMultiplierBase;
+	protected float accelerationMultiplierMod;
+	protected float speedMultiplierBase;
+	@dereferenced
+	protected SpeedMultiplierModChanges speedMultiplierModChanges;
+	protected float speedMultiplierMod;
+	protected float turnScale;
+	protected float runSpeed;
+	protected float walkSpeed;
+	protected float currentSpeed;
+	protected float waterModPercent;
+	protected float runAcceleration;
+	protected float walkAcceleration;
+	protected float height;
+	protected float swimHeight;
+	protected float slopeModPercent;
+	protected float slopeModAngle;
+
+	protected unsigned long listenToID;
+	protected unsigned long watchToID;
+
+	protected string performanceAnimation;
+	protected string moodString;
+
+	protected WeaponObject weapon;
+
+	protected GroupObject group;
+	protected unsigned long groupInviterID;
+	protected unsigned long groupInviteCounter;
+
+	@weakReference
+	protected GuildObject guild;
+
+	protected unsigned long targetID;
+	protected byte moodID;
+	protected int performanceStartTime;
+	protected int performanceType;
+
+	@dereferenced
+	protected DeltaVector<int> hamList;
+
+	@dereferenced
+	protected DeltaVector<int> maxHamList;
+
+	protected byte frozen;
+
+	protected string templateString;
+
+	// Skill stuff
+	@dereferenced
+	protected SkillList skillList;
+
+	@dereferenced
+	protected SkillModList skillModList;
+
+	@dereferenced
+	protected transient ReadWriteLock skillModMutex;
+
+	protected transient CommandQueue commandQueue;
+
+	protected transient unsigned int lastActionCounter;
+
+	@dereferenced
+	protected Time nextAction;
+
+	@transactional
+	protected transient CooldownTimerMap cooldownTimerMap;
+
+	@dereferenced
+	protected BuffList creatureBuffs;
+	@dereferenced
+	protected DamageOverTimeList damageOverTimeList;
+
+	@dereferenced
+	protected Time lastSuccessfulCombatAction;
+
+	protected transient DizzyFallDownEvent dizzyFallDownEvent;
+
+	@dereferenced
+	protected Time timeOfDeath;
+
+	@dereferenced
+	private transient Mutex screenPlayStatesMutex;
+	/*
+	 * Whenever screenPlayStates is being used the screenPlayStatesMutex should be held.
+	 */
+	@dereferenced
+	private VectorMap<string, unsigned long> screenPlayStates;
+
+	@dereferenced
+	protected SynchronizedVectorMap<unsigned long, unsigned long> personalEnemyFlags;
+
+	protected transient byte healthWoundHeal;
+	protected transient byte actionWoundHeal;
+	protected transient byte mindWoundHeal;
+
+	protected transient byte currentWeather;
+	protected transient byte currentWind;
+
+	@dereferenced
+	protected transient Time lastCombatActionTime;
+
+	@dereferenced
+	protected transient Time nextAllowedMoveTime;
+
+	@dereferenced
+	protected transient Vector3 lastCombatPosition;
+
+	protected transient string alternateAppearance;
+
+	public static final int HUMAN = 0;
+	public static final int RODIAN = 1;
+	public static final int TRANDOSHAN = 2;
+	public static final int MONCAL = 3;
+	public static final int WOOKIE = 4;
+	public static final int BOTHAN = 5;
+	public static final int TWILEK = 6;
+	public static final int ZABRAK = 7;
+	public static final int ITHORIAN = 0x21;
+	public static final int SULLUSTAN = 0x31;
+
+	public static final int MALE = 0;
+	public static final int FEMALE = 1;
+
+	public static final int CREOCOVTYPE = 2;
+
+	public static transient float DEFAULTRUNSPEED;
+
+	public static final unsigned long DEAD_TOO_LONG = 1800000; //30 minutes - How long can someone be dead and still be resuscitated in Miliseconds
+
+	/**
+	 * CreatureObject constructor, used to initialized the object
+	 * @pre { templateData is a valid SharedCreatureObjectTemplate LuaObject that contains the necessary values to initialize CreatureObject }
+	 * @post { CreatureObject is initialized }
+	 * @param templateData templateData points to the SharedCreatureObjectTemplate LuaObject that is used to initialize CreatureObject members
+	 */
+	public CreatureObject() {
+		Logger.setLoggingName("CreatureObject");
+
+		initializeMembers();
+	}
+
+	public native void initializeMembers();
+
+	public native void finalize();
+
+	@preLocked
+	public native void createChildObjects();
+
+	/**
+	 * Reads and sets the template data from a SharedTangibleObjectTemplate LuaObject
+	 * @pre { templateData is a valid pointer }
+	 * @post { TangibleObject members are initialized }
+	 * @param templateData templateData points to the SharedTangibleObjectTemplate LuaObject that is used to initialize the TangibleObject members
+	 */
+	@local
+	public native void loadTemplateData(SharedObjectTemplate templateData);
+
+	/**
+	 * Initializes the transient members of SceneObject, must call the inherited object method first.
+	 * @pre {transient members are not initialized }
+	 * @post { transient members are initialized }
+	 */
+	public native void initializeTransientMembers();
+
+	@preLocked
+	public native void setIncapacitationTimer(unsigned int newCount, boolean notifyClient = true);
+
+	/**
+	 * Sends a CommandQueueRemove ObjectControllerMessage to the owner client of this object
+	 * @pre { }
+	 * @post { client received the CommandQueueRemove message }
+	 * @param actioncntr action id that will be cleared from clients queue
+	 * @param timer how many seconds will the action take to execute
+	 * @param tab1 message 1
+	 * @param tab2 message 2
+	 */
+	@preLocked
+	public native void clearQueueAction(unsigned int actioncntr, float timer = 0, unsigned int tab1 = 0, unsigned int tab2 = 0);
+	@preLocked
+	public native void clearQueueActions(boolean combatOnly = true);
+
+	/**
+	 * Sends the CREO baseline messages of this object to the specified player
+	 * @pre { this object is locked }
+	 * @post { this object is locked, player received the baseline messages }
+	 * @param player SceneObject that will receive the baselines
+	 */
+	@dirty
+	public native void sendBaselinesTo(SceneObject player);
+
+	/**
+	 * Sends the necessary messages to owner client
+	 * @pre { this object is locked }
+	 * @post { this object is locked, owner received its own scene object }
+	 * @param doClose if true a SceneObjectCloseMessage is sent to finish the object
+	 */
+	@dirty
+	public native void sendToOwner(boolean doClose = true);
+
+	/**
+	 * Sends a system message to the client of this object
+	 * @pre {}
+	 * @post { this object received the message }
+	 * @param message string message to send
+	 */
+	@dirty
+	public native void sendSystemMessage(final string message);
+
+	/**
+	 * Sends a PlayMusicMessage
+	 */
+	@dirty
+	public native void playMusicMessage(final string file);
+
+	/**
+	 * Sends a tutorial request
+	 */
+	@dirty
+	public native void sendNewbieTutorialRequest(final string request);
+
+	/**
+	 * Sends NewbieTutorialEnableHud
+	 */
+	@dirty
+	public native void sendNewbieTutorialEnableHudElement(final string ui, boolean enable = true, float blinkCount = 0.0f);
+
+	@dirty
+	public native void sendOpenHolocronToPageMessage(final string page);
+
+	/**
+	 * Sends a system message to the client of this object
+	 * @pre {}
+	 * @post { this object received the message }
+	 * @param message unicode message to send
+	 */
+	@dirty
+	public native void sendSystemMessage(unicode message);
+
+	/**
+	 * Sends a system message to the client of this object
+	 * @pre {}
+	 * @post { this object received the message }
+	 * @param file stf file name of the message
+	 * @param stringid stf stringid of the message
+	 */
+	//public native void sendSystemMessage(final string file, final string stringid);
+
+	/**
+	 * Sends a system message to the client of this object
+	 * @pre {}
+	 * @post { this object received the message }
+	 * @param message StringIdChatParameter message to send
+	 */
+	@local
+	@dirty
+	public native void sendSystemMessage(@dereferenced StringIdChatParameter stringid);
+
+	/**
+	 * Sends the contained slotted objects to the specified player
+	 * @pre { this object is locked }
+	 * @post { this object is locked, player received the slotted objects }
+	 * @param player SceneObject that will receive the objects
+	 */
+	@dirty
+	public native void sendSlottedObjectsTo(SceneObject player);
+
+	/**
+	 * Sets the combat state
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object is in a combat state }
+	 */
+	@preLocked
+	public abstract native void setCombatState();
+
+	/**
+	 * Cleares the combat state
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object is not in a combat state }
+	 * @param clearDefenders if true the defender vector willl be emptied
+	 */
+	@preLocked
+	public native void clearCombatState(boolean clearDefenders = true);
+
+	public native void addMountedCombatSlow();
+
+	public native void removeMountedCombatSlow(boolean showEndMessage = true);
+
+	/**
+	 * Sets a new posture
+	 * @pre { this object is locked }
+	 * @post {this object is locked, this object has the new posture set }
+	 * @param newPosture posture to set
+	 * @param immediate if set true the client will immediately play the posture animation, should not be used in combat
+	 *
+	 */
+	@preLocked
+	public native abstract void setPosture(int newPosture, boolean immediate = true, boolean notifyClient = true);
+
+	@preLocked
+	public native abstract void updatePostures(boolean immediate = true);
+
+	/**
+	 * checks locomotion and sets a new one if appropriate
+	 * @pre { this object is locked }
+	 * @post {this object is locked, this object has the new locomotion set, if appropriate }
+	 */
+	public native float calculateSpeed();
+
+	@preLocked
+	public native abstract void updateLocomotion();
+
+	@preLocked
+	public native void setHeight(float heigh, boolean notifyClient = true);
+
+	/**
+	 * Updates the acceleration speed multiplier base
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param newMultiplierBase new multiplier base to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setAccelerationMultiplierBase(float newMultiplierBase, boolean notifyClient = true);
+
+	/**
+	 * Updates the acceleration speed multiplier mod
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param newMultiplierMod new multiplier mod to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setAccelerationMultiplierMod(float newMultiplierMod, boolean notifyClient = true, boolean recalculateBuffs = true);
+
+	/**
+	 * Updates the speed multiplier base
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param newMultiplierBase new multiplier base to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setSpeedMultiplierBase(float newMultiplierBase, boolean notifyClient = true);
+
+	/**
+	 * Updates the speed multiplier mod
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param newMultiplierMod new multiplier mod to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setSpeedMultiplierMod(float newMultiplierMod, boolean notifyClient = true, boolean recalculateBuffs = true);
+
+	/**
+	 * Updates the turn scale mod
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param newMultiplierMod new multiplier mod to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setTurnScale(float newMultiplierMod, boolean notifyClient = true);
+
+	/**
+	 * Updates the walk speed
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param value new value to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setWalkSpeed(float value, boolean notifyClient = true);
+
+	/**
+	 * Updates the turn scale mod
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param value new value to be set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setWaterModPercent(float value, boolean notifyClient = true);
+
+	/**
+	 * Updates the run speed
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 *
+	 */
+	@preLocked
+	public native void setRunSpeed(float newSpeed, boolean notifyClient = true);
+
+	public void setCurrentSpeed(float newSpeed) {
+		currentSpeed = newSpeed;
+	}
+
+	/**
+	 * Updates a specific type of the HAM
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the HAM type updated to the new value }
+	 * @param type specifies which HAM type to update
+	 * @param value the new value
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	public native void setHAM(int type, int value, boolean notifyClient = true);
+
+	/**
+	 * Inflicts damage into the object
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @return unused for now
+	 */
+	@preLocked
+	@arg1preLocked
+	public native int inflictDamage(TangibleObject attacker, int damageType, float damage, boolean destroy, boolean notifyClient = true, boolean isCombatAction = false);
+
+	@preLocked
+	@arg1preLocked
+	public native int inflictDamage(TangibleObject attacker, int damageType, float damage, boolean destroy, final string xp, boolean notifyClient = true, boolean isCombatAction = false);
+
+	@read
+	public boolean hasDamage(int attribute) {
+		return hamList.get(attribute) + wounds.get(attribute) < maxHamList.get(attribute);
+	}
+
+	/**
+	 * Heals damage
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @return unused for now
+	 */
+	@preLocked
+	public native int healDamage(TangibleObject healer, int damageType, int damage, boolean notifyClient = true, boolean notifyObservers = true);
+
+	/**
+	 * Heals wounds
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @return unused for now
+	 */
+	@preLocked
+	public native abstract int healWound(TangibleObject healer, int damageType, int damage, boolean notifyClient = true, boolean notifyObservers = true);
+
+	/**
+	 * Updates a specific type of the Base HAM
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the Base HAM type updated to the new value }
+	 * @param type specifies which Base HAM type to update
+	 * @param value the new value
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	public native void setBaseHAM(int type, int value, boolean notifyClient = true);
+
+	/**
+	 * Updates a specific type of wound
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the Wounds type updated to the new value }
+	 * @param type specifies which Wounds type to update
+	 * @param value the new value
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	public native abstract void setWounds(int type, int value, boolean notifyClient = true);
+
+	/**
+	 * adds wounds
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @return returns wounds added
+	 */
+	@preLocked
+	public native abstract int addWounds(int type, int value, boolean notifyClient = true, boolean doShockWounds = true);
+
+	/**
+	 * Updates a specific type of the Max HAM
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the Max HAM type updated to the new value }
+	 * @param type specifies which Max HAM type to update
+	 * @param value the new value
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setMaxHAM(int type, int value, boolean notifyClient = true);
+	@preLocked
+	public native void addMaxHAM(int type, int value, boolean notifyClient = true);
+
+	/**
+	 * Updates a specific type of the Encumbrance
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the Encumbrance type updated to the new value }
+	 * @param type specifies which Encumbrance type to update
+	 * @param value the new value
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	public native void setEncumbrance(int type, int value, boolean notifyClient = true);
+
+	public native void addEncumbrance(int type, int value, boolean notifyClient = true);
+
+	/**
+	 * Updates the weapon to the specified object
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified weapon id }
+	 * @param weao the new weapon
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setWeapon(WeaponObject weao, boolean notifyClient = false);
+
+	/**
+	 * Is called when this object has been inserted with an object
+	 * @param object object that has been inserted
+	 */
+	public native int notifyObjectInserted(SceneObject object);
+
+	/**
+	 * Is called when an object was removed
+	 * @param object object that has been inserted
+	 */
+	public native int notifyObjectRemoved(SceneObject object);
+
+	/**
+	 * Updates the performance type to the specified type
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified index }
+	 * @param type the new performance type
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setPerformanceType(int type, boolean notifyClient = true);
+
+	/**
+	 * Updates listen id
+	 */
+	@preLocked
+	public native void setListenToID(unsigned long id, boolean notifyClient = true);
+
+	/**
+	 * Updates the preformance start time
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the counter updated }
+	 * @param counter new performance counter
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setPerformanceStartTime(int counter, boolean notifyClient = true);
+
+	/**
+	 * Updates the preformance animation string
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the animation updated }
+	 * @param animation new animation
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setPerformanceAnimation(final string animation, boolean notifyClient = true);
+
+	/**
+	 * Updates shock wounds
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified target id }
+	 * @param shock new shock wounds
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setShockWounds(int newShock, boolean notifyClient = true);
+
+	@preLocked
+	public native void addShockWounds(int shockToAdd, boolean notiyClient = true, boolean sendSpam = true);
+
+	/**
+	 * Updates the target id to the specified object id
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified target id }
+	 * @param objectID the new target id
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void setTargetID(unsigned long targetID, boolean notifyClient = true);
+
+	/**
+	 * Adds the buff to the creature, activating it and sending packets if it is a player.
+	 * Buffs should never be added to the list without sending of packets.
+	 * @param buff The Buff object to add the creature.
+	 */
+	@preLocked
+	@arg1preLocked
+	public native void addBuff(Buff buff);
+
+	/**
+	 * Removes the buff from the creature, activating it and sending packets if it is a player.
+	 * Buffs should never be removed from the list without sending of packets.
+	 * @param buffcrc The buff crc to remove from the buff list.
+	 */
+	@preLocked
+	public native boolean removeBuff(unsigned int buffcrc);
+
+	/**
+	 * Removes the buff from the creature, activating it and sending packets if it is a player.
+	 * Buffs should never be removed from the list without sending of packets.
+	 * @param buffcrc The buff object to remove from the list.
+	 */
+	@preLocked
+	@arg1preLocked
+	public native void removeBuff(Buff buff);
+
+	@preLocked
+	public native boolean removeStateBuff(unsigned long state);
+
+	/**
+	 * Removes all buffs from the creature, deactivating any currently active buffs.
+	 * @param updateclient Should packets be sent to the player?
+	 */
+	@preLocked
+	public native void clearBuffs(boolean updateclient, boolean removeAll);
+
+	/**
+	 * Renews the buff and all secondary buffs associated with it.
+	 * @param buffCRC The buff to renew from the list
+	 * @param duration The duration to renew the buff at
+	 * @param sendToClient Send buff information to the client - Necessary to update timers
+	 */
+	@preLocked
+	public native void renewBuff(unsigned int buffCRC, int duration, boolean sendToClient = false);
+
+
+	public native void updateVehiclePosition(boolean sendPackets);
+
+	@preLocked
+	public native void addWearableObject(TangibleObject object, boolean notifyClient = true);
+
+	@preLocked
+	public native void removeWearableObject(TangibleObject object, boolean notifyClient = true);
+
+	@local
+	@read
+	public final WearablesDeltaVector getWearablesDeltaVector() {
+		return wearablesVector;
+	}
+
+	@read
+	public void sendBuffsTo(CreatureObject creature) {
+		creatureBuffs.sendTo(creature);
+	}
+
+	@local
+	@read
+	public final BuffList getBuffList() {
+		return creatureBuffs;
+	}
+
+	@read
+	public Buff getBuff(unsigned int buffcrc) {
+		return creatureBuffs.getBuffByCRC(buffcrc);
+	}
+
+	@read
+	public long getSkillModFromBuffs(final string skillMod) {
+		return creatureBuffs.getModifierByName(skillMod);
+	}
+
+	@preLocked
+	public abstract int addDotState(CreatureObject attacker,
+				unsigned long dotType,
+				unsigned long objectID,
+				unsigned int strength,
+				byte type,
+				unsigned int duration,
+				float potency,
+				unsigned int defense,
+				int secondaryStrength = 0) {
+
+		return damageOverTimeList.addDot(this,
+				attacker,
+				objectID,
+				duration,
+				dotType,
+				type,
+				strength,
+				potency,
+				defense,
+				secondaryStrength);
+	}
+
+	@preLocked
+	public boolean healDot(unsigned long dotType, int reduction, boolean sendMsg = true) {
+		return damageOverTimeList.healState(this, dotType, reduction, sendMsg);
+	}
+
+	@preLocked
+	public void clearDots() {
+		damageOverTimeList.clear(this);
+	}
+
+	@local
+	public DamageOverTimeList getDamageOverTimeList() {
+		return damageOverTimeList;
+	}
+
+	@read
+	public boolean hasBuff(unsigned int buffcrc) {
+		return creatureBuffs.hasBuff(buffcrc);
+	}
+
+	@preLocked
+	public native void notifySelfPositionUpdate();
+
+	@preLocked
+	public native void notifyPostureChange(int newPosture);
+
+	@preLocked
+	public native void setLevel(int level, boolean randomHam = true);
+
+	public native void updateToDatabaseAllObjects(boolean startTask);
+
+	@dirty
+	public native boolean isResuscitable();
+
+	@preLocked
+	public native void addBankCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native void addCashCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native void clearBankCredits(boolean notifyClient = true);
+
+	@preLocked
+	public native void clearCashCredits(boolean notifyClient = true);
+
+	@preLocked
+	public native void transferCredits(int cash, int bank, boolean notifyClient = true);
+
+	@preLocked
+	public native CreditObject getCreditObject();
+
+	@preLocked
+	public native void subtractBankCredits(int credits);
+
+	@preLocked
+	public native void subtractCashCredits(int credits);
+
+	@preLocked
+	public native boolean subtractCredits(int credits);
+
+	@dirty
+	public native boolean verifyCashCredits(int credits);
+
+	@dirty
+	public native boolean verifyBankCredits(int credits);
+
+	@dirty
+	public native boolean verifyCredits(int credits);
+
+	@dirty
+	public native boolean isDancing();
+
+	@dirty
+	public native boolean isPlayingMusic();
+
+	@preLocked
+	public native void stopEntertaining();
+
+	@dirty
+	public native boolean isEntertaining() {
+		return isDancing() || isPlayingMusic();
+	}
+
+	/**
+	 * Sets the slope mod percent.
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified slope mod andgle & percent. }
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void updateSlopeMods(boolean notifyClient = true);
+
+	/**
+	 * Sets the slope mod percent.
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified slope mod andgle & percent. }
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void updateWaterMod(boolean notifyClient = true);
+
+	/**
+	 * Adds the specified skillbox to this object
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified skillbox in the delta vector
+	 * @param skillbox skillbox to add
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	@local
+	public native void addSkill(Skill skill, boolean notifyClient = true);
+
+	/**
+	 * Adds the specified skillbox to this object
+	 * @pre { this object is locked }
+	 * @post { this object is locked, this object has the specified skillbox in the delta vector
+	 * @param skillbox skillbox name to add
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void addSkill(final string skill, boolean notifyClient = true);
+
+	/**
+	 * Removes the specified skillbox from this object
+	 * @pre { this object is locked }
+	 * @post { this obejct is locked, skillbox is removed }
+	 * @param skillBox skillBox to remove
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	@local
+	public native void removeSkill(Skill skill, boolean notifyClient = true);
+
+	/**
+	 * Removes the specified skillbox from this object
+	 * @pre { this object is locked }
+	 * @post { this obejct is locked, skillbox is removed }
+	 * @param skillBox skillBox to remove
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void removeSkill(final string skill, boolean notifyClient = true);
+
+	/**
+	 * Adds new value to the specified skillmod (add a negative number to subtract)
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param skillMod skill mod to change
+	 * @param value value to add/subtract
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void addSkillMod(final int modType, final string skillMod, int value, boolean notifyClient = true);
+
+	/**
+	 * Adds new value to the specified skillmod (add a negative number to subtract)
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param skillMod skill mod to change
+	 * @param value value to add/subtract
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	//public native void addWearableSkillMod(final string skillMod, long value, boolean notifyClient = true);
+
+	/**
+	 * Removes skill mod from the list (same as setting to 0)
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param skillMod skill mod to remove
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void removeSkillMod(final int modType, final string skillMod, int value, boolean notifyClient = true);
+
+	@preLocked
+	public native void removeAllSkillModsOfType(final int modType, boolean notifyClient = true);
+
+	/**
+	 * Sets a new group inviter id
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param id object id of the inviter
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void updateGroupInviterID(unsigned long id, boolean notifyClient = true);
+
+	/**
+	 * Sets the group of this object
+	 * @pre { this object is locked }
+	 * @post {this object is locked }
+	 * @param group GroupObject to update
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native void updateGroup(GroupObject group, boolean notifyClient = true);
+
+	/**
+	 * Enqueues a command action
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param actionCRC queue command crc
+	 * @param actionCount command count
+	 * @param targetID target
+	 * @param arguments arguments
+	 * @param priority command priority
+	 */
+	@preLocked
+	public native void enqueueCommand(unsigned int actionCRC, unsigned int actionCount, unsigned long targetID, final unicode arguments, int priority = -1, int compareCount = -1);
+
+	@preLocked
+	public native void sendCommand(unsigned int crc, final unicode args, unsigned long targetID = 0, int priority = 2);
+
+	@preLocked
+	public native void sendCommand(final string action, final unicode args, unsigned long targetID = 0, int priority = 2);
+
+	/**
+	 * Sets characters mood
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param moodID mood to set
+	 */
+	@preLocked
+	public native void setMood(byte moodID, boolean notifyClient = true);
+
+	/**
+	 * Sets a new mood animation
+	 * @pre { this is locked }
+	 * @post { this is locked }
+	 * @param mood mood animation string
+	 */
+	@preLocked
+	public native void setMoodString(final string animation, boolean notifyClient = true);
+
+	/**
+	 * Removes a command from queue
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param actionCount the action count to remove
+	 */
+	@preLocked
+	public native void deleteQueueAction(unsigned int actionCount);
+
+	/**
+	 * Sets a new state to the statebitmask
+	 * @pre { this object is locked }
+	 * @post { this object is locked, stateBitmask has the new state }
+	 * @param state state to add
+	 */
+	@preLocked
+	public native boolean setState(unsigned long state, boolean notifyClient = true);
+
+	/**
+	 * Sets an alternate appearance
+	 * @pre { this object is locked }
+	 * @post { this object is locked, alternateAppearance is set and clients updated
+	 * @param serverAppearanceTemplate appearance template
+	 * @notifyClient updates all in range clients and self
+	 */
+	@preLocked
+	public native void setAlternateAppearance(final string appearanceTeamplate, boolean notifyClient = true);
+
+	/**
+	 * Cleares a state from the state bitmask
+	 * @pre { this object is locked }
+	 * @post { this object is locked, stateBitmask doesnt have the specified state }
+	 * @param state state to clear
+	 */
+	@preLocked
+	public native boolean clearState(unsigned long state, boolean notifyClient = true);
+
+	@preLocked
+	public void setControlDevice(ControlDevice device) {
+		controlDevice = device;
+	}
+
+	/**
+	 * Updates creatureLinkID with specified object
+	 * @pre { this is locked }
+	 * @post { this is locked }
+	 */
+	@preLocked
+	public native void setCreatureLink(CreatureObject object, boolean notifyClient = true);
+
+	/**
+	 * Executes an object controller command
+	 */
+	@preLocked
+	public native void executeObjectControllerAction(unsigned int actionCRC);
+
+	@preLocked
+	public native void executeObjectControllerAction(unsigned int actionCRC, unsigned long targetID, final unicode args);
+
+	/**
+	 * Evaluates if this object can be attacked by the passed creature object
+	 * @pre { }
+	 * @post { }
+	 * @return returns true if the creature object can attack this
+	 */
+	@dirty
+	public native boolean isAttackableBy(CreatureObject object);
+
+	@dirty
+	public native boolean isAttackableBy(CreatureObject object, boolean bypassDeadCheck);
+
+	@dirty
+	public native abstract boolean isAttackableBy(TangibleObject attacker);
+
+	@dirty
+	public native boolean isAttackableBy(TangibleObject object, boolean bypassDeadCheck);
+
+	@dirty
+	public native boolean isHealableBy(CreatureObject object);
+
+	@dirty
+	public native boolean healFactionChecks(CreatureObject object, boolean isPlayer);
+
+	@dirty
+	public native boolean isInvulnerable();
+
+	/**
+	 * Evaluates if the bounty hunter has a mission with the target.
+	 * @param target the target.
+	 * @return true if bounty hunter has a mission with the target.
+	 */
+	@dirty
+	public native boolean hasBountyMissionFor(CreatureObject target);
+
+	/**
+	 * sends the conversation list
+	 * @pre {this locked, player locked }
+	 * @post { this locked, player locked }
+	 * @return whether the conversation was started or not
+	 */
+	@dirty
+	public abstract boolean sendConversationStartTo(SceneObject player) {
+		return false;
+	}
+
+	/**
+	 * sends conversation end
+	 * @pre {this locked}
+	 * @post {this locked}
+	 */
+	@dirty
+	@preLocked
+	public abstract boolean stopConversation() {
+		return false;
+	}
+
+	/**
+	 * sends the conversation list
+	 * @pre {this locked, player locked }
+	 * @post { this locked, player locked }
+	 */
+	public abstract void selectConversationOption(int option, SceneObject obj) {
+
+	}
+
+	/**
+	 * Sends a message to client
+	 * @pre { }
+	 * @post { message is sent to client }
+	 * @param msg BasePacket to send
+	 */
+	@dirty
+	@local
+	public native void sendMessage(BasePacket msg);
+
+	/**
+	 * Sends CombatSpam to players for state/posture changes
+	 * @pre { }
+	 * @post { CombatSpam is sent to clients }
+	 * @param stringName The string name in cbt_spam.stf to send.
+	 * @param color The color of the combat spam text. 0 = white, 1 = auto green/red, 10 = red, 11 = yellow
+	 * @param broadcast Specifies whether to send the packet to all nearby players or just this player.
+	 */
+	@dirty
+	public native void sendStateCombatSpam(final string fileName, final string stringName, byte color, int damage = 0, boolean broadcast = true);
+
+	/**
+	 * Sends custom CombatSpam strings to players
+	 * @pre { }
+	 * @post { CombatSpam is sent to clients }
+	 * @param customString The string to send to combat spam window.
+	 * @param color The color of the combat spam text. 0 = white, 10 = red, 11 = yellow
+	 */
+	@dirty
+	public native void sendCustomCombatSpam(final unicode customString, byte color);
+
+	/**
+	 * Sends a ExecuteConsoleCommand to the client
+	 * @param command example "/attack"
+	 */
+	@dirty
+	public native void sendExecuteConsoleCommand(final string command);
+
+	/**
+	 * Evaluates if this creature is aggresive to the object
+	 * @pre { }
+	 * @post { }
+	 * @return returns true if its aggressive
+	 */
+	@dirty
+	public native boolean isAggressiveTo(CreatureObject object);
+
+	/**
+	 * Is called when this object is destroyed
+	 * @pre { this, attacker locked }
+	 * @post { this, attacker locked }
+	 */
+	@preLocked
+	@arg1preLocked
+	public native int notifyObjectDestructionObservers(TangibleObject attacker, int condition, boolean isCombatAction);
+
+	/**
+	 * Is called when this object is killed
+	 * @pre { this, killer locked }
+	 * @post { this, killer locked }
+	 * @param killer The killer.
+	 */
+	@preLocked
+	@arg1preLocked
+	public native int notifyObjectKillObservers(TangibleObject killer);
+
+	/**
+	 * Gets called when this objects is loaded from database
+	 * @pre { this locked }
+	 * @post { this locked }
+	 */
+	@preLocked
+	public native void notifyLoadFromDatabase();
+
+	@local
+	public native void notifyInsert(QuadTreeEntry obj);
+
+	@local
+	public native void notifyDissapear(QuadTreeEntry obj);
+
+	@dirty
+	@local
+	public native void notifyPositionUpdate(QuadTreeEntry entry);
+
+	/**
+	 * Destroys this object from database
+	 * @pre { this is locked }
+	 * @post { this is locked }
+	 * @param destroyContainedObjects if true, will destroy from database all its contained objects
+	 */
+	@preLocked
+	public void destroyObjectFromDatabase(boolean destroyContainedObjects = false) {
+		clearBuffs(false, true);
+
+		super.destroyObjectFromDatabase(destroyContainedObjects);
+	}
+
+	@preLocked
+	public native void setFactionRank(int rank, boolean notifyClient = true);
+
+	@read
+	public native string getFirstName();
+
+	public native string setFirstName(final string newFirstName, boolean skipVerify);
+
+	public native string setFirstName(final string newFirstName);
+
+	@read
+	public native string getLastName();
+
+	public native string setLastName(final string newLastName, boolean skipVerify);
+
+	public native string setLastName(final string newLastName);
+
+	@dirty
+	public boolean isOnline() {
+		PlayerObject ghost = getPlayerObject();
+
+		if (!ghost)
+			return false;
+
+		return ghost.isOnline();
+	}
+
+	@dirty
+	public boolean canTreatInjuries() {
+		return !super.getPendingTask("injuryTreatment");
+	}
+
+	@dirty
+	public boolean canTreatStates() {
+		return !super.getPendingTask("stateTreatment");
+	}
+
+	@dirty
+	public boolean canTreatWounds() {
+		return !super.getPendingTask("woundTreatment");
+	}
+
+	@dirty
+	public boolean canTreatConditions() {
+		return !super.getPendingTask("conditionTreatment");
+	}
+
+	@reference
+	@dirty
+	public native PlayerObject getPlayerObject();
+
+	@read
+	public boolean isListening() {
+		return listenToID != 0;
+	}
+
+	@read
+	public boolean isWatching() {
+		return watchToID != 0;
+	}
+
+	@preLocked
+	public native void setClient(ZoneClientSession cli);
+
+	@preLocked
+	public native void dismount();
+
+	@read
+	public native float calculateBFRatio();
+
+	@preLocked
+	public native void removeFeignedDeath();
+
+	@preLocked
+	public native boolean canFeignDeath();
+
+	@preLocked
+	public native void feignDeath();
+
+	@preLocked
+	public native void setFeignedDeathState();
+
+	@preLocked
+	public native void setDizziedState(int durationSeconds = 5);
+
+	@preLocked
+	public native void setRalliedState(int durationSeconds = 5);
+
+	@preLocked
+	public native void setAimingState(int durationSeconds = 5);
+
+	@preLocked
+	public native void setCoverState(int durationSeconds = 40);
+
+	@preLocked
+	public native void setBerserkedState(unsigned int duration);
+
+	@preLocked
+	public native void setStunnedState(int durationSeconds = 5);
+
+	@preLocked
+	public native void setBlindedState(int durationSeconds = 5);
+
+	@preLocked
+	public native void setIntimidatedState(int durationSeconds = 15);
+
+	@preLocked
+	public native void setSnaredState(int durationSeconds = 20);
+
+	@preLocked
+	public native void setRootedState(int durationSeconds = 20);
+
+	public native boolean setNextAttackDelay(CreatureObject attacker, final string command, unsigned int mod, int del);
+
+	@preLocked
+	public native void setMeditateState();
+
+	@preLocked
+	public abstract native void activateHAMRegeneration(int latency);
+
+	@preLocked
+	public abstract native void activatePassiveWoundRegeneration();
+
+	@preLocked
+	public abstract native void activateStateRecovery();
+
+	@preLocked
+	public void updateTimeOfDeath() {
+		timeOfDeath.updateToCurrentTime();
+	}
+
+	@read
+	public boolean hasAttackDelay() {
+		return !cooldownTimerMap.isPast("nextAttackDelay");
+	}
+
+	public native void removeAttackDelay();
+
+	@read
+	public boolean hasIncapTimer() {
+		return !cooldownTimerMap.isPast("incapTimer");
+	}
+
+	@local
+	public CooldownTimerMap getCooldownTimerMap() {
+		return cooldownTimerMap;
+	}
+
+	@read
+	public boolean hasSpice() {
+		return creatureBuffs.hasSpice();
+	}
+
+	public void updateLastSuccessfulCombatAction() {
+		lastSuccessfulCombatAction.updateToCurrentTime();
+	}
+
+	public native void setPostureChangeDelay(unsigned long delay);
+
+	@read
+	public boolean hasPostureChangeDelay() {
+		return !cooldownTimerMap.isPast("postureChangeDelay");
+	}
+
+	public void removePostureChangeDelay() {
+		cooldownTimerMap.updateToCurrentTime("postureChangeDelay");
+	}
+
+	public void updatePostureDownRecovery() {
+		cooldownTimerMap.updateToCurrentAndAddMili("postureDownRecovery", 30000);
+	}
+
+	@read
+	public boolean checkPostureDownRecovery() {
+		return cooldownTimerMap.isPast("postureDownRecovery");
+	}
+
+	public void updatePostureUpRecovery() {
+		cooldownTimerMap.updateToCurrentAndAddMili("postureUpRecovery", 30000);
+	}
+
+	@read
+	public boolean checkPostureUpRecovery() {
+		return cooldownTimerMap.isPast("postureUpRecovery");
+	}
+
+	public void updateKnockdownRecovery() {
+		cooldownTimerMap.updateToCurrentAndAddMili("knockdownRecovery", 30000);
+	}
+
+	@read
+	public boolean checkKnockdownRecovery() {
+		return cooldownTimerMap.isPast("knockdownRecovery");
+	}
+
+	@preLocked
+	public void setNextAllowedMoveTime(unsigned long time) {
+		nextAllowedMoveTime.updateToCurrentTime();
+		nextAllowedMoveTime.addMiliTime(time);
+	}
+
+	@read
+	public boolean isMovementAllowed() {
+		return nextAllowedMoveTime.isPast();
+	}
+
+	// Updates directional arrows and planet names for group members out of range
+	@dirty
+	public native void updateGroupMFDPositions();
+
+	// misc methods
+	@preLocked
+	public abstract native void queueDizzyFallEvent();
+
+	@read
+	public boolean hasDizzyEvent() {
+		return dizzyFallDownEvent;
+	}
+
+	@preLocked
+	public void clearDizzyEvent() {
+		if (hasDizzyEvent()) {
+			dizzyFallDownEvent.cancel();
+			dizzyFallDownEvent = null;
+		}
+	}
+
+	/**
+	 * Returns the given ScreenPlayState.
+	 * Takes the screenPlayStatesMutex.
+	 * @param screenPlay ScreenPlay to retrieve
+         */
+	@dirty
+	public unsigned long getScreenPlayState(final string screenPlay) {
+		synchronized (screenPlayStatesMutex) {
+			return screenPlayStates.get(screenPlay);
+		}
+	}
+
+	/**
+	 * Sets the given ScreenPlayState.
+	 * Takes the screenPlayStatesMutex.
+	 * @param screenPlay ScreenPlay to modify
+	 * @param state the State to set
+         */
+	public void setScreenPlayState(final string screenPlay, unsigned long state) {
+		synchronized (screenPlayStatesMutex) {
+			screenPlayStates.put(screenPlay, state);
+		}
+	}
+
+	public void updateCooldownTimer(final string coooldownTimer, unsigned long miliSecondsToAdd = 0) {
+		if (miliSecondsToAdd != 0) {
+			cooldownTimerMap.updateToCurrentAndAddMili(coooldownTimer, miliSecondsToAdd);
+		} else {
+			cooldownTimerMap.updateToCurrentTime(coooldownTimer);
+		}
+	}
+
+	@read
+	public boolean checkCooldownRecovery(final string cooldown) {
+		return cooldownTimerMap.isPast(cooldown);
+	}
+
+	@read
+	@local
+	public final Time getCooldownTime(final string cooldown) {
+		return cooldownTimerMap.getTime(cooldown);
+	}
+
+	public void addCooldown(final string name, unsigned long miliseconds) {
+		cooldownTimerMap.updateToCurrentAndAddMili(name, miliseconds);
+	}
+
+	@dirty
+	public native void doAnimation(final string animation);
+
+	@dirty
+	public native void doCombatAnimation(TangibleObject defender, unsigned int animationCRC, byte hit, byte trails, unsigned long weaponID=0);
+
+	@dirty
+	public native void doCombatAnimation(unsigned int animationCRC);
+
+	@read
+	public native unicode getCreatureName();
+
+	@read
+	public boolean isGrouped() {
+		return group;
+	}
+
+	@read
+	public int getBankCredits() {
+		return creditObject.getBankCredits();
+	}
+
+	@read
+	public int getCashCredits() {
+		return creditObject.getCashCredits();
+	}
+
+	@read
+	public int getBaseHAM(int idx) {
+		return baseHAM.get(idx);
+	}
+
+	@read
+	public int getWounds(int idx) {
+		return wounds.get(idx);
+	}
+
+	@local
+	@read
+	public final DeltaVector<int> getWounds() {
+		return wounds;
+	}
+
+	@read
+	public int getHAM(int idx) {
+		return hamList.get(idx);
+	}
+
+	@read
+	@local
+	public final DeltaVector<int> getHAM() {
+		return hamList;
+	}
+
+	@read
+	public int getMaxHAM(int idx) {
+		return maxHamList.get(idx);
+	}
+
+	@local
+	@read
+	public final DeltaVector<int> getMaxHAM() {
+		return maxHamList;
+	}
+
+	@read
+	public int getEncumbrance(int idx) {
+		return encumbrances.get(idx);
+	}
+
+	@local
+	@read
+	public final DeltaVector<int> getEncumbrances() {
+		return encumbrances;
+	}
+
+	@mock
+	@read
+	public abstract byte getPosture() {
+		return posture;
+	}
+
+	@mock
+	@read
+	public byte getLocomotion() {
+		return locomotion;
+	}
+
+	@read
+	public byte getFactionRank() {
+		return factionRank;
+	}
+
+	@weakReference
+	@read
+	public CreatureObject getLinkedCreature() {
+		return linkedCreature;
+	}
+
+	@read
+	public unsigned long getCreatureLinkID() {
+		CreatureObject strongRef = linkedCreature;
+
+		if (strongRef)
+			return strongRef.getObjectID();
+		else
+			return 0;
+	}
+
+	@read
+	public float getShockWounds() {
+		return shockWounds;
+	}
+
+	@read
+	public unsigned long getWatchToID() {
+		return watchToID;
+	}
+
+	@read
+	public unsigned long getStateBitmask() {
+		return stateBitmask;
+	}
+
+	@mock
+	@read
+	public abstract boolean hasState(unsigned long state) {
+		return stateBitmask & state;
+	}
+
+	@read
+	public boolean hasStates() {
+		return stateBitmask != 0;
+	}
+
+	@read
+	public unsigned long getListenID() {
+		return listenToID;
+	}
+
+	@read
+	public float getAccelerationMultiplierBase() {
+		return accelerationMultiplierBase;
+	}
+
+	@read
+	public float getAccelerationMultiplierMod() {
+		return accelerationMultiplierMod;
+	}
+
+	@read
+	public float getSpeedMultiplierBase() {
+		return speedMultiplierBase;
+	}
+
+	@read
+	public float getSpeedMultiplierMod() {
+		return speedMultiplierMod;
+	}
+
+	@mock
+	@read
+	public abstract float getCurrentSpeed() {
+		return currentSpeed;
+	}
+
+	@preLocked
+	@local
+	@dirty
+	public SpeedMultiplierModChanges getSpeedMultiplierModChanges() {
+		return speedMultiplierModChanges;
+	}
+
+
+	@read
+	public int getCommandQueueSize() {
+		return commandQueue.getQueueSize();
+	}
+
+
+	@preLocked
+	public void setLastActionCounter(unsigned int ctr) {
+		lastActionCounter = ctr;
+	}
+
+	@preLocked
+	public unsigned int incrementLastActionCounter() {
+		lastActionCounter = lastActionCounter + 32;
+		if (lastActionCounter < 0x40000000)
+			lastActionCounter = 0x40000000;
+
+		return lastActionCounter;
+	}
+
+	@read
+	public unsigned int getLastActionCounter() {
+		return lastActionCounter;
+	}
+
+	@read
+	public float getSlopeModAngle() {
+		return slopeModAngle;
+	}
+
+	@read
+	public native float getSlopeModPercent();
+
+	@read
+	public float getWaterModPercent() {
+		return waterModPercent;
+	}
+
+	@read
+	public float getRunSpeed() {
+		return runSpeed;
+	}
+
+	@read
+	public float getWalkSpeed() {
+		return walkSpeed;
+	}
+
+	@read
+	public float getTurnScale() {
+		return turnScale;
+	}
+
+	@read
+	public float getRunAcceleration() {
+		return runAcceleration;
+	}
+
+	@read
+	public float getWalkAcceleration() {
+		return walkAcceleration;
+	}
+
+	@read
+	public string getPerformanceAnimation() {
+		return performanceAnimation;
+	}
+
+	@read
+	public string getMoodString() {
+		return moodString;
+	}
+
+	@read
+	public unsigned long getWeaponID() {
+		if (!weapon)
+			return 0;
+		else
+			return weapon.getObjectID();
+	}
+
+	@reference
+	@dirty
+	@preLocked
+	public native WeaponObject getWeapon();
+
+	@mock
+	@dirty
+	public abstract native WeaponObject getDefaultWeapon();
+
+	@weakReference
+	@read
+	public GuildObject getGuildObject() {
+		return guild;
+	}
+
+	@read
+	public int getGuildID() {
+		GuildObject strongRef = guild;
+
+		if (strongRef)
+			return strongRef.getGuildID();
+		else
+			return 0;
+	}
+
+	@read
+	public boolean isInGuild() {
+		GuildObject strongRef = guild;
+
+		return strongRef;
+	}
+
+	@preLocked
+	public void setGuildObject(GuildObject guildobj) {
+		guild = guildobj;
+	}
+
+	@read
+	public unsigned long getGroupID() {
+		if (group)
+			return group.getObjectID();
+		else
+			return 0;
+	}
+
+	@read
+	public unsigned long getGroupInviterID() {
+		return groupInviterID;
+	}
+
+	@read
+	@reference
+	public GroupObject getGroup() {
+		return group;
+	}
+
+	@read
+	public unsigned long getGroupInviteCounter() {
+		return groupInviteCounter;
+	}
+
+	@read
+	public unsigned long getTargetID() {
+		return targetID;
+	}
+
+	@read
+	public byte getMoodID() {
+		return moodID;
+	}
+
+	@read
+	public int getPerformanceStartTime() {
+		return performanceStartTime;
+	}
+
+	@read
+	public int getPerformanceType() {
+		return performanceType;
+	}
+
+	@read
+	public byte getFrozen() {
+		return frozen;
+	}
+
+	@read
+	public float getHeight() {
+		return height;
+	}
+
+	@read
+	public boolean isDroidSpecies() {
+		//Determine if creature is a droid.
+		return getSpecies() >= 203 && getSpecies() <= 225 && getSpecies() != 207;
+	}
+
+	@read
+	public boolean isWalkerSpecies() {
+		//Determine if creature is an ATST or ATAT.
+		return getSpecies() == 226;
+	}
+
+	@read
+	public boolean isProbotSpecies() {
+		return getSpecies() == 216;
+	}
+
+	@read
+	public native boolean hasEffectImmunity(byte effectType);
+
+	@read
+	public native boolean hasDotImmunity(unsigned int dotType);
+
+	@read
+	public abstract native int getSpecies();
+
+	@read
+	public string getSpeciesName() {
+		int species = getSpecies();
+		if(species == 0)
+			return "human";
+		else if(species == 1)
+			return "rodian";
+		else if(species == 2)
+			return "trandoshan";
+		else if(species == 3)
+			return "moncal";
+		else if(species == 4)
+			return "wookiee";
+		else if(species == 5)
+			return "bothan";
+		else if(species == 6)
+			return "twilek";
+		else if(species == 7)
+			return "zabrak";
+		else if(species == 0x21)
+			return "ithorian";
+		else if(species == 0x31)
+			return "sullustan";
+		else
+			return "";
+	}
+
+	@read
+	public native int getGender();
+
+	@local
+	@read
+	public final DeltaVector<int> getBaseHAM() {
+		return baseHAM;
+	}
+
+	@local
+	@read
+	public final SkillList getSkillList() {
+		return skillList;
+	}
+
+	@read
+	public native int getSkillMod(final string skillmod);
+
+	@dirty
+	public native int getSkillModOfType(final string skillmod, final unsigned int modType);
+
+	@read
+	public boolean hasSkill(final string skill) {
+		return skillList.containsSkill(skill);
+	}
+
+	@local
+	public SkillModList getSkillModList() {
+		return skillModList;
+	}
+
+	@local
+	@read
+	public final SkillModList getSkillModList() {
+		return skillModList;
+	}
+
+	@preLocked
+	public void setWatchToID(unsigned long id) {
+		watchToID = id;
+	}
+
+	@dirty
+	public boolean isCreatureObject() {
+		return true;
+	}
+
+	@dirty
+	@nativeStub
+	@local
+	public native CreatureObject asCreatureObject();
+
+	@local
+	public Time getNextActionTime() {
+		return nextAction;
+	}
+
+	@read
+	public boolean isNextActionPast() {
+		return nextAction.isPast();
+	}
+
+	@read
+	public boolean isSwimming() {
+		return stateBitmask & CreatureState.SWIMMING;
+	}
+
+	@dirty
+	@reference
+	public native ZoneClientSession getClient();
+
+	@weakReference
+	@read
+	public ControlDevice getControlDevice() {
+		return controlDevice;
+	}
+
+	@read
+	public float getSwimHeight() {
+		return swimHeight;
+	}
+
+	@mock
+	@read
+	public abstract boolean isIncapacitated() {
+		return posture == CreaturePosture.INCAPACITATED;
+	}
+
+	@mock
+	@read
+	public abstract boolean isDead() {
+		return posture == CreaturePosture.DEAD;
+	}
+
+	@read
+	public boolean isKnockedDown() {
+		return posture == CreaturePosture.KNOCKEDDOWN;
+	}
+
+	@read
+	public boolean isKneeling() {
+		return posture == CreaturePosture.CROUCHED;
+	}
+
+	@read
+	public boolean isProne() {
+		return posture == CreaturePosture.PRONE;
+	}
+
+	@read
+	public boolean isStanding() {
+		return posture == CreaturePosture.UPRIGHT;
+	}
+
+	@read
+	public boolean isSitting() {
+		return posture == CreaturePosture.SITTING;
+	}
+
+	@read
+	public boolean isLyingDown() {
+		return posture == CreaturePosture.LYINGDOWN;
+	}
+
+	@read
+	public boolean isSkillAnimating() {
+		return posture == CreaturePosture.SKILLANIMATING;
+	}
+
+	@read
+	public boolean isRallied() {
+		return stateBitmask & CreatureState.RALLIED;
+	}
+
+	@mock
+	@read
+	public abstract boolean isInCombat() {
+		return stateBitmask & CreatureState.COMBAT;
+	}
+
+	@read
+	public boolean isDizzied() {
+		return stateBitmask & CreatureState.DIZZY;
+	}
+
+	@read
+	public boolean isBerserked() {
+		return stateBitmask & CreatureState.BERSERK;
+	}
+
+	@read
+	public boolean isStunned() {
+		return stateBitmask & CreatureState.STUNNED;
+	}
+
+	@read
+	public boolean isBlinded() {
+		return stateBitmask & CreatureState.BLINDED;
+	}
+
+	@read
+	public boolean isIntimidated() {
+		return stateBitmask & CreatureState.INTIMIDATED;
+	}
+
+	@read
+	public boolean isSnared() {
+		return stateBitmask & CreatureState.IMMOBILIZED;
+	}
+
+	@read
+	public boolean isImmobilized() {
+		return stateBitmask & CreatureState.IMMOBILIZED;
+	}
+
+	@read
+	public boolean isRooted() {
+		return stateBitmask & CreatureState.FROZEN;
+	}
+
+	@read
+	public boolean isFrozen() {
+		return stateBitmask & CreatureState.FROZEN;
+	}
+
+	@read
+	public boolean isDiseased() {
+		return stateBitmask & CreatureState.DISEASED;
+	}
+
+	@read
+	public boolean isPoisoned() {
+		return stateBitmask & CreatureState.POISONED;
+	}
+
+	@read
+	public boolean isBleeding() {
+		return stateBitmask & CreatureState.BLEEDING;
+	}
+
+	@read
+	public boolean isOnFire() {
+		return stateBitmask & CreatureState.ONFIRE;
+	}
+
+	@read
+	public boolean isFeigningDeath() {
+		return stateBitmask & CreatureState.FEIGNDEATH;
+	}
+
+	@read
+	public boolean isRidingMount() {
+		return stateBitmask & CreatureState.RIDINGMOUNT;
+	}
+
+	@read
+	public boolean hasRidingCreature() {
+		return stateBitmask & CreatureState.MOUNTEDCREATURE;
+	}
+
+	@read
+	public boolean isPeaced() {
+		return stateBitmask & CreatureState.PEACE;
+	}
+
+	@read
+	public boolean isMeditating() {
+		return stateBitmask & CreatureState.ALERT;
+	}
+
+	@read
+	public boolean isAiming() {
+		return stateBitmask & CreatureState.AIMING;
+	}
+
+	@read
+	public boolean isInCover() {
+		return stateBitmask & CreatureState.COVER;
+	}
+
+	@read
+	public boolean isWalking() {
+		return currentSpeed <= walkSpeed;
+	}
+
+	@read
+	public boolean isRunning() {
+		return currentSpeed >= runSpeed;
+	}
+
+	@dirty
+	public abstract boolean isNonPlayerCreatureObject() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isDroidObject() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isHelperDroidObject() {
+		return false;
+	}
+
+	@dirty
+	public native boolean isPlayerCreature();
+
+	@read
+	public native int getReceiverFlags();
+
+	@dirty
+	public abstract boolean isInformantCreature() {
+		return false;
+	}
+
+	@dirty
+	public native CampSiteActiveArea getCurrentCamp();
+
+	@read
+	public byte getCurrentWeather() {
+		return currentWeather;
+	}
+
+	@preLocked
+	public void setCurrentWeather(byte value) {
+		currentWeather = value;
+	}
+
+	@read
+	public byte getCurrentWind() {
+		return currentWind;
+	}
+
+	@preLocked
+	public void setCurrentWind(byte value) {
+		currentWind = value;
+	}
+
+	@preLocked
+	@arg1preLocked
+	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
+
+	@read
+	public string getAlternateAppearance() {
+		return alternateAppearance;
+	}
+
+	@local
+	@dirty
+	public ReadWriteLock getSkillModMutex() {
+		return skillModMutex;
+	}
+
+	@read
+	public native float calculateCostAdjustment(byte stat, float baseCost);
+
+	@read
+	public native float getSpeedModifier();
+
+	@read
+	public native float getAccelerationModifier();
+
+	@local
+	public native void sendSpeedAndAccelerationMods(SceneObject player);
+
+	@local
+	public native void broadcastSpeedAndAccelerationMods(boolean sendSelf = true);
+
+	@preLocked
+	public native void updateSpeedAndAccelerationMods();
+
+	@preLocked
+	public native void setFaction(unsigned int crc);
+
+	/**
+	 * Destroys a PlayerCreature from the database. If this object is not a PlayerCreature then the method will return without doing anything.
+	 * @pre { this is locked }
+	 * @post { this is locked }
+	 * @param destroyContainedObjects if true, will destroy from database all its contained objects
+	 */
+	@preLocked
+	public abstract native void destroyPlayerCreatureFromDatabase(boolean destroyContainedObjects = false);
+
+	@dirty
+	public native float getTemplateRadius();
+
+	@preLocked
+	public abstract void reloadTemplate() {
+	}
+
+	@preLocked
+	public native void removeOutOfRangeObjects();
+
+	@preLocked
+	public native void synchronizeCloseObjects();
+
+	@preLocked
+	public native void addPersonalEnemyFlag(CreatureObject enemy, unsigned long duration);
+
+	@read
+	public unsigned long getPersonalEnemyFlagTime(unsigned long enemyID) {
+		return personalEnemyFlags.get(enemyID);
+	}
+
+	@preLocked
+	public native void removePersonalEnemyFlag(CreatureObject enemy);
+
+	@preLocked
+	public native void removePersonalEnemyFlag(unsigned long enemyID);
+
+	@read
+	public native boolean hasPersonalEnemyFlag(CreatureObject enemy);
+
+	@preLocked
+	public native void schedulePersonalEnemyFlagTasks();
+
+	@preLocked
+	public native void setHue(int hueIndex);
+
+	@read
+	public int getHueValue() {
+		return hueValue;
+	}
+
+	@local
+	@weakReference
+	@read
+	public AuctionSearchTask getAuctionSearchTask() {
+		return auctionSearch;
+	}
+
+	@preLocked
+	@local
+	@dirty
+	public void setAuctionSearchTask(AuctionSearchTask task) {
+		auctionSearch = task;
+	}
+
+	@local
+	public native Instrument getPlayableInstrument();
+}

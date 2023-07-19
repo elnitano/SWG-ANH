@@ -1,0 +1,62 @@
+fbase_elite_dark_trooper_extreme = Creature:new {
+	objectName = "@mob/creature_names:fbase_elite_dark_trooper_extreme",
+	randomNameType = NAME_DARKTROOPER,
+	randomNameTag = true,
+	mobType = MOB_ANDROID,
+	socialGroup = "imperial",
+	faction = "imperial",
+	level = 270,
+	chanceHit = 18.0,
+	damageMin = 1495,
+	damageMax = 2700,
+	baseXp = 27000,
+	baseHAM = 254000,
+	baseHAMmax = 345000,
+	armor = 3,
+	resists = {140,125,115,150,150,150,150,125,-1},
+	meatType = "",
+	meatAmount = 0,
+	hideType = "",
+	hideAmount = 0,
+	boneType = "",
+	boneAmount = 0,
+	milk = 0,
+	tamingChance = 0,
+	ferocity = 0,
+	pvpBitmask = ATTACKABLE + OVERT,
+	creatureBitmask = PACK + KILLER + NOINTIMIDATE + NODOT,
+	optionsBitmask = AIENABLED,
+	diet = HERBIVORE,
+	scale = 1.5,
+
+	templates = {"object/mobile/dark_trooper.iff"},
+	lootGroups = {
+		{
+			groups = {
+				{group = "color_crystals", chance = 300000},
+				{group = "junk", chance = 6000000},
+				{group = "holocron_dark", chance = 150000},
+				{group = "holocron_light", chance = 150000},
+				{group = "weapons_all", chance = 1050000},
+				{group = "armor_all", chance = 1050000},
+				{group = "clothing_attachments", chance = 150000},
+				{group = "armor_attachments", chance = 150000},
+				{group = "wearables_all", chance = 1000000}
+			}
+		}
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "imperial_carbine",
+	secondaryWeapon = "stormtrooper_sword",
+	conversationTemplate = "",
+	reactionStf = "@npc_reaction/stormtrooper",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(carbineermaster,marksmanmaster),
+	secondaryAttacks = merge(fencermaster,brawlermaster)
+}
+
+CreatureTemplates:addCreatureTemplate(fbase_elite_dark_trooper_extreme, "fbase_elite_dark_trooper_extreme")

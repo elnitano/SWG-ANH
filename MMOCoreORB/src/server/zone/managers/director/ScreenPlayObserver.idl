@@ -1,0 +1,51 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.
+*/
+
+package server.zone.managers.director;
+import engine.lua.Lua;
+import engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import system.util.VectorMap;
+
+@json
+@lua
+class ScreenPlayObserver extends Observer {
+	protected string play;
+	protected string key;
+	
+	@dereferenced
+	protected VectorMap<unsigned long, float> floatData;
+	
+	public ScreenPlayObserver() {
+		play = "";
+		key = "";
+		floatData.setNoDuplicateInsertPlan();
+	}
+
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);
+	
+	public native void storeFloatValue(final string dataKey, float dataVal);
+
+	public void setScreenPlay(final string screen) {
+		play = screen;
+	}
+
+	public void setScreenKey(final string screenKey) {
+		key = screenKey;
+	}
+
+	public string getScreenPlay() {
+		return play;
+	}
+
+	public string getScreenKey() {
+		return key;
+	}
+	
+	public float getFloatValue(unsigned long dataKey) {
+		return floatData.get(dataKey);
+	}
+}

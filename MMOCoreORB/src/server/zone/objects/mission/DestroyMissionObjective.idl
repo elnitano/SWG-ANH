@@ -1,0 +1,101 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.mission;
+
+import engine.util.Observable;
+import server.zone.objects.mission.MissionObject;
+import server.zone.objects.mission.MissionObserver;
+import server.zone.Zone;
+import engine.core.ManagedObject;
+
+include engine.util.u3d.Vector3;
+include engine.log.Logger;
+include system.lang.Time;
+include server.zone.objects.mission.MissionObjective;
+include server.zone.objects.tangible.LairObject;
+include server.zone.objects.area.MissionSpawnActiveArea;
+include server.zone.objects.transaction.TransactionLog;
+
+@json
+class DestroyMissionObjective extends MissionObjective {
+	@dereferenced
+	protected string lairTemplate;
+
+	protected MissionSpawnActiveArea spawnActiveArea;
+
+	protected LairObject lairObject;
+
+	int difficultyLevel;
+	int difficulty;
+
+	@dereferenced
+	protected Time lairSpawnTime;
+
+	public DestroyMissionObjective(MissionObject mission) {
+		super(mission);
+
+		difficultyLevel = 0;
+		difficulty = 2;
+
+		Logger.setLoggingName("DestroyMissionObjective");
+	}
+
+	public native void finalize() {
+		//Logger.info("deleting from memory", true);
+	}
+
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		lairSpawnTime.updateToCurrentTime();
+
+		Logger.setLoggingName("DestroyMissionObjective");
+	}
+
+	@preLocked
+	public native void activate();
+	public native void abort();
+	public native void complete();
+
+	public native void spawnLair();
+
+	/**
+	 * Destroys this object from database
+	 * @pre { this is locked }
+	 * @post { this is locked }
+	 */
+	@preLocked
+	public native void destroyObjectFromDatabase();
+
+	@local
+	@dereferenced
+	@dirty
+	public native Vector3 findValidSpawnPosition(Zone zone);
+
+	public native int notifyObserverEvent(MissionObserver observer, unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);
+
+	@local
+	@preLocked
+	public native void setLairTemplateToSpawn(final string sp);
+
+	@preLocked
+	public void setDifficultyLevel(int diff) {
+		difficultyLevel = diff;
+	}
+
+	@preLocked
+	public void setDifficulty(int diff) {
+		difficulty = diff;
+	}
+
+	@dereferenced
+	@local
+	@dirty
+	public native Vector3 getEndPosition();
+
+	@local
+	@dirty
+	public native void addMissionStats(@dereferenced TransactionLog trx);
+}

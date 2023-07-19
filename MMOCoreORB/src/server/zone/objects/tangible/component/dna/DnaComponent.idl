@@ -1,0 +1,362 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.component.dna;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.tangible.component.Component;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+import server.zone.packets.scene.AttributeListMessage;
+
+@json
+class DnaComponent extends Component {
+	protected int cleverness;
+	protected int endurance;
+	protected int fierceness;
+	protected int power;
+
+	// intelligence will be replaced with intellect
+	protected int intelligence;
+	protected int intellect;
+
+	protected int courage;
+
+	// dependency will be replaced with dependability
+	protected int dependency;
+	protected int dependability;
+
+	protected int dexterity;
+	protected int fortitude;
+	protected int hardiness;
+
+	protected string source;
+
+	protected string special1;
+	protected string special2;
+
+	protected boolean ranged;
+
+	protected int quality;
+	protected int armorRating;
+
+	protected float kinResist;
+	protected float energyResist;
+	protected float blastResist;
+	protected float coldResist;
+	protected float heatResist;
+	protected float elecResist;
+	protected float acidResist;
+	protected float stunResist;
+	protected float saberResist;
+
+	protected int sourceLevel;
+
+	// we need to account for special protections in samples
+	protected int specialResists;
+
+	public DnaComponent() {
+		Logger.setLoggingName("DnaComponent");
+
+		fortitude = 0;
+		hardiness = 0;
+		dexterity = 0;
+		endurance = 0;
+		intelligence = 0; // Old var
+		intellect = 0;
+		cleverness = 0;
+		dependency = 0; // Old var
+		dependability = 0;
+		courage = 0;
+		fierceness = 0;
+		power = 0;
+
+		source = "unknown";
+		special1 = "none";
+		special2 = "none";
+		ranged = false;
+		quality = 7;
+
+		armorRating = 0;
+		kinResist = 0.f;
+		energyResist = 0.f;
+		blastResist = 0.f;
+		coldResist = 0.f;
+		heatResist = 0.f;
+		elecResist = 0.f;
+		acidResist = 0.f;
+		stunResist = 0.f;
+		saberResist = -1;
+
+		sourceLevel = 1;
+		specialResists = 0;
+	}
+
+	public void setStats(float clever, float endur, float fierc, float pow, float intel, float cour, float depend, float dext, float fort, float hardi) {
+		cleverness = clever;
+		endurance = endur;
+		fierceness = fierc;
+		power = pow;
+		intellect = intel;
+		courage = cour;
+		dependability = depend;
+		dexterity = dext;
+		fortitude = fort;
+		hardiness = hardi;
+	}
+
+	@dirty
+	public native void setSpecialResist(int type);
+
+	@dirty
+	public native boolean isSpecialResist(int type);
+
+	public void setCleverness(float value) {
+		cleverness = value;
+	}
+
+	@dirty
+	public float getCleverness() {
+		return cleverness;
+	}
+
+	public void setLevel(int value) {
+		sourceLevel = value;
+	}
+
+	@dirty
+	public int getLevel() {
+		return sourceLevel;
+	}
+
+
+	public void setEndurance(float value) {
+		endurance = value;
+	}
+
+	@dirty
+	public float getEndurance() {
+		return endurance;
+	}
+
+	public void setFierceness(float value) {
+		fierceness = value;
+	}
+
+	@dirty
+	public float getFierceness() {
+		return fierceness;
+	}
+
+	public void setPower(float value) {
+		power = value;
+	}
+
+	@dirty
+	public float getPower() {
+		return power;
+	}
+
+	public void setIntellect(float value) {
+		intellect = value;
+	}
+
+	@dirty
+	public float getIntellect() {
+		if (intellect > 0)
+			return intellect;
+
+		return intelligence;
+	}
+
+	public void setCourage(float value) {
+		courage = value;
+	}
+
+	@dirty
+	public float getCourage() {
+		return courage;
+	}
+
+	public void setDependability(float value) {
+		dependability = value;
+	}
+
+	@dirty
+	public float getDependability() {
+		if (dependability > 0)
+			return dependability;
+
+		return dependency;
+	}
+
+	public void setDexterity(float value) {
+		dexterity = value;
+	}
+
+	@dirty
+	public float getDexterity() {
+		return dexterity;
+	}
+
+	public void setFortitude(float value) {
+		fortitude = value;
+	}
+
+	@dirty
+	public float getFortitude() {
+		return fortitude;
+	}
+
+	public void setHardiness(float value) {
+		hardiness = value;
+	}
+
+	@dirty
+	public float getHardiness() {
+		return hardiness;
+	}
+
+	public void setEnergy(float value){
+		energyResist = value;
+	}
+
+	@dirty
+	public float getEnergy() {
+		return energyResist;
+	}
+
+	public void setBlast(float value) {
+		blastResist = value;
+	}
+
+	@dirty
+	public float getBlast(){
+		return blastResist;
+	}
+
+	public void setCold(float value) {
+		coldResist = value;
+	}
+
+	@dirty
+	public float getCold() {
+		return coldResist;
+	}
+
+	public void setHeat(float value) {
+		heatResist = value;
+	}
+
+	@dirty
+	public float getHeat() {
+		return heatResist;
+	}
+	public void setElectric(float value) {
+		elecResist = value;
+	}
+
+	@dirty
+	public float getElectric() {
+		return elecResist;
+	}
+
+	public void setAcid(float value) {
+		acidResist = value;
+	}
+
+	@dirty
+	public float getAcid() {
+		return acidResist;
+	}
+
+	public void setStun(float value) {
+		stunResist = value;
+	}
+
+	@dirty
+	public float getStun() {
+		return stunResist;
+	}
+
+	public void setSaber(float value) {
+		saberResist = value;
+	}
+
+	@dirty
+	public float getSaber() {
+		return saberResist;
+	}
+
+	public void setArmorRating(int rating) {
+		armorRating = rating;
+	}
+
+	public void setKinetic(float value) {
+		kinResist = value;
+	}
+
+	@dirty
+	public float getKinetic() {
+		return kinResist;
+	}
+	public void setSource(final string src) {
+		source = src;
+	}
+
+	public void setSpecialAttackOne(final string atk) {
+		special1 = atk;
+	}
+
+	@dirty
+	public string getSpecialAttackOne() {
+		return special1;
+	}
+
+	public void setSpecialAttackTwo(final string atk) {
+		special2 = atk;
+	}
+
+	@dirty
+	public string getSpecialAttackTwo() {
+		return special2;
+	}
+
+	public void setRanged(boolean b) {
+		ranged = b;
+	}
+
+	@dirty
+	public boolean isRanged() {
+		return ranged;
+	}
+
+	public void setQuality(int qual) {
+		quality = qual;
+	}
+
+	@dirty
+	public unsigned int getQuality() {
+		return quality;
+	}
+	/**
+	 * Initializes the transient members of SceneObject, must call the inherited object method first.
+	 * @pre {transient members are not initialized }
+	 * @post { transient members are initialized }
+	 */
+	public native void initializeTransientMembers();
+
+	@local
+	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
+
+	@local
+	@dirty
+	public native void fillAttributeList(AttributeListMessage msg, CreatureObject object);
+
+	@dirty
+	public native string convertSpecialAttack(string attackName);
+
+	@dirty
+	public native string resistValue(float input);
+
+}

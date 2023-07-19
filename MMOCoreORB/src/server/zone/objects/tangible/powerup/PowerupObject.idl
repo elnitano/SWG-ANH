@@ -1,0 +1,103 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.powerup;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.tangible.TangibleObject;
+include server.zone.objects.tangible.powerup.PowerupStatVector;
+import server.zone.objects.tangible.weapon.WeaponObject;
+include templates.SharedObjectTemplate;
+import server.zone.packets.object.ObjectMenuResponse;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+include server.zone.packets.scene.AttributeListMessage;
+include templates.tangible.PowerupTemplate;
+
+@lua
+@json
+class PowerupObject extends TangibleObject {
+	public static final float MAXPRIMARY = 33.16;
+	public static final float MAXSECONDARY = 16.33;
+
+	@dereferenced
+	protected PowerupStatVector modifiers;
+
+	protected int uses;
+
+	protected string type;
+
+	public PowerupObject() {
+		uses = 0;
+
+		Logger.setLoggingName("PowerupObject");
+	}
+
+	@read
+	public boolean isRanged() {
+		return type == "ranged";
+	}
+
+	@read
+	public boolean isMelee() {
+		return type == "melee";
+	}
+
+	@read
+	public boolean isThrown() {
+		return type == "thrown";
+	}
+
+	@read
+	public boolean isMine() {
+		return type == "mine";
+	}
+
+	public void decreaseUses() {
+		uses = uses - 1;
+	}
+
+	@read
+	public int getUses() {
+		return uses;
+	}
+
+	public void setUses(int i) {
+		uses = i;
+	}
+
+	public void setType(final string t) {
+		type = t;
+	}
+
+	@read
+	public native float getPowerupStat(final string stat);
+
+	public native void addPowerupStat(final string attributeToMod, final string name, final string pupAttrib, float value);
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	@dirty
+	public native void fillAttributeList(AttributeListMessage msg, CreatureObject object);
+
+	@local
+	public native void addSecondaryStat(CraftingValues values, PowerupTemplate pupTemplate);
+
+	@local
+	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
+
+	@local
+	@dirty
+	public native void fillWeaponAttributeList(AttributeListMessage alm, WeaponObject weapon);
+
+	@read
+	private native float getWeaponStat(final string attrib, WeaponObject weapon, boolean withPup);
+
+
+}

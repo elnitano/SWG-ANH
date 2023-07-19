@@ -1,0 +1,343 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.deed.pet;
+
+import server.zone.objects.tangible.deed.Deed;
+import server.zone.packets.object.ObjectMenuResponse;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+include server.zone.packets.scene.AttributeListMessage;
+import server.zone.objects.creature.CreatureObject;
+include server.zone.objects.creature.ai.variables.CreatureAttackMap;
+include templates.SharedObjectTemplate;
+
+@json
+class PetDeed extends Deed {
+	// dna qulity
+	protected int quality;
+	// Pet Level
+	protected int level;
+	// Crafted pets have their own attack speed and chance to hit
+	protected float chanceHit;
+	protected float attackSpeed;
+	// Damage min/mac for the pet
+	protected int damageMin;
+	protected int damageMax;
+	// Armor value of the pet
+	protected int armor;
+	// resists of the pet
+	protected float kinResist;
+	protected float energyResist;
+	protected float blastResist;
+	protected float coldResist;
+	protected float heatResist;
+	protected float elecResist;
+	protected float acidResist;
+	protected float stunResist;
+	protected float saberResist;
+	// ham of the pet
+	protected int health;
+	protected int action;
+	protected int mind;
+	protected int regen;
+	// specials
+	protected string special1;
+	protected string special2;
+	protected boolean ranged;
+
+	protected string controlDeviceObjectTemplate;
+	protected string mobileTemplate;
+
+	protected float cleverness;
+	protected float endurance;
+	protected float fierceness;
+	protected float power;
+	protected float intellect;
+	protected float courage;
+	protected float dependability;
+	protected float dexterity;
+	protected float fortitude;
+	protected float hardiness;
+
+	// sampling
+	protected int sampleCount;
+	protected int specialResists;
+
+	@dereferenced
+	protected CreatureAttackMap attacks;
+
+	public PetDeed() {
+		Logger.setLoggingName("PetDeed");
+		damageMin = 20;
+		damageMax = 20;
+		armor = 0;
+		kinResist = 0;
+		blastResist = 0;
+		coldResist = 0;
+		heatResist = 0;
+		elecResist = 0;
+		acidResist = 0;
+		stunResist = 0;
+		saberResist = -1;
+		health = 10;
+		action = 10;
+		mind = 10;
+		special1 = "none";
+		special2 = "none";
+		ranged = false;
+		chanceHit = 0;
+		attackSpeed = 0;
+		level = 1;
+
+		// Source DNA of a pet deed
+		fortitude = 0.f;
+		hardiness = 0.f;
+		dexterity = 0.f;
+		endurance = 0.f;
+		intellect = 0.f;
+		cleverness = 0.f;
+		dependability = 0.f;
+		courage = 0.f;
+		fierceness = 0.f;
+		power = 0.f;
+
+		quality = 7;
+		sampleCount = 0;
+		specialResists = 0;
+		regen = 1;
+	}
+	@dirty
+	public native void setSpecialResist(int type);
+
+	@read
+	public native boolean isSpecialResist(int type);
+
+	@read
+	public int getSampleCount() {
+		return sampleCount;
+	}
+
+	public void incrementSampleCount() {
+		sampleCount += 1;
+	}
+
+	public native void initializeTransientMembers();
+
+	@read
+	@local
+	public native final CreatureAttackMap getAttacks();
+
+	@read
+	public int getQuality() {
+		return quality;
+	}
+
+	@read
+	public int getLevel() {
+		return level;
+	}
+
+	@read
+	public float getAttackSpeed() {
+		return attackSpeed;
+	}
+
+	@read
+	public float getHitChance() {
+		return chanceHit;
+	}
+
+	@read
+	public int getHealth() {
+		return health;
+	}
+
+	@read
+	public int getAction() {
+		return action;
+	}
+
+	@read
+	public int getMind() {
+		return mind;
+	}
+
+	@read
+	public int getMinDamage() {
+		return damageMin;
+	}
+
+	@read
+	public int getMaxDamage() {
+		return damageMax;
+	}
+
+	@read
+	public float getKinetic() {
+		return kinResist;
+	}
+
+	@read
+	public float getEnergy() {
+		return energyResist;
+	}
+
+	@read
+	public float getBlast() {
+		return blastResist;
+	}
+
+	@read
+	public float getCold() {
+		return coldResist;
+	}
+
+	@read
+	public float getHeat() {
+		return heatResist;
+	}
+
+	@read
+	public float getElectric() {
+		return elecResist;
+	}
+
+	@read
+	public float getAcid() {
+		return acidResist;
+	}
+
+	@read
+	public float getStun() {
+		return stunResist;
+	}
+
+	@read
+	public float getSaber() {
+		return saberResist;
+	}
+
+	@read
+	public boolean getRanged() {
+		return ranged;
+	}
+
+	@read
+	public int getArmor() {
+		return armor;
+	}
+
+	/**
+	 * Reads and sets the template data from a SharedTangibleObjectTemplate LuaObject
+	 * @pre { templateData is a valid pointer }
+	 * @post { TangibleObject members are initialized }
+	 * @param templateData templateData points to the SharedTangibleObjectTemplate LuaObject that is used to initialize the TangibleObject members
+	 */
+	@local
+	public native void loadTemplateData(SharedObjectTemplate templateData);
+
+	@local
+	@dirty
+	public native void fillAttributeList(AttributeListMessage alm, CreatureObject object);
+
+	@local
+	@dirty
+	public native void fillObjectMenuResponse(ObjectMenuResponse menuResponse, CreatureObject player);
+
+	/**
+	 * Handles the radial selection sent by the client
+	 * @pre { this object is locked, player is locked }
+	 * @post { this object is locked, player is locked }
+	 * @returns 0 if successfull
+	 */
+	@preLocked
+	@arg1preLocked
+	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
+
+	@local
+	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
+
+	@dirty
+	public boolean isPetDeedObject() {
+		return true;
+	}
+
+	@read
+	public string getSpecial1() {
+		return special1;
+	}
+
+	@read
+	public string getSpecial2() {
+		return special2;
+	}
+
+	@read
+	public float getCleverness() {
+		return cleverness;
+	}
+
+	@read
+	public float getEndurance() {
+		return endurance;
+	}
+
+	@read
+	public float getFierceness() {
+		return fierceness;
+	}
+
+	@read
+	public float getPower() {
+		return power;
+	}
+
+	@read
+	public float getIntellect() {
+		return intellect;
+	}
+
+	@read
+	public float getCourage() {
+		return courage;
+	}
+
+	@read
+	public float getDependability() {
+		return dependability;
+	}
+
+	@read
+	public float getDexterity() {
+		return dexterity;
+	}
+
+	@read
+	public float getFortitude() {
+		return fortitude;
+	}
+
+	@read
+	public float getHardiness() {
+		return hardiness;
+	}
+
+	@read
+	@local
+	public native string getTemplateName();
+
+	/**
+	 * Setup attack map during initialize
+	 */
+	@local
+	public native void setupAttacks();
+
+	@local
+	public native int calculatePetLevel();
+
+	@local
+	public native void adjustPetLevel(CreatureObject player, CreatureObject pet);
+	@local
+	public native boolean adjustPetStats(CreatureObject player, CreatureObject pet);
+}

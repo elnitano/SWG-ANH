@@ -1,0 +1,180 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone;
+
+import engine.service.proto.BaseClientProxy;
+import engine.service.proto.BasePacket;
+import engine.core.ManagedObject;
+import server.zone.objects.creature.CreatureObject;
+import system.lang.Time;
+import system.util.VectorMap;
+import engine.core.Task;
+
+include engine.log.LoggerHelperStream;
+include system.util.SynchronizedVectorMap;
+include server.zone.objects.scene.variables.PendingTasksMap;
+include server.zone.objects.scene.variables.OrderedTaskExecutioner;
+
+@dirty
+class ZoneClientSession extends ManagedObject {
+	transient protected BaseClientProxy session;
+
+	string ipAddress;
+
+	@dereferenced
+	protected SynchronizedVectorMap<unsigned int, unsigned long> characters;
+
+	@dereferenced
+	protected SynchronizedVectorMap<unsigned int, unsigned long> bannedCharacters;
+
+	@weakReference
+	protected CreatureObject player;
+
+	protected string sessionID;
+
+	protected unsigned int accountID;
+
+	protected transient PendingTasksMap pendingTasks;
+
+	boolean disconnecting;
+
+	@dereferenced
+	protected Time commandSpamCooldown;
+
+	protected int commandCount;
+
+	public native ZoneClientSession(BaseClientProxy session);
+
+	public native void disconnect();
+	public native void disconnect(boolean doLock);
+
+	@dirty
+	@local
+	public native void sendMessage(BasePacket msg);
+
+	public native void balancePacketCheckupTime();
+
+	public native void resetPacketCheckupTime();
+
+	public native void closeConnection(boolean lockPlayer, boolean doLock = true);
+
+	public native void setupLogging();
+	public native void info(final string msg, boolean force = false);
+	public native void debug(final string msg);
+	public native void error(final string msg);
+
+	@local
+	@dirty
+	public void executeOrderedTask(Task task) {
+		pendingTasks.putOrdered(task, this);
+	}
+
+	@local
+	@dirty
+	public PendingTasksMap getPendingTasks() {
+		return pendingTasks;
+	}
+
+	@read
+	@dereferenced
+	@local
+	public LoggerHelperStream info(int forced = false) /*int instead of bool because of const char* implicit cast to bool*/  {
+		return session.info(forced);
+	}
+
+	@read
+	@dereferenced
+	@local
+	public LoggerHelperStream error()  {
+		return session.error();
+	}
+
+	@read
+	@dereferenced
+	@local
+	public LoggerHelperStream debug()  {
+		return session.debug();
+	}
+
+	@read
+	public native string getAddress();
+
+	@read
+	public native string getIPAddress();
+
+	// setters and getters
+	public native void setPlayer(CreatureObject playerCreature);
+
+	public void setSessionID(final string id) {
+		sessionID = id;
+	}
+
+	public native void setAccountID(unsigned int acc);
+
+	@read
+	public int getCommandCount() {
+		return commandCount;
+	}
+
+	public void increaseCommandCount() {
+		commandCount = commandCount + 1;
+	}
+
+	public void resetCommandCount() {
+		commandCount = 0;
+	}
+
+	@local
+	@read
+	public final Time getCommandSpamCooldown() {
+		return commandSpamCooldown;
+	}
+
+	@local
+	public Time getCommandSpamCooldown() {
+		return commandSpamCooldown;
+	}
+
+	@local
+	public native BaseClientProxy getSession();
+
+	@reference
+	@dirty
+	public native CreatureObject getPlayer();
+
+	@read
+	public string getSessionID() {
+		return sessionID;
+	}
+
+	@read
+	public unsigned int getAccountID() {
+		return accountID;
+	}
+
+	@read
+	public native boolean hasCharacter(unsigned long cid, unsigned int galaxyId);
+
+	public void addCharacter(unsigned long cid, unsigned int galaxyId) {
+		characters.put(galaxyId, cid);
+	}
+
+	public void addBannedCharacter(unsigned long cid, unsigned int galaxyId) {
+		bannedCharacters.put(galaxyId, cid);
+	}
+
+	@read
+	public int getCharacterCount() {
+		return characters.size() + bannedCharacters.size();
+	}
+
+	@read
+	public native int getCharacterCount(int galaxyId);
+
+	public void resetCharacters() {
+		characters.removeAll();
+		bannedCharacters.removeAll();
+	}
+}

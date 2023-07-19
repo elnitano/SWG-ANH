@@ -1,0 +1,141 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature.credits;
+
+import engine.log.Logger;
+include engine.log.LoggerHelperStream;
+include system.lang.ref.WeakReference;
+import engine.core.ManagedObject;
+import server.zone.objects.creature.CreatureObject;
+
+@json
+class CreditObject extends ManagedObject {
+	public static final int CREDITCAP = 2000000000; // 2 billion, client does not support anything larger than a signed int
+
+	protected int bankCredits;
+	protected int cashCredits;
+	protected unsigned long ownerObjectID;
+
+	@preLocked
+	public native void notifyLoadFromDatabase();
+
+	@dereferenced
+	@rawTemplate(value = 'CreatureObject*')
+	protected transient WeakReference owner;
+
+	public CreditObject() {
+		bankCredits = 0;
+		cashCredits = 0;
+		ownerObjectID = 0;
+	}
+
+	@preLocked
+	public native void setBankCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native void setCashCredits(int credits, boolean notifyClient = true);
+
+	@read
+	public int getBankCredits() {
+		return bankCredits;
+	}
+
+	@read
+	public int getCashCredits() {
+		return cashCredits;
+	}
+
+	@preLocked
+	public native void subtractBankCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native void subtractCashCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native boolean subtractCredits(int credits, boolean notifyClient = true, boolean bankFirst = false);
+
+	@preLocked
+	public native void transferCredits(int cash, int bank, boolean notifyClient = true);
+
+	@preLocked
+	public void clearBankCredits(boolean notifyClient = true) {
+		setBankCredits(0, notifyClient);
+	}
+
+	@preLocked
+	public void clearCashCredits(boolean notifyClient = true) {
+		setCashCredits(0, notifyClient);
+	}
+
+	@preLocked
+	public native void addBankCredits(int credits, boolean notifyClient = true);
+
+	@preLocked
+	public native void addCashCredits(int credits, boolean notifyClient = true);
+
+	@dirty
+	public boolean verifyCredits(int credits) {
+		if (credits < 0)
+			return false;
+
+		if (getCashCredits() + getBankCredits() < credits)
+			return false;
+
+		return true;
+	}
+
+	@dirty
+	public boolean verifyCashCredits(int credits) {
+		if (credits < 0)
+			return false;
+
+		if (getCashCredits() < credits)
+			return false;
+
+		return true;
+	}
+
+	@dirty
+	public boolean verifyBankCredits(int credits) {
+		if (credits < 0)
+			return false;
+
+		if (getBankCredits() < credits)
+			return false;
+
+		return true;
+	}
+
+	@local
+	@dereferenced
+	@rawTemplate(value = 'CreatureObject*')
+	@dirty
+	public native WeakReference getOwner();
+
+	@local
+    @read
+	public abstract native unsigned long getOwnerObjectID();
+
+	public native void setOwner(CreatureObject obj);
+
+	@read
+	@dereferenced
+	@local
+	public native LoggerHelperStream error();
+
+	@read
+	@dereferenced
+	@local
+	public native LoggerHelperStream info(int forced = false); /*int instead of bool because of const char* implicit cast to bool*/
+
+	@read
+	@dereferenced
+	@local
+	public native LoggerHelperStream debug();
+
+	@read
+	@local
+	public native string toStringData();
+}

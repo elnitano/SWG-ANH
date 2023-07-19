@@ -1,0 +1,119 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.pharmaceutical;
+
+import server.zone.objects.tangible.TangibleObject;
+import server.zone.objects.creature.CreatureObject;
+import server.zone.packets.scene.AttributeListMessage;
+include templates.SharedObjectTemplate;
+include system.lang.String;
+
+@json
+class PharmaceuticalObject extends TangibleObject {
+	protected int medicineUseRequired;
+
+	public PharmaceuticalObject() {
+		setLoggingName("PharmaceuticalObject");
+
+		medicineUseRequired = 0;
+	}
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	@dirty
+	public void fillAttributeList(AttributeListMessage msg, CreatureObject object) {
+		msg.insertAttribute("volume", 1);
+		msg.insertAttribute("counter_uses_remaining", super.getUseCount());
+
+		msg.insertAttribute("crafter", super.getCraftersName());
+		msg.insertAttribute("serial_number", super.getSerialNumber());
+	}
+
+	@dirty
+	public int getMedicineUseRequired() {
+		return medicineUseRequired;
+	}
+
+	@dirty
+	public abstract float getRange(CreatureObject creature = null) {
+		return 5;
+	}
+
+	@dirty
+	public abstract boolean isArea() {
+		return false;
+	}
+
+	@dirty
+	public abstract float getArea() {
+		return 0;
+	}
+
+	@dirty
+	public boolean isPharmaceuticalObject() {
+		return true;
+	}
+
+	@dirty
+	public abstract boolean isStimPack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isPetStimPack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isDroidRepairKit() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isRangedStimPack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isEnhancePack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isWoundPack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isDroidReconstructionKit() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isCurePack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isStatePack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isRevivePack() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isVitalityPack() {
+		return false;
+	}
+}
