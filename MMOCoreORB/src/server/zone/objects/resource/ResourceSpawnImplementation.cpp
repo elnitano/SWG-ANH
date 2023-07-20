@@ -242,8 +242,8 @@ Reference<ResourceContainer*> ResourceSpawnImplementation::createResource(int un
    	if (units != 0)
    		newResource->setQuantity(units);
 
-   	newResource->setCustomObjectName(getFamilyName(), false);
-
+   	String resourceName = getFamilyName() + " (" + getName() + ")";
+   	newResource->setCustomObjectName(resourceName, false);
    	++containerReferenceCount;
 
    	return newResource;
