@@ -521,8 +521,44 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 	if (!maxCondition)
 		addConditionDamage(prototype, craftingValues);
 
-	delete craftingValues;
+if(!prototype->isAttachment()){
+		delete craftingValues;
+	}
 
+	// Update object name with mod stat if is attachment
+	if(prototype->isAttachment()){
+		Attachment* attachment = cast<Attachment*>( prototype.get());
+
+		// We want to override the UpdateCraftingValues here for Attachments to enable us
+		// to create new specific loot groups for attachments! --Boogles
+		//attachment->updateCraftingValues(craftingValues, true, templateObject->getTemplateName());
+		//delete craftingValues;
+
+		HashTable<String, int>* mods = attachment->getSkillMods();
+		HashTableIterator<String, int> iterator = mods->iterator();
+		StringId attachmentName;
+		String key = "";
+		int value = 0;
+		int last = 0;
+		String attachmentType = "[AA] ";
+		String attachmentCustomName = "";
+
+		if(attachment->isClothingAttachment()){
+			attachmentType = "[CA] ";
+		}
+
+		for(int i = 0; i < mods->size(); ++i) {
+			iterator.getNextKeyAndValue(key, value);
+
+			if(value > last){
+				last = value;
+				attachmentName.setStringId("stat_n", key);
+				prototype->setObjectName(attachmentName,false);
+				attachmentCustomName = attachmentType + prototype->getDisplayedName() + " " + String::valueOf(value);
+			}
+		}
+		prototype->setCustomObjectName(attachmentCustomName,false);
+	}
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
