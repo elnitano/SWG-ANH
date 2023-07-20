@@ -504,7 +504,7 @@ void PlayerObjectImplementation::notifySceneReady() {
 	}
 
 	checkAndShowTOS();
-	createHelperDroid();
+	//createHelperDroid();
 }
 
 void PlayerObjectImplementation::sendFriendLists() {
