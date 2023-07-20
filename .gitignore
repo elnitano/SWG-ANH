@@ -3,3 +3,5 @@ luacov.report.out
 luacov.stats.out
 *.bak
 MMOCoreORB/bin/scripts/managers/resource_manager_spawns.lua
+MMOCoreORB/bin/scripts/managers/ghoutput.xml
+MMOCoreORB/bin/scripts/managers/intendedspawns.txt
