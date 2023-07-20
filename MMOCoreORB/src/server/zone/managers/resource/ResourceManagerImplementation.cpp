@@ -443,6 +443,11 @@ String ResourceManagerImplementation::dumpResources() {
 	return resourceSpawner->dumpResources();
 }
 
+String ResourceManagerImplementation::ghDump() {
+	Locker locker(_this.getReferenceUnsafeStaticCast());
+
+	return resourceSpawner->ghDump();
+}
 String ResourceManagerImplementation::despawnResource(String& resourceName) {
 
 	ManagedReference<ResourceSpawn*> spawn = getResourceSpawn(resourceName);

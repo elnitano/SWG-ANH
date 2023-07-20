@@ -96,6 +96,8 @@ class ResourceManager extends Observer implements Logger {
 	public native string healthCheck(); 
 	
 	public native string dumpResources();
+
+	public native string ghDump();
 	
 	public native string despawnResource(string resourceName);
 	

@@ -56,6 +56,9 @@ public:
 			} else if(command == "create") {
 				giveResource(creature, &args);
 
+			} else if(command == "ghdump") {
+                ghDump(creature, &args);
+                
 			} else {
 				throw Exception();
 			}
@@ -67,6 +70,7 @@ public:
 			creature->sendSystemMessage("		dump : Performs manual dump of all resources to resource_manager_spawns.lua");
 			creature->sendSystemMessage("		despawn <resource name> : Despawns a specific resource");
 			creature->sendSystemMessage("		info <resource name> : Lists Info about a specific resource");
+			creature->sendSystemMessage("		ghDump : Updates the Galaxy Harvester output file");
 			creature->sendSystemMessage("		find <class> <attribute> <gt|lt> <value> [<and|or> <attribute> <gt|lt> <value> [...]]");
 			creature->sendSystemMessage("		create <name> [quantity] : Spawns resource in inventory");
 		}
@@ -106,6 +110,16 @@ public:
 
 		creature->sendSystemMessage(resMan->dumpResources());
 	}
+
+	void ghDump(CreatureObject* creature, StringTokenizer* args) const {
+        if(creature->getZoneServer() == nullptr)
+            return;
+        
+        ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
+        
+        creature->sendSystemMessage(resMan->ghDump());
+        
+    }
 
 	void despawnResource(CreatureObject* creature, StringTokenizer* args) const {
 		if(creature->getZoneServer() == nullptr)
