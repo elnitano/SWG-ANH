@@ -438,7 +438,6 @@ function TatooineMosEisleyScreenPlay:spawnMobiles()
 	end
 
 	--Creatures
-	--[[
 	spawnMobile(self.planet, "minor_worrt",300,3863.8,5,-4809.5,170,0)
 	spawnMobile(self.planet, "minor_worrt",300,3857.8,5,-4814.4,127,0)
 	spawnMobile(self.planet, "minor_worrt",300,3856.5,5,-4826.1,45,0)
@@ -489,5 +488,4 @@ function TatooineMosEisleyScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "worrt",300,3585.7,5,-4530.5,-81,0)
 	spawnMobile(self.planet, "worrt",300,3573.9,5,-4529.6,108,0)
 	spawnMobile(self.planet, "worrt",300,3580.5,5,-4544.8,34,0)
-	]]
 end

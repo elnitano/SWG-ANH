@@ -112,8 +112,8 @@ naboo_regions = {
 	{"keren_medium_newbie", 1685, 2620, {RING, 1300, 2200}, SPAWNAREA, {"naboo_keren_medium_newbie"}, 32},
 	{"moenia_easy_newbie", 4800, -4820, {CIRCLE, 1300}, SPAWNAREA, {"naboo_moenia_easy_newbie"}, 64},
 	{"moenia_medium_newbie", 4800, -4820, {RING, 1300, 2200}, SPAWNAREA, {"naboo_moenia_medium_newbie"}, 32},
-	{"theed_easy_newbie_1", -5485, 4380, {CIRCLE, 1750}, SPAWNAREA, {"naboo_theed_easy_newbie"}, 32},
-	{"theed_easy_newbie_2", -4940, 4030, {CIRCLE, 1750}, SPAWNAREA, {"naboo_theed_easy_newbie"}, 32},
+	{"theed_easy_newbie_1", -5485, 4380, {CIRCLE, 1750}, NOSPAWNAREA, {"naboo_theed_easy_newbie"}, 32},
+	{"theed_easy_newbie_2", -4940, 4030, {CIRCLE, 1750}, NOSPAWNAREA, {"naboo_theed_easy_newbie"}, 32},
 	{"theed_medium_newbie", -5212, 4205, {RING, 1750, 2800}, SPAWNAREA, {"naboo_theed_medium_newbie"}, 64},
 
 	-- North
