@@ -1042,11 +1042,6 @@ void ServerCore::handleCommands() {
 
 	auto reader = coredetail::ConsoleReaderService(instance);
 	reader.start(true);
-	
-	ZoneServer* zoneServer = zoneServerRef.getForUpdate();
-
-	if (zoneServer != nullptr)
-		zoneServer->setServerStateLocked();
 
 	while (handleCmds) {
 		Thread::sleep(500);
