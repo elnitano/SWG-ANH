@@ -24,6 +24,7 @@ void ComponentImplementation::fillAttributeList(AttributeListMessage* alm, Creat
 	alm->insertAttribute("volume", 1);
 	alm->insertAttribute("crafter", craftersName);
 	alm->insertAttribute("serial_number", objectSerial);
+	alm->insertAttribute("quantity", useCount);
 
 	for (int i = 0; i < keyList.size(); ++i) {
 		String attribute = keyList.get(i);
