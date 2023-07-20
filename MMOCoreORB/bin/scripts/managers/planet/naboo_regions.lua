@@ -19,9 +19,9 @@ naboo_regions = {
 	{"westedge_naboo_nobuild", -8000, -8000, {RECTANGLE, -7621, 7640}, NOBUILDZONEAREA},
 	{"southedge_naboo_nobuild", -7620, -8000, {RECTANGLE, 8000, -7640}, NOBUILDZONEAREA},
 	{"eastedge_naboo_nobuild", 7640, -7640, {RECTANGLE, 8000, 7640}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_nab1", -4113, -533, {CIRCLE, 256},NOBUILDZONEAREA},
-	{"old_battlfield_nobuild_nab2", -3762, -5377, {CIRCLE, 192}, NOBUILDZONEAREA},
-	{"old_battlfield_nobuild_nab3", -5044, 6662, {CIRCLE, 192}, NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_nab1", -4113, -533, {CIRCLE, 256},NOBUILDZONEAREA},
+	--{"old_battlfield_nobuild_nab2", -3762, -5377, {CIRCLE, 192}, NOBUILDZONEAREA},
+	--{"old_battlfield_nobuild_nab3", -5044, 6662, {CIRCLE, 192}, NOBUILDZONEAREA},
 
 
 	-- Named Regions, POIs and Decor

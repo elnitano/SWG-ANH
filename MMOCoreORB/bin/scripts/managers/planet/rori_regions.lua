@@ -19,9 +19,9 @@ rori_regions = {
 	{"northedge_rori_nobuild", -8000, 7640, {RECTANGLE, 8000, 8000}, NOBUILDZONEAREA},
 	{"southedge_rori_nobuild", -7641, -8000, {RECTANGLE, 8000, -7640}, NOBUILDZONEAREA},
 	{"westedge_rori_nobuild", -8000, -8000, {RECTANGLE, -7641, 7640}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_ror1", -2337, 6427, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_ror2", 2879, -1277, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlfield_nobuild_ror3", -3372, -6972, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_ror1", -2337, 6427, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_ror2", 2879, -1277, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlfield_nobuild_ror3", -3372, -6972, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
 
 	-- Named Regions, POIs and Decor
 	{"@rori_region_names:asworal_everglades_1", -6176, -7360, {RECTANGLE, 5216, -5536}, NAMEDREGION},

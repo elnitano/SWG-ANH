@@ -93,9 +93,9 @@ corellia_regions = {
 	{"a_crash_site_37", -1754, -3280, {CIRCLE, 40}, NOBUILDZONEAREA},
 	{"abandoned_power_generator_38", -2295, -1335, {CIRCLE, 40}, NOBUILDZONEAREA},
 	{"a_droid_graveyard_39", -1869, -143, {CIRCLE, 75}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_cor1", 263, 4620, {CIRCLE, 256}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_cor2", -1870, -1223, {CIRCLE, 192}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_cor3", 3785, -4037, {CIRCLE, 192}, NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_cor1", 263, 4620, {CIRCLE, 256}, NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_cor2", -1870, -1223, {CIRCLE, 192}, NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_cor3", 3785, -4037, {CIRCLE, 192}, NOBUILDZONEAREA},
 	{"coronet_square_walls", -184.2, -4759.9, {RECTANGLE, -168.1, -4743.8}, LOCKEDAREA},
 
 	-- Cities

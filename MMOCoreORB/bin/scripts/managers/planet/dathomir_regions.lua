@@ -19,7 +19,7 @@ dathomir_regions = {
 	{"westedge_dathomir_nobuild", -8000, -7640, {RECTANGLE, -7640, 7640}, NOBUILDZONEAREA},
 	{"southedge_dathomir_nobuild", -8000, -8000, {RECTANGLE, 8000, -7640}, NOBUILDZONEAREA},
 	{"eastedge_dathomir_nobuild", 7640, -7640, {RECTANGLE, 8000, 7640}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_dath1", 4162, -4279, {CIRCLE, 256}, NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_dath1", 4162, -4279, {CIRCLE, 256}, NOBUILDZONEAREA},
 
 	-- Named Regions, POIs and Decor
 	{"@dathomir_region_names:nightsister_clan", -4069, -184, {CIRCLE, 400}, NOBUILDZONEAREA + NOSPAWNAREA + NAMEDREGION},

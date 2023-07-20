@@ -19,8 +19,8 @@ tatooine_regions = {
 	{"westedge_tatooine_nobuild", -7980, -7641, {RECTANGLE, -7640, 7640}, NOBUILDZONEAREA},
 	{"southedge_tatooine_nobuild", -8000, -8000, {RECTANGLE, 8000, -7640}, NOBUILDZONEAREA},
 	{"eastedge_tatooine_nobuild", 7640, -7640, {RECTANGLE, 8000, 7640}, NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_tat1", 2488, 4388, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_tat2", 4950, 4650, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_tat1", 2488, 4388, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_tat2", 4950, 4650, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
 
 	-- Named Regions, POIs and Decor
 	{"@tatooine_region_names:jabbas_palace", -5983, -6267, {CIRCLE, 500}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION + NAVAREA},

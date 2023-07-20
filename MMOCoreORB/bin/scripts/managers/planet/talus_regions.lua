@@ -19,9 +19,9 @@ talus_regions = {
 	{"westedge_talus_nobuild", -7998, -7641, {RECTANGLE, -7641, 7640}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"southedge_talus_nobuild", -8000, -8000, {RECTANGLE, 8000, -7640}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"eastedge_talus_nobuild", 7640, -7640, {RECTANGLE, 8000, 7640}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_tal1", -3420, -3196, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_tal2", -5355, 2784, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
-	{"old_battlefield_nobuild_tal3", -411, 4639, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_tal1", -3420, -3196, {CIRCLE, 192}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_tal2", -5355, 2784, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
+	--{"old_battlefield_nobuild_tal3", -411, 4639, {CIRCLE, 256}, NOSPAWNAREA + NOBUILDZONEAREA},
 
 	-- Named Regions, POIs and Decor
 	{"aakuan_champions_cave", 5928, 4656, {CIRCLE, 75}, NOSPAWNAREA + NOBUILDZONEAREA},
