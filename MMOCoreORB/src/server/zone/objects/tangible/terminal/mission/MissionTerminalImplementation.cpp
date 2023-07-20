@@ -12,6 +12,8 @@
 #include "server/zone/managers/city/CityManager.h"
 #include "server/zone/managers/city/CityRemoveAmenityTask.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
+#include "server/zone/managers/director/DirectorManager.h"
+#include "server/zone/objects/player/PlayerObject.h"
 
 void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	TerminalImplementation::fillObjectMenuResponse(menuResponse, player);
@@ -28,6 +30,10 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		menuResponse->addRadialMenuItemToRadialID(73, 76, 3, "@city/city:south"); // South
 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
 	}
+		if (terminalType == "general" || terminalType == "imperial" || terminalType == "rebel") {
+        //menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
+        menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction");
+    }
 }
 
 int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
@@ -78,6 +84,24 @@ int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player
 		cityManager->alignAmenity(city, player, _this.getReferenceUnsafeStaticCast(), selectedID - 74);
 
 		return 0;
+	} else if (selectedID == 112) {
+        
+        Lua* lua = DirectorManager::instance()->getLuaInstance();
+        
+        Reference<LuaFunction*> mission_level_choice = lua->createFunction("mission_level_choice", "openWindow", 0);
+        *mission_level_choice << player;
+        
+        mission_level_choice->callFunction();
+        return 0;
+    } else if (selectedID == 113) {
+        
+        Lua* lua = DirectorManager::instance()->getLuaInstance();
+        
+        Reference<LuaFunction*> mission_direction_choice = lua->createFunction("mission_direction_choice", "openWindow", 0);
+        *mission_direction_choice << player;
+        
+        mission_direction_choice->callFunction();
+        return 0;
 	}
 
 	return TangibleObjectImplementation::handleObjectMenuSelect(player, selectedID);
