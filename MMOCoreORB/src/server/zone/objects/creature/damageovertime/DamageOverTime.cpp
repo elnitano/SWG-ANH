@@ -448,23 +448,17 @@ uint32 DamageOverTime::doForceChokeTick(CreatureObject* victim, CreatureObject* 
 }
 
 float DamageOverTime::reduceTick(float reduction) {
-#ifdef DEBUG_DOTS
-	info(true) << "reduceTick - Reduction: " << reduction << " Strength = " << strength;
-#endif
+    if (reduction < 0.f)
+        return reduction;
 
-	// this ensures we can't increase a dot strength
-	if (reduction <= 0.f)
-		return reduction;
+    if (reduction >= strength) {
+        expireTick();
+        return reduction - strength;
+    } else {
+        strength -= reduction;
+    }
 
-	int reducReamining = reduction - strength;
-
-	strength -= reduction;
-
-	if (reducReamining > 0.f) {
-		expireTick();
-	}
-
-	return reducReamining;
+    return 0.f;
 }
 
 void DamageOverTime::multiplyDuration(float multiplier) {
