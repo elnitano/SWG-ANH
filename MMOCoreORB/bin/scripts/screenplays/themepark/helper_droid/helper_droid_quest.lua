@@ -1,7 +1,7 @@
 local ObjectManager = require("managers.object.object_manager")
 
 HelperDroidQuest = ScreenPlay:new {
-	questsEnabled = true,
+	questsEnabled = false,
 
 	brawler = {"survival_knife", "wooden_staff", "heavy_axe"},
 	marksman = {"cdef_pistol", "cdef_carbine", "cdef_rifle"},
