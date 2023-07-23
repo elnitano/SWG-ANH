@@ -128,21 +128,9 @@ function HologrindJediManager:awardJediStatusAndSkill(pCreatureObject)
 		return
 	end
 
-	PlayerObject(pGhost):setJediState(2)
+	PlayerObject(pGhost):setJediState(1)
 
-	awardSkill(pCreatureObject, "force_title_jedi_rank_02")
-	
-	CreatureObject(pCreatureObject):playEffect("clienteffect/trap_electric_01.cef", "")
-	CreatureObject(pCreatureObject):playMusicMessage("sound/music_become_jedi.snd")
-	
-	local pInventory = SceneObject(pCreatureObject):getSlottedObject("inventory")
-
-	if (pInventory == nil or SceneObject(pInventory):isContainerFullRecursive()) then
-		CreatureObject(pCreatureObject):sendSystemMessage("@jedi_spam:inventory_full_jedi_robe")
-	else
-		local pInventory = CreatureObject(pCreatureObject):getSlottedObject("inventory")
-		local pItem = giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
-	end
+	awardSkill(pCreatureObject, "force_title_jedi_novice")
 end
 
 -- Check if the player has mastered all hologrind professions and send sui window and award skills.

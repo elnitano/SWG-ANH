@@ -35,16 +35,30 @@ function ForceShrineMenuComponent:doMeditate(pObject, pPlayer)
 	if (tonumber(readScreenPlayData(pPlayer, "KnightTrials", "completedTrials")) == 1 and not CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03")) then
 		KnightTrials:resetCompletedTrialsToStart(pPlayer)
 	end
+	if (not CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
+		local pGhost = CreatureObject(pPlayer):getPlayerObject()
 
-	if (not CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") and CreatureObject(pPlayer):hasScreenPlayState(32, "VillageJediProgression")) then
-		local currentTrial = JediTrials:getCurrentTrial(pPlayer)
+		if (pGhost == nil) then
+			return
+		end
+		
+		local suiManager = LuaSuiManager()
+		suiManager:sendMessageBox(pPlayer, pPlayer, "@quest/force_sensitive/intro:force_sensitive", "Your attunement to the force has not gone unnoticed. A strange force lightning struck you, and you're now elegible to train Jedi. Be mindful of your surroundings, you're a target now for certain professions.", "@ok", "HologrindJediManager", "notifyOkPressed")
+		
+		PlayerObject(pGhost):setJediState(2)
 
-		if (not JediTrials:isOnPadawanTrials(pPlayer)) then
-			PadawanTrials:startPadawanTrials(pObject, pPlayer)
-		elseif (currentTrial == 0) then
-			PadawanTrials:startNextPadawanTrial(pObject, pPlayer)
+		awardSkill(pPlayer, "force_title_jedi_rank_02")
+		
+		CreatureObject(pPlayer):playEffect("clienteffect/trap_electric_01.cef", "")
+		CreatureObject(pPlayer):playMusicMessage("sound/music_become_jedi.snd")
+		
+		local pInventory = SceneObject(pPlayer):getSlottedObject("inventory")
+
+		if (pInventory == nil or SceneObject(pInventory):isContainerFullRecursive()) then
+			CreatureObject(pCreatureObject):sendSystemMessage("@jedi_spam:inventory_full_jedi_robe")
 		else
-			PadawanTrials:showCurrentTrial(pObject, pPlayer)
+			local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+			local pItem = giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
 		end
 	elseif (JediTrials:isOnKnightTrials(pPlayer)) then
 		local pPlayerShrine = KnightTrials:getTrialShrine(pPlayer)
