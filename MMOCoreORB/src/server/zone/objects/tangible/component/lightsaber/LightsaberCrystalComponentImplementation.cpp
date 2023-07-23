@@ -106,7 +106,7 @@ void LightsaberCrystalComponentImplementation::generateCrystalStats() {
 		float minFloatStat = crystalData->getMinForceCost();
 		float maxFloatStat = crystalData->getMaxForceCost();
 
-		floatForceCost = getRandomizedStat(minFloatStat, maxFloatStat, itemLevel);
+		floatForceCost = Math::getPrecision(getRandomizedStat(minFloatStat, maxFloatStat, itemLevel), 1);
 
 		minFloatStat = crystalData->getMinAttackSpeed();
 		maxFloatStat = crystalData->getMaxAttackSpeed();
@@ -171,7 +171,7 @@ void LightsaberCrystalComponentImplementation::validateCrystalStats() {
 		float maxFloatStat = crystalData->getMaxForceCost();
 
 		if (floatForceCost > maxFloatStat || floatForceCost < minFloatStat)
-			floatForceCost = getRandomizedStat(minFloatStat, maxFloatStat, itemLevel);
+			floatForceCost = Math::getPrecision(getRandomizedStat(minFloatStat, maxFloatStat, itemLevel), 1);
 
 		minFloatStat = crystalData->getMinAttackSpeed();
 		maxFloatStat = crystalData->getMaxAttackSpeed();
@@ -304,7 +304,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				alm->insertAttribute("wpn_attack_cost_health", sacHealth);
 				alm->insertAttribute("wpn_attack_cost_action", sacAction);
 				alm->insertAttribute("wpn_attack_cost_mind", sacMind);
-				alm->insertAttribute("forcecost", (int)getForceCost());
+				alm->insertAttribute("forcecost", getForceCost());
 
 				// For debugging
 				if (player->isPrivileged()) {

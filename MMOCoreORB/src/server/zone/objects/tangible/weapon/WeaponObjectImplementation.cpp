@@ -353,7 +353,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 
 	// Force Cost
 	if (getForceCost() > 0)
-		alm->insertAttribute("forcecost", (int)getForceCost());
+		alm->insertAttribute("forcecost", getForceCost());
 
 	for (int i = 0; i < getNumberOfDots(); i++) {
 
