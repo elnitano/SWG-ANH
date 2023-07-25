@@ -886,7 +886,7 @@ void LootManagerImplementation::addStaticDots(TangibleObject* object, const Loot
 				float value = 0;
 
 				if (max != min) {
-					value = calculateDotValue(min, max, level);
+					value = calculateDotValue(min, max, level, false);
 				}
 				else { value = max; }
 
@@ -967,12 +967,27 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 
 			weapon->addDotAttribute(att);
 
-			int strMin = randomDotStrength.elementAt(0);
-			int strMax = randomDotStrength.elementAt(1);
+			//int strMin = randomDotStrength.elementAt(0);
+			//int strMax = randomDotStrength.elementAt(1);
+			int strMin = 0;
+			int strMax = 0;
+			if(level < 25){
+				strMin = randomDotStrength.elementAt(0); // 10
+				strMax = randomDotStrength.elementAt(1); // 50
+			}else if(level >= 25 && level < 100){
+				strMin = randomDotStrength.elementAt(2); // 40
+				strMax = randomDotStrength.elementAt(3); // 100
+			}else if(level >= 100 && level < 180){
+				strMin = randomDotStrength.elementAt(4); // 60
+				strMax = randomDotStrength.elementAt(5); // 180
+			}else if(level >= 180){
+				strMin = randomDotStrength.elementAt(6); // 80
+				strMax = randomDotStrength.elementAt(7); // 225
+			}
 			float str = 0;
 
 			if (strMax != strMin)
-				str = calculateDotValue(strMin, strMax, level);
+				str = calculateDotValue(strMin, strMax, level, true);
 			else
 				str = strMax;
 
@@ -992,7 +1007,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float dur = 0;
 
 			if (durMax != durMin)
-				dur = calculateDotValue(durMin, durMax, level);
+				dur = calculateDotValue(durMin, durMax, level, false);
 			else
 				dur = durMax;
 
@@ -1012,7 +1027,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float pot = 0;
 
 			if (potMax != potMin)
-				pot = calculateDotValue(potMin, potMax, level);
+				pot = calculateDotValue(potMin, potMax, level, false);
 			else
 				pot = potMax;
 
@@ -1027,7 +1042,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float use = 0;
 
 			if (useMax != useMin)
-				use = calculateDotValue(useMin, useMax, level);
+				use = calculateDotValue(useMin, useMax, level, false);
 			else
 				use = useMax;
 
@@ -1042,9 +1057,12 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 	}
 }
 
-float LootManagerImplementation::calculateDotValue(float min, float max, float level) {
+float LootManagerImplementation::calculateDotValue(float min, float max, float level, bool random) {
 	float randVal = (float)System::random(max - min);
 	float value = Math::max(min, Math::min(max, randVal * (1 + (level / 1000)))); // Used for Str, Pot, Dur, Uses.
+	if (random) {
+		value = randVal;
+	}	
 
 	if (value < min) {
 		value = min;
