@@ -123,7 +123,7 @@ void AccountManager::loginApprovedAccount(LoginClient* client, ManagedReference<
 	sessionQuery << accountID << ", '" << sessionID << "', '" << ip << "' , ADDTIME(NOW(), '" << sessionDuration << "'));";
 
 	StringBuffer logQuery;
-	logQuery << "INSERT INTO account_log (account_id, ip_address, timestamp) VALUES (" << accountID << ", '" << ip << "', NOW());";
+	logQuery << "INSERT INTO account_log (account_id, ip_address, timestamp, action) VALUES (" << accountID << ", '" << ip << "', NOW(), 'Sever Login');";
 
 	try {
 		ServerDatabase::instance()->executeStatement(sessionQuery);
