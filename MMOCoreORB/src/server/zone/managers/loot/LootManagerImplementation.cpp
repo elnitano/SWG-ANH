@@ -886,7 +886,7 @@ void LootManagerImplementation::addStaticDots(TangibleObject* object, const Loot
 				float value = 0;
 
 				if (max != min) {
-					value = calculateDotValue(min, max, level, false);
+					value = calculateDotValue(min, max, level, 0.0);
 				}
 				else { value = max; }
 
@@ -987,7 +987,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float str = 0;
 
 			if (strMax != strMin)
-				str = calculateDotValue(strMin, strMax, level, true);
+				str = calculateDotValue(strMin, strMax, level, 1.0);
 			else
 				str = strMax;
 
@@ -1007,7 +1007,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float dur = 0;
 
 			if (durMax != durMin)
-				dur = calculateDotValue(durMin, durMax, level, false);
+				dur = calculateDotValue(durMin, durMax, level, 0.0);
 			else
 				dur = durMax;
 
@@ -1027,7 +1027,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float pot = 0;
 
 			if (potMax != potMin)
-				pot = calculateDotValue(potMin, potMax, level, false);
+				pot = calculateDotValue(potMin, potMax, level, 0.0);
 			else
 				pot = potMax;
 
@@ -1042,7 +1042,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float use = 0;
 
 			if (useMax != useMin)
-				use = calculateDotValue(useMin, useMax, level, false);
+				use = calculateDotValue(useMin, useMax, level, 0.0);
 			else
 				use = useMax;
 
@@ -1057,10 +1057,10 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 	}
 }
 
-float LootManagerImplementation::calculateDotValue(float min, float max, float level, bool random) {
+float LootManagerImplementation::calculateDotValue(float min, float max, float level, float random) {
 	float randVal = (float)System::random(max - min);
 	float value = Math::max(min, Math::min(max, randVal * (1 + (level / 1000)))); // Used for Str, Pot, Dur, Uses.
-	if (random) {
+	if (random > 0.0) {
 		value = randVal;
 	}	
 
