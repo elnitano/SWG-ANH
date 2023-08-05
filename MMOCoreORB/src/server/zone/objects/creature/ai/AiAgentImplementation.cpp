@@ -4114,7 +4114,8 @@ float AiAgentImplementation::getEffectiveResist() {
 	return 0;
 }
 
-float AiAgentImplementation::getReducedResist(float value) {
+// Removal of HAM based Resist Reduction, replace with BF based
+/*float AiAgentImplementation::getReducedResist(float value) {
 	if (value == -1) {
 		return value;
 	}
@@ -4170,6 +4171,7 @@ float AiAgentImplementation::getReducedResist(float value) {
 
 	return newValue;
 }
+*/
 
 void AiAgentImplementation::setPatrolPoints(PatrolPointsVector& pVector) {
 	Locker locker(&targetMutex);

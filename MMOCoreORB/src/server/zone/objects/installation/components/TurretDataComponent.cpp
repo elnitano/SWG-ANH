@@ -216,11 +216,14 @@ void TurretDataComponent::fillAttributeList(AttributeListMessage* alm) {
 
 	ManagedReference<InstallationObject*> turret = cast<InstallationObject*>(getParent());
 
-	if (turret == nullptr)
-		return;
+	// Removal of old HAM Based reduction, and base on BF instead.
+	//if (turret == nullptr)
+	//	return;
 
 	alm->insertAttribute("condition",String::valueOf(turret->getMaxCondition() - turret->getConditionDamage()) + "/" + String::valueOf(turret->getMaxCondition()));
 
+	// Removal of old HAM Based reduction, and base on BF instead.
+	/*
 	int objectCount = turret->getSlottedObjectsSize();
 	int volumeLimit = turret->getContainerVolumeLimit();
 
@@ -228,6 +231,7 @@ void TurretDataComponent::fillAttributeList(AttributeListMessage* alm) {
 	contentsString << objectCount << "/" << volumeLimit;
 
 	alm->insertAttribute("contents", contentsString);
+	*/
 
 	if (getArmorRating() == 0)
 		alm->insertAttribute("armorrating", "None");
@@ -383,7 +387,8 @@ unsigned int TurretDataComponent::getArmorRating() {
 	return 0;
 }
 
-float TurretDataComponent::getArmorResistReduction(float value) {
+// Removal of old HAM based Resist reduction, make it based BF based
+/*float TurretDataComponent::getArmorResistReduction(float value) {
 	if (value == -1) {
 		return value;
 	}
@@ -426,66 +431,76 @@ float TurretDataComponent::getArmorResistReduction(float value) {
 
 	return newValue;
 }
+*/
 
 float TurretDataComponent::getKinetic() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getKinetic());
+		//return getArmorResistReduction(templateData->getKinetic());
+		return templateData->getKinetic();
 
 	return 0;
 }
 
 float TurretDataComponent::getEnergy() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getEnergy());
+		//return getArmorResistReduction(templateData->getEnergy());
+		return templateData->getEnergy();
 
 	return 0;
 }
 
 float TurretDataComponent::getElectricity() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getElectricity());
+		//return getArmorResistReduction(templateData->getElectricity());
+		return templateData->getElectricity();
 
 	return 0;
 }
 
 float TurretDataComponent::getStun() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getStun());
+		//return getArmorResistReduction(templateData->getStun());
+		return templateData->getStun();
 
 	return 0;
 }
 
 float TurretDataComponent::getBlast() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getBlast());
+		//return getArmorResistReduction(templateData->getBlast());
+		return templateData->getBlast();
 
 	return 0;
 }
 
 float TurretDataComponent::getHeat() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getHeat());
+		//return getArmorResistReduction(templateData->getHeat());
+		return templateData->getHeat();
 
 	return 0;
 }
 
 float TurretDataComponent::getCold() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getCold());
+		//return getArmorResistReduction(templateData->getCold());
+		return templateData->getCold();
 
 	return 0;
 }
 
 float TurretDataComponent::getAcid() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getAcid());
+		//return getArmorResistReduction(templateData->getAcid());
+		return templateData->getAcid();
 
 	return 0;
 }
 
 float TurretDataComponent::getLightSaber() {
 	if (templateData != nullptr)
-		return getArmorResistReduction(templateData->getLightSaber());
+		//return getArmorResistReduction(templateData->getLightSaber());
+		return templateData->getLightSaber();
 
 	return 0;
 }
