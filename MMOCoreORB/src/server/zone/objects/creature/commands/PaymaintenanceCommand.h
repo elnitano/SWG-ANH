@@ -23,7 +23,8 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		if (creature->getCashCredits() <= 0) {
+		// Add check for Bank credits aswell
+		if (creature->getCashCredits() <= 0 && creature->getBankCredits() <= 0) {
 			creature->sendSystemMessage("@player_structure:no_money"); //You do not have any money to pay maintenance.
 			return GENERALERROR;
 		}

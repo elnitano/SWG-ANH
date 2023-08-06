@@ -1279,23 +1279,52 @@ void StructureManager::payMaintenance(StructureObject* structure, CreatureObject
 		return;
 	}
 
+	// Add option for payment by Bank Credits aswell
 	int cash = creature->getCashCredits();
+	int bank = creature->getBankCredits();
+	int total = cash + bank;
 
-	if (cash < amount) {
+	if (total < amount) {
 		creature->sendSystemMessage("@player_structure:insufficient_funds"); // You have insufficient funds to make this deposit.
 		return;
 	}
 
-	StringIdChatParameter params("base_player", "prose_pay_success"); // You successfully make a payment of %DI credits to %TT.
-	params.setTT(structure->getDisplayedName());
-	params.setDI(amount);
+	//StringIdChatParameter params("base_player", "prose_pay_success"); // You successfully make a payment of %DI credits to %TT.
+	//params.setTT(structure->getDisplayedName());
+	//params.setDI(amount);
 
-	creature->sendSystemMessage(params);
+	//creature->sendSystemMessage(params);
 
-	{
-		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
-		creature->subtractCashCredits(amount);
-		structure->addMaintenance(amount);
+	int totalamount = amount;
+	int must_use_bank = 0;
+	if(cash < amount){
+		totalamount = totalamount - cash;
+		must_use_bank = 1;
+	}
+	if(must_use_bank == 1){
+		if(cash > 0){
+			{
+				TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, cash, true);
+				creature->subtractCashCredits(cash);
+				structure->addMaintenance(cash);
+			}
+			creature->sendSystemMessage("You successfully paid " + String::valueOf(cash) + " of credits from Cash, and " + String::valueOf(totalamount) + " of credits from Bank to " + structure->getDisplayedName());
+		}
+		{
+			TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, totalamount, true);
+			creature->subtractBankCredits(totalamount);
+			structure->addMaintenance(totalamount);
+		}
+		if(cash <= 0){
+			creature->sendSystemMessage("You successfully paid " + String::valueOf(totalamount) + " of credits from Bank to " + structure->getDisplayedName());
+		}
+	}else{
+		{
+			TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, totalamount, true);
+			creature->subtractCashCredits(totalamount);
+			structure->addMaintenance(totalamount);
+		}
+		creature->sendSystemMessage("You successfully paid " + String::valueOf(totalamount) + " of credits from Cash to " + structure->getDisplayedName());
 	}
 
 	if (!ConfigManager::instance()->getBool("Core3.StructureMaintenanceTask.AllowBankPayments", true)) {
