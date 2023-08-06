@@ -79,7 +79,7 @@ rebelRewardData = {
 	hirelingList = {
 		"rebel_trooper", "senior_specforce_heavy_weapons_specialist", "senior_specforce_infiltrator", "senior_specforce_marine", "senior_specforce_pathfinder", "senior_specforce_technician",
 		"senior_specforce_urban_guerrilla", "senior_specforce_wilderness_fighter", "specforce_heavy_weapons_specialist", "specforce_infiltrator", "specforce_interrogator", "specforce_marine",
-		"specforce_procurement_specialist", "specforce_technician",	"specforce_wilderness_operative", "rebel_specforce_guerrilla",
+		"specforce_procurement_specialist", "specforce_technician",	"specforce_wilderness_operative", "rebel_specforce_guerrilla", "droideka",
 	},
 
 	hirelings = {
@@ -98,7 +98,8 @@ rebelRewardData = {
 		specforce_procurement_specialist = { type=factionRewardType.hireling, display="@mob/creature_names:specforce_procurement_specialist", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="specforce_procurement_specialist", cost=375},
 		specforce_technician = { type=factionRewardType.hireling, display="@mob/creature_names:specforce_technician", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="specforce_technician", cost=375},
 		specforce_wilderness_operative = { type=factionRewardType.hireling, display="@mob/creature_names:specforce_wilderness_operative", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="specforce_wilderness_operative", cost=375},
-		rebel_specforce_guerrilla = { type=factionRewardType.hireling, display="@mob/creature_names:rebel_specforce_guerrilla", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="rebel_specforce_urban_guerrilla", cost=375},
+		rebel_specforce_guerrilla = { type=factionRewardType.hireling, display="@mob/creature_names:rebel_specforce_guerrilla", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="rebel_specforce_urban_guerrilla", cost=3375},
+		droideka = { type=factionRewardType.hireling, display="@mob/creature_names:droideka", item="object/intangible/pet/pet_control.iff", controlledObjectTemplate="rebel_droideka", cost=14575},
 	},
 
 	schematicList = {

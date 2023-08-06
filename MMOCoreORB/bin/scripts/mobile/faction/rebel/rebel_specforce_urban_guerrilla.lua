@@ -5,15 +5,15 @@ rebel_specforce_urban_guerrilla = Creature:new {
 	mobType = MOB_NPC,
 	socialGroup = "rebel",
 	faction = "rebel",
-	level = 18,
-	chanceHit = 0.32,
-	damageMin = 170,
-	damageMax = 180,
-	baseXp = 1426,
-	baseHAM = 4100,
-	baseHAMmax = 5000,
+	level = 35,
+	chanceHit = 0.4,
+	damageMin = 305,
+	damageMax = 320,
+	baseXp = 3465,
+	baseHAM = 9000,
+	baseHAMmax = 10000,
 	armor = 0,
-	resists = {5,5,5,5,5,5,5,-1,-1},
+	resists = {40,20,20,50,50,50,50,-1,-1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -23,10 +23,11 @@ rebel_specforce_urban_guerrilla = Creature:new {
 	milk = 0,
 	tamingChance = 0,
 	ferocity = 0,
-	pvpBitmask = ATTACKABLE,
-	creatureBitmask = PACK + KILLER + STALKER,
+	pvpBitmask = ATTACKABLE + OVERT,
+	creatureBitmask = PACK + KILLER + NOINTIMIDATE + NODOT,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1.5,
 
 	templates = {
 		"object/mobile/dressed_rebel_specforce_guerilla_human_male_01.iff",
@@ -54,17 +55,15 @@ rebel_specforce_urban_guerrilla = Creature:new {
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
 	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
 	primaryWeapon = "rebel_carbine",
-	secondaryWeapon = "rebel_pistol",
-	thrownWeapon = "thrown_weapons",
-
+	secondaryWeapon = "stormtrooper_sword",
 	conversationTemplate = "",
 	reactionStf = "@npc_reaction/military",
 	personalityStf = "@hireling/hireling_military",
 
 	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
 	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
-	primaryAttacks = marksmanmaster,
-	secondaryAttacks = marksmanmaster
+	primaryAttacks = merge(carbineermaster,marksmanmaster),
+	secondaryAttacks = merge(fencermaster,brawlermaster)
 }
 
 CreatureTemplates:addCreatureTemplate(rebel_specforce_urban_guerrilla, "rebel_specforce_urban_guerrilla")

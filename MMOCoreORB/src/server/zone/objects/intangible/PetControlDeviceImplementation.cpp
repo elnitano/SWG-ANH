@@ -199,12 +199,12 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 
 	for (int i = 0; i < ghost->getActivePetsSize(); ++i) {
 		ManagedReference<AiAgent*> object = ghost->getActivePet(i);
-
+		String pet_faction = pet->getFactionString().toLowerCase();
 		if (object != nullptr) {
 			if (object->isCreature() && petType == PetManager::CREATUREPET) {
 				const CreatureTemplate* activePetTemplate = object->getCreatureTemplate();
 
-				if (activePetTemplate == nullptr || activePetTemplate->getTemplateName() == "at_st")
+				if (activePetTemplate == nullptr || (activePetTemplate->getTemplateName() == "at_st" || activePetTemplate->getTemplateName() == "rebel_droideka"))
 					continue;
 
 				if (++currentlySpawned >= maxPets) {
@@ -227,10 +227,10 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 				const CreatureTemplate* activePetTemplate = object->getCreatureTemplate();
 				const CreatureTemplate* callingPetTemplate = pet->getCreatureTemplate();
 
-				if (activePetTemplate == nullptr || callingPetTemplate == nullptr || activePetTemplate->getTemplateName() != "at_st")
+				if (activePetTemplate == nullptr || callingPetTemplate == nullptr || (pet_faction == "imperial" && activePetTemplate->getTemplateName() != "at_st") || (pet_faction == "rebel" && activePetTemplate->getTemplateName() != "rebel_droideka")){
 					continue;
 
-				if (++currentlySpawned >= maxPets || (activePetTemplate->getTemplateName() == "at_st" && callingPetTemplate->getTemplateName() == "at_st")) {
+				if (++currentlySpawned >= maxPets || (pet_faction == "imperial" && activePetTemplate->getTemplateName() == "at_st" && callingPetTemplate->getTemplateName() == "at_st") || (pet_faction == "rebel" && activePetTemplate->getTemplateName() == "rebel_droideka" && callingPetTemplate->getTemplateName() == "rebel_droideka")) {
 					player->sendSystemMessage("@pet/pet_menu:at_max"); // You already have the maximum number of pets of this type that you can call.
 					return;
 				}
