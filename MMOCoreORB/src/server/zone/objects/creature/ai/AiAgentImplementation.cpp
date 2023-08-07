@@ -1727,7 +1727,7 @@ void AiAgentImplementation::notifyDespawn(Zone* zone) {
 	stateBitmask = 0;
 
 	shockWounds = 0;
-	unmitigatedDamage = 0;
+	//unmitigatedDamage = 0;
 
 	if (threatMap != nullptr)
 		threatMap->removeAll();

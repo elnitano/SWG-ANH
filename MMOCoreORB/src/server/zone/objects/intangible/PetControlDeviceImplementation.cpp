@@ -229,6 +229,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 
 				if (activePetTemplate == nullptr || callingPetTemplate == nullptr || (pet_faction == "imperial" && activePetTemplate->getTemplateName() != "at_st") || (pet_faction == "rebel" && activePetTemplate->getTemplateName() != "rebel_droideka")){
 					continue;
+				}
 
 				if (++currentlySpawned >= maxPets || (pet_faction == "imperial" && activePetTemplate->getTemplateName() == "at_st" && callingPetTemplate->getTemplateName() == "at_st") || (pet_faction == "rebel" && activePetTemplate->getTemplateName() == "rebel_droideka" && callingPetTemplate->getTemplateName() == "rebel_droideka")) {
 					player->sendSystemMessage("@pet/pet_menu:at_max"); // You already have the maximum number of pets of this type that you can call.
