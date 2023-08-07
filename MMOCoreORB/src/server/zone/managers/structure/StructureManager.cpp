@@ -1122,7 +1122,10 @@ void StructureManager::promptPayUncondemnMaintenance(CreatureObject* creature, S
 }
 
 void StructureManager::promptPayMaintenance(StructureObject* structure, CreatureObject* creature, SceneObject* terminal) {
-	int availableCredits = creature->getCashCredits();
+	int availableCash = creature->getCashCredits();
+	int availableBank = creature->getBankCredits();
+
+	int availableCredits = availableCash + availableBank;
 
 	if (availableCredits <= 0) {
 		creature->sendSystemMessage("@player_structure:no_money"); // You do not have any money to pay maintenance.
