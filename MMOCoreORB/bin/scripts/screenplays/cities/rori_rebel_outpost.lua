@@ -29,7 +29,7 @@ RoriRebelOutpostScreenPlay = CityScreenPlay:new {
 		{"rebel_specforce_pathfinder", 360, 3651, 103, -6485, 90, 0, ""},
 		{"specforce_wilderness_operative", 360, 3651, 103, -6489, 90, 0, ""},
 		{"specforce_lieutenant", 360, 3645, 103, -6494, 180, 0, ""},
-		{"rebel_specforce_urban_guerrilla", 360, -2.0, 2, 3.5, 90, 4505604, ""},
+		{"rebel_specforce_pathfinder", 360, -2.0, 2, 3.5, 90, 4505604, ""},
 
 		--Guard Tower with carbine trainer
 		{"specforce_wilderness_operative", 360, 3635, 103, -6439, 91, 0, ""},
@@ -76,12 +76,12 @@ RoriRebelOutpostScreenPlay = CityScreenPlay:new {
 		{"rebel_colonel", 360, 3694, 96, -6441, 0, 0, ""},
 		{"rebel_specforce_captain", 360, 3679, 96, -6446, 210, 0, ""},
 		{"rebel_colonel", 360, 3658, 96, -6443, 90, 0, ""},
-		{"rebel_specforce_urban_guerrilla", 360, 3670, 96, -6443, 270, 0, ""},
+		{"rebel_specforce_pathfinder", 360, 3670, 96, -6443, 270, 0, ""},
 		{"rebel_colonel", 360, 3641, 96, -6432, 90, 0, ""},
 		{"specforce_major", 360, 3671, 96, -6480, 270, 0, ""},
 		{"rebel_specforce_sergeant", 360, 3657, 96, -6483, 140, 0, ""},
 		{"specforce_wilderness_operative", 360, 3642, 96, -6477, 110, 0, ""},
-		{"rebel_specforce_urban_guerrilla", 360, 3656, 96, -6463, 80, 0, ""},
+		{"rebel_specforce_pathfinder", 360, 3656, 96, -6463, 80, 0, ""},
 		{"specforce_marine", 360, 3684, 96, -6458, 280, 0, ""}
 	}
 }
