@@ -699,6 +699,22 @@ void EntertainingSessionImplementation::addEntertainerBuffDuration(CreatureObjec
 	if (buffDuration > (120.0f + (10.0f / 60.0f)) ) // 2 hrs 10 seconds
 		buffDuration = (120.0f + (10.0f / 60.0f)); // 2hrs 10 seconds
 
+	// Add up to 3 hour buff, if entertainer got additional skill points (up to 125)
+	float additionalFactor = (60.0f / 25.0f);
+	float maxEnhancement = 0.0f;
+	if (isDancing()){
+		maxEnhancement = (float) entertainer->getSkillMod("healing_dance_mind");
+	} else if (isPlayingMusic()) {
+		maxEnhancement = (float) entertainer->getSkillMod("healing_music_mind");
+	}
+
+	if(maxEnhancement > 100.0){
+		if(maxEnhancement > 125.0) { maxEnhancement = 125.0; }
+		float additionalDuration = maxEnhancement - 100.0;
+		buffDuration += additionalDuration * additionalFactor;
+	}
+
+
 	setEntertainerBuffDuration(creature, performanceType, buffDuration);
 }
 
