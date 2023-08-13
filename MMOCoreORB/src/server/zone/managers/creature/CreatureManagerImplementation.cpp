@@ -109,7 +109,6 @@ SceneObject* CreatureManagerImplementation::spawnLair(unsigned int lairTemplate,
 
 	if(maxCond > 50000){
 		maxCond = 40000;
-		int halfMax = maxCond/2;
 		maxCond = (maxCond + System::random(10000));
 	}
 
