@@ -20,8 +20,6 @@
 #include "templates/mobile/LairTemplate.h"
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
 #include "server/zone/managers/mission/DestroyMissionLairObserver.h"
-#include "server/zone/objects/area/events/RemoveNoSpawnAreaTask.h"
-#include "server/ServerCore.h"
 
 void DestroyMissionObjectiveImplementation::setLairTemplateToSpawn(const String& sp) {
 	lairTemplate = sp;
@@ -303,34 +301,6 @@ int DestroyMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* 
 
 		complete();
 
-		// Code for NoSpawnArea after destroying a mission lair
-		SceneObject* scene0 = dynamic_cast<SceneObject*>(observable);
-
-		if (scene0 == nullptr)
-			return 1;
-
-		Locker locker(_this.getReferenceUnsafeStaticCast());
-
-		ManagedReference<MissionObject*> mission = this->mission.get();
-		Zone* thisZone = getPlayerOwner()->getZone();
-
-		if (thisZone != nullptr) {
-
-			// Set up an active area
-			ManagedReference<ActiveArea*> area = (ServerCore::getZoneServer()->createObject(STRING_HASHCODE("object/active_area.iff"), 0)).castTo<ActiveArea*>();
-			Locker locker(area);
-
-			// Set radius within 64m of player's position and flag it as NoSpawnArea
-			area->setRadius(64);
-			area->addAreaFlag(ActiveArea::NOSPAWNAREA);
-			area->initializePosition(scene0->getPositionX(), scene0->getPositionZ(), scene0->getPositionY());
-
-			thisZone->transferObject(area, -1, true);
-
-			// Remove NoSpawnArea in a specific amount of time
-			Reference<Task*> task = new RemoveNoSpawnAreaTask(area);
-			task->schedule(15000);
-		}
 		return 1;
 	}
 
