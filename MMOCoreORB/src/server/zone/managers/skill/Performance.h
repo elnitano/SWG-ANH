@@ -141,8 +141,35 @@ public:
 		return baseXp;
 	}
 
-	inline int getFlourishXpMod() {
-		return flourishXpMod;
+	inline int getFlourishXpMod(int idx) {
+		if(idx < 1){
+			idx = 1;
+		}
+		if(idx > 130){
+			return flourishXpMod; // Return original Xp if dancing
+		}
+		int array_start_at_zero = idx - 1;
+		int new_flourishMod[] = {
+			//Musician Flourish Exp
+			//
+			//Instrument list:
+			//Slitherhorn, Fizz, Fanfar, Kloohorn, Mandoviol, Traz, Bandfill, Flutedroopy, Omnibox, Nalargon
+			4, 12, 16, 20, 26, 28, 36, 40, 44, 48, //starwars1
+			8, 12, 16, 20, 26, 28, 36, 40, 44, 48, //rock
+			12, 12, 16, 20, 26, 28, 36, 40, 44, 48, //starwars2
+			6, 6, 6, 20, 26, 28, 36, 40, 44, 48, //folk
+			20, 20, 20, 20, 26, 28, 36, 40, 44, 48, //starwars3
+			26, 26, 26, 26, 26, 28, 36, 40, 44, 48, //ceremonial
+			32, 32, 32, 32, 32, 32, 36, 40, 44, 48, //ballad
+			40, 40, 40, 40, 40, 40, 40, 40, 44, 48, //waltz
+			44, 44, 44, 44, 44, 44, 44, 44, 44, 48, //jazz
+			48, 48, 48, 48, 48, 48, 48, 48, 48, 48, //virtuoso
+			40, 40, 40, 40, 40, 40, 40, 40, 44, 48, //western
+			28, 28, 28, 28, 28, 28, 36, 40, 44, 48, //starwars4
+			36, 36, 36, 36, 36, 36, 36, 44, 44, 48, //funk
+		};
+
+		return new_flourishMod[array_start_at_zero];
 	}
 
 	inline int getHealMindWound() {

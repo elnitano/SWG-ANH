@@ -680,9 +680,11 @@ void EntertainingSessionImplementation::doFlourish(int flourishNumber, bool gran
 
 			int flourishCap = (int) (10 / loopDuration); // Cap for how many flourishes count towards xp per pulse. Music loops are 5s, dance are 10s so music has a cap of 2, dance a cap of 1.
 
-			if (grantXp && flourishCount < flourishCap)
-				flourishXp += performance->getFlourishXpMod();
-
+			if (grantXp && flourishCount < flourishCap){
+				int flourishIndex = performance->getPerformanceIndex();
+				flourishXp += performance->getFlourishXpMod(flourishIndex);
+			}
+			
 			flourishCount++;
 		}
 		entertainer->notifyObservers(ObserverEventType::FLOURISH, entertainer, flourishNumber);
@@ -1032,7 +1034,8 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 			flourishXp = oldFlourishXp;
 
 			if (flourishXp > 0) {
-				int flourishDec = (int)((float)performance->getFlourishXpMod() / 6.0f);
+				int flourishIndex = performance->getPerformanceIndex();
+				int flourishDec = (int)((float)performance->getFlourishXpMod(flourishIndex) / 6.0f);
 				flourishXp -= Math::max(1, flourishDec);
 			}
 
