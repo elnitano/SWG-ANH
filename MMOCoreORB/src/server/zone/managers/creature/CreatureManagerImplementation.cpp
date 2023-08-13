@@ -105,10 +105,18 @@ SceneObject* CreatureManagerImplementation::spawnLair(unsigned int lairTemplate,
 
  	Locker blocker(building);
 
+	int maxCond = difficultyLevel * (900 + System::random(200));
+
+	if(maxCond > 50000){
+		maxCond = 40000;
+		int halfMax = maxCond/2;
+		maxCond = (maxCond + System::random(10000));
+	}
+
  	building->setFaction(lairTmpl->getFaction());
  	building->setPvpStatusBitmask(CreatureFlag::ATTACKABLE);
  	building->setOptionsBitmask(0, false);
- 	building->setMaxCondition(difficultyLevel * (900 + System::random(200)));
+ 	building->setMaxCondition(maxCond);
  	building->setConditionDamage(0, false);
  	building->initializePosition(x, z, y);
  	building->setDespawnOnNoPlayersInRange(true);
