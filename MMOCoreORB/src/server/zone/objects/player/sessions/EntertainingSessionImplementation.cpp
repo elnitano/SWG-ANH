@@ -708,9 +708,9 @@ void EntertainingSessionImplementation::addEntertainerBuffDuration(CreatureObjec
 		maxEnhancement = (float) entertainer->getSkillMod("healing_music_mind");
 	}
 
-	if(maxEnhancement > 100.0){
-		if(maxEnhancement > 125.0) { maxEnhancement = 125.0; }
-		float additionalDuration = maxEnhancement - 100.0;
+	if(maxEnhancement > 100.0f){
+		if(maxEnhancement > 125.0f) { maxEnhancement = 125.0f; }
+		float additionalDuration = maxEnhancement - 100.0f;
 		buffDuration += additionalDuration * additionalFactor;
 	}
 
