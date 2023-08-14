@@ -154,10 +154,10 @@ public:
 			//
 			//Instrument list:
 			//Slitherhorn, Fizz, Fanfar, Kloohorn, Mandoviol, Traz, Bandfill, Flutedroopy, Omnibox, Nalargon
-			4, 12, 16, 20, 26, 28, 36, 40, 44, 48, //starwars1
-			8, 12, 16, 20, 26, 28, 36, 40, 44, 48, //rock
+			4, 8, 16, 20, 26, 28, 36, 40, 44, 48, //starwars1
+			8, 8, 16, 20, 26, 28, 36, 40, 44, 48, //rock
 			12, 12, 16, 20, 26, 28, 36, 40, 44, 48, //starwars2
-			6, 6, 6, 20, 26, 28, 36, 40, 44, 48, //folk
+			16, 16, 16, 20, 26, 28, 36, 40, 44, 48, //folk
 			20, 20, 20, 20, 26, 28, 36, 40, 44, 48, //starwars3
 			26, 26, 26, 26, 26, 28, 36, 40, 44, 48, //ceremonial
 			32, 32, 32, 32, 32, 32, 36, 40, 44, 48, //ballad
