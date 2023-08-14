@@ -694,6 +694,7 @@ void EntertainingSessionImplementation::doFlourish(int flourishNumber, bool gran
 }
 
 void EntertainingSessionImplementation::addEntertainerBuffDuration(CreatureObject* creature, int performanceType, float duration) {
+	ManagedReference<CreatureObject*> entertainer = this->entertainer.get();
 	int buffDuration = getEntertainerBuffDuration(creature, performanceType);
 
 	buffDuration += duration;
