@@ -129,7 +129,7 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"trainer_1hsword",0,-5565,6,4304,84,0, ""},
 		{"trainer_2hsword",0,-5382,6,4327,180,0, ""},
 		{"trainer_architect",0,-4931,6,4020,39,0, ""},
-		{"trainer_armorsmith", 0, -12.7, 1.1, -0.7, 178, 1692092, ""},
+		--{"trainer_armorsmith", 0, -12.7, 1.1, -0.7, 178, 1692092, ""},
 		{"trainer_artisan",0,-4946,6,4131,138,0, ""},
 		{"trainer_artisan",0,-5996.85,6,4287.56,69,0, ""},
 		{"trainer_bioengineer",0,-5017,6,4009,0,0, ""},
@@ -137,9 +137,9 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"trainer_brawler",0,-4858,6,4087,-47,0, ""},
 		{"trainer_brawler",0,-4684,6,3947,-71,0, ""},
 		{"trainer_chef",0,-4877,6,4065,0,0, ""},
-		{"trainer_combatmedic", 0, -16.8, 0.3, 9.7, 225, 1697364, ""},
-		{"trainer_combatmedic", 0, 30.6, 7.3, 6.0, 280, 1697368, ""},
-		{"trainer_doctor",0,17.4,0.3,0.8, 15, 1697360, ""},
+		--{"trainer_combatmedic", 0, -16.8, 0.3, 9.7, 225, 1697364, ""},
+		--{"trainer_combatmedic", 0, 30.6, 7.3, 6.0, 280, 1697368, ""},
+		--{"trainer_doctor",0,17.4,0.3,0.8, 15, 1697360, ""},
 		{"trainer_doctor",0,-5038,6,4146,180,0, ""},
 		{"trainer_entertainer",0,-4840,6,4082,66,0, ""},
 		{"trainer_entertainer",0,-5834,6,4241,104,0, ""},
@@ -156,6 +156,14 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"trainer_scout",0,-4796,6,4103,240,0, ""},
 		{"trainer_unarmed",0,-5649,6,4206,0,0, ""},
 
+		--Med Center
+		{"trainer_combatmedic",0,-16.4871,0.26,10.7738,176,1697364, ""},
+		{"trainer_combatmedic",0,26.5469,0.26,5.31169,90,1697360, ""},
+		{"trainer_doctor",0,16.0979,0.26,-0.105232,266,1697360, ""},
+		{"trainer_medic",0,13.7645,0.26,4.7703,149,1697360, ""},
+		{"trainer_medic",0,-17.1613,0.26,-0.82884,167,1697364, ""},
+		{"comm_operator",300,-32.8,0.3,13.892,92,1697365, ""},
+
 		--Hotel
 		{"businessman",60,15.5641,1.28309,-2.37071,135.005,1677395, "worried"},
 		{"businessman",60,-4.2087,0.999986,2.15452,179.993,1677394, "conversation"},
@@ -168,6 +176,22 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"ysnide_omewror",60,4.2931,1.00001,-6.52435,180.012,1677394, "conversation"},
 		{"commoner_old",300,-22.6115,1.6,-10.3739,179.996,1677400, "sad"},
 		{"noble",300,-22.6115,1.6,-11.4739,0,1677400, "conversation"},
+
+		--Guild Hall -5457 4122
+		{"trainer_brawler",0,-11,1,-13,0,1692075, ""},
+		{"trainer_marksman",0,0,1.13306,-13,0,1692074, ""},
+		{"trainer_scout", 0, -11.9, 1.13306, 5.1, 179, 1692072, ""},
+		{"junk_dealer", 0, -14.3, 1.1, 3, 107, 1692072, ""},
+
+		--Guild Hall -5368 4138
+		{"trainer_artisan",0,0.0417929,1.13306,-13.5584,2,1692084, ""},
+
+		--Guild Hall -5452 4014
+		{"trainer_architect",0,11,1.133,-14.5,0,1692093, ""},
+		{"trainer_armorsmith",0,-15,1.1,0,90,1692092, ""},
+		{"trainer_droidengineer",0,-11,1.13306,-13,0,1692095, ""},
+		{"trainer_merchant",0,12,1.13306,6,180,1692091, ""},
+		{"trainer_weaponsmith",0,-3.1,1.1,-8.2,91,1692094, ""},
 
 		--Guild Hall/Theater
 		{"mercenary",300,-6.34119,0.6,-9.37965,360.011,5475480, "neutral"},
