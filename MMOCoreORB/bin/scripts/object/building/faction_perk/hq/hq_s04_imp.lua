@@ -134,9 +134,9 @@ object_building_faction_perk_hq_hq_s04_imp = object_building_faction_perk_hq_sha
 
 	childCreatureObjects = {
 		-- Exterior Spawns
-		{ mobile = "fbase_at_st", x = 30, z = 0, y = 18, cellid = -1, respawn = 720, containmentType = -1, heading = 3.14},
-		{ mobile = "fbase_at_st", x = -30, z = 0, y = 18, cellid = -1, respawn = 720, containmentType = -1, heading = 0},
-		{ mobile = "fbase_at_st", x = 0, z = 0, y = 44, cellid = -1, respawn = 720, containmentType = -1, heading = 0},
+		{ mobile = "fbase_dark_trooper_hard", x = 30, z = 0, y = 18, cellid = -1, respawn = 720, containmentType = -1, heading = 3.14},
+		{ mobile = "fbase_dark_trooper_hard", x = -30, z = 0, y = 18, cellid = -1, respawn = 720, containmentType = -1, heading = 0},
+		{ mobile = "fbase_dark_trooper_hard", x = 0, z = 0, y = 44, cellid = -1, respawn = 720, containmentType = -1, heading = 0},
 		{ mobile = "fbase_imperial_exterminator_hard", x = 5, z = 0, y = 50, cellid = -1, respawn = 360, containmentType = -1, heading = 0},
 
 		{ mobile = "fbase_dark_trooper_hard", x = 22, z = 0, y = 2, cellid = -1, respawn = 360, containmentType = -1, heading = 0},

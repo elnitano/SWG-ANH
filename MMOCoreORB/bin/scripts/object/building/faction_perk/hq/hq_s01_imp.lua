@@ -104,7 +104,7 @@ object_building_faction_perk_hq_hq_s01_imp = object_building_faction_perk_hq_sha
 		{ mobile = "fbase_imperial_sharpshooter", x = 4, z = 0, y = 50, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
 		{ mobile = "fbase_imperial_sharpshooter", x = 0, z = 0, y = 50, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
 		{ mobile = "fbase_imperial_sharpshooter", x = -4, z = 0, y = 50, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
-		{ mobile = "at_st", x = 0, z = 0, y = 42, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
+		{ mobile = "fbase_scout_trooper", x = 0, z = 0, y = 42, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
 
 		{ mobile = "fbase_command_security_guard", x = -25, z = 0, y = 14, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
 		{ mobile = "fbase_command_security_guard", x = -30, z = 0, y = 14, cellid = -1, respawn = 300, containmentType = -1, heading = 0},
