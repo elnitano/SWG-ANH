@@ -59,15 +59,6 @@ PolearmHit3Command = {
 		75, 
 		0, 
 		45 
-	  ),
-	  StateEffect( 
-		POSTUREDOWN_EFFECT, 
-		{ "postureDownRecovery" }, 
-		{ "posture_change_down_defense" }, 
-		{},
-		100, 
-		0, 
-		0 
 	  )
 	},
 
