@@ -311,7 +311,8 @@ float AttributesMap::getCurrentVisiblePercentage(const String group) const {
 		}
 	}
 
-	totalPercentage /= totalAttributes;
+	if(totalAttributes>0.f)
+		totalPercentage /= totalAttributes;
 
 #ifdef DEBUG_ATTRIBUTES_MAP
 	info(true) << "---- END getCurrentVisiblePercentage -- Group: " << group << " Total Attributes in Group: " << totalAttributes << " Returning " << totalPercentage << " ----";
@@ -404,8 +405,8 @@ float AttributesMap::getMaxVisiblePercentage(const int i) const {
 			}
 		}
 	}
-
-	totalPercentage /= totalAttributes;
+	if(totalAttributes>0.f)
+		totalPercentage /= totalAttributes;
 
 #ifdef DEBUG_ATTRIBUTES_MAP
 	info(true) << "---- END getMaxVisiblePercentage -- Group: " << group << " Returning: " << totalPercentage << " ----";
