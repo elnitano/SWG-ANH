@@ -248,7 +248,7 @@ public:
 	                    continue;
 	                }
 
-	                GroupLootTask* task = new GroupLootTask(group, creature, agent, lootAll);
+	                GroupLootTask* task = new GroupLootTask(group, creature, agent, lootArea);
 	                if (task != nullptr)
 	                    task->execute();
 
