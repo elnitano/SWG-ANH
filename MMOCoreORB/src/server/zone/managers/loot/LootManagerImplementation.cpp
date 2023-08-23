@@ -250,6 +250,7 @@ int LootManagerImplementation::calculateLootCredits(int level) {
 
 TangibleObject* LootManagerImplementation::createLootObject(const LootItemTemplate* templateObject, int level, bool maxCondition) {
 	int uncappedLevel = level;
+	int loot_type = 0; // 0 = Default, 1 = Exceptional, 2 = Legendary
 
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- called ----------";
@@ -313,8 +314,12 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 	float adjustment = floor((float)(((level > 50) ? level : 50) - 50) / 10.f + 0.5);
 
 	if (System::random(legendaryChance) >= legendaryChance - adjustment) {
-		UnicodeString newName = prototype->getDisplayedName() + " (Legendary)";
-		prototype->setCustomObjectName(newName, false);
+		if(!prototype->isAttachment()){
+			UnicodeString newName = prototype->getDisplayedName() + " (Legendary)";
+			prototype->setCustomObjectName(newName, false);
+		} else {
+			loot_type = 2;
+		}
 
 		excMod = legendaryModifier;
 
@@ -322,8 +327,12 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 
 		legendaryLooted.increment();
 	} else if (System::random(exceptionalChance) >= exceptionalChance - adjustment) {
-		UnicodeString newName = prototype->getDisplayedName() + " (Exceptional)";
-		prototype->setCustomObjectName(newName, false);
+		if(!prototype->isAttachment()){
+			UnicodeString newName = prototype->getDisplayedName() + " (Exceptional)";
+			prototype->setCustomObjectName(newName, false);
+		} else {
+			loot_type = 1;
+		}
 
 		excMod = exceptionalModifier;
 
@@ -521,7 +530,7 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 	if (!maxCondition)
 		addConditionDamage(prototype, craftingValues);
 
-if(!prototype->isAttachment()){
+	if(!prototype->isAttachment()){
 		delete craftingValues;
 	}
 
@@ -555,10 +564,17 @@ if(!prototype->isAttachment()){
 				attachmentName.setStringId("stat_n", key);
 				prototype->setObjectName(attachmentName,false);
 				attachmentCustomName = attachmentType + prototype->getDisplayedName() + " " + String::valueOf(value);
+				if(loot_type == 1){
+					attachmentCustomName = attachmentCustomName + " (Exceptional)";
+				} else if(loot_type == 2){
+					attachmentCustomName = attachmentCustomName + " (Legendary)";
+				}
+				info(true) << "value: " << value << " last: " << last << " key: " << key << " loot_type: " << loot_type;
 			}
 		}
 		prototype->setCustomObjectName(attachmentCustomName,false);
 	}
+
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
@@ -886,7 +902,7 @@ void LootManagerImplementation::addStaticDots(TangibleObject* object, const Loot
 				float value = 0;
 
 				if (max != min) {
-					value = calculateDotValue(min, max, level, 0.0);
+					value = calculateDotValue(min, max, level, 0.f);
 				}
 				else { value = max; }
 
@@ -987,7 +1003,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float str = 0;
 
 			if (strMax != strMin)
-				str = calculateDotValue(strMin, strMax, level, 1.0);
+				str = calculateDotValue(strMin, strMax, level, 1.f);
 			else
 				str = strMax;
 
@@ -1007,7 +1023,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float dur = 0;
 
 			if (durMax != durMin)
-				dur = calculateDotValue(durMin, durMax, level, 0.0);
+				dur = calculateDotValue(durMin, durMax, level, 0.f);
 			else
 				dur = durMax;
 
@@ -1027,7 +1043,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float pot = 0;
 
 			if (potMax != potMin)
-				pot = calculateDotValue(potMin, potMax, level, 0.0);
+				pot = calculateDotValue(potMin, potMax, level, 0.f);
 			else
 				pot = potMax;
 
@@ -1042,7 +1058,7 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 			float use = 0;
 
 			if (useMax != useMin)
-				use = calculateDotValue(useMin, useMax, level, 0.0);
+				use = calculateDotValue(useMin, useMax, level, 0.f);
 			else
 				use = useMax;
 
@@ -1060,9 +1076,9 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 float LootManagerImplementation::calculateDotValue(float min, float max, float level, float random) {
 	float randVal = (float)System::random(max - min);
 	float value = Math::max(min, Math::min(max, randVal * (1 + (level / 1000)))); // Used for Str, Pot, Dur, Uses.
-	if (random > 0.0) {
+	if(random > 0.f){
 		value = randVal;
-	}	
+	}
 
 	if (value < min) {
 		value = min;
