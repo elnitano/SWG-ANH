@@ -28,7 +28,7 @@ dathomir_regions = {
 	{"dathomir_singing_mtn_clan_city1", 534, 4197, {CIRCLE, 90}, NOSPAWNAREA},
 	{"dathomir_singing_mtn_clan_city2", 593, 4523, {CIRCLE, 80}, NOSPAWNAREA},
 	{"dathomir_singing_mtn_clan_city3", 522, 4718, {CIRCLE, 80}, NOSPAWNAREA},
-	{"dathomir_singing_mtn_clan_witch_city", 194, 4512, {CIRCLE, 150}, NOSPAWNAREA},
+	{"dathomir_singing_mtn_clan_witch_city", 194, 4512, {CIRCLE, 512}, NOSPAWNAREA},
 	{"dathomir_singing_mtn_clan_nobuild", 416, 4575, {CIRCLE, 1600}, NOBUILDZONEAREA},
 	{"dathomir_nightsister_slave_mine_sd", 2452, -1628, {CIRCLE, 125}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"dathomir_smc_east_side_bridge", -440, 4176, {CIRCLE, 40}, NOBUILDZONEAREA + NOSPAWNAREA},
