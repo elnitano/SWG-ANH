@@ -126,8 +126,8 @@ object_weapon_melee_polearm_lance_nightsister = object_weapon_melee_polearm_shar
 	experimentalWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "expDamage", "exp_durability", "expRange", "expRange", "null", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
 	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage", "attackspeed", "woundchance", "hitpoints", "zerorangemod", "maxrangemod", "midrange", "midrangemod", "maxrange", "attackhealthcost", "attackactioncost", "attackmindcost"},
-	experimentalMin = {0, 0, 23, 213, 6.3, 11, 750, -5, -5, 6, -5, 6, 38, 78, 54},
-	experimentalMax = {0, 0, 35, 305, 4, 25, 1500, 10, 10, 6, 10, 6, 20, 42, 32},
+	experimentalMin = {0, 0, 34, 319, 6.3, 11, 750, -5, -5, 6, -5, 6, 38, 78, 54}, -- Min changed from 23 to 35 and Max from 213 to 320 - 50% increase
+	experimentalMax = {0, 0, 53, 458, 4, 25, 1500, 10, 10, 6, 10, 6, 20, 42, 32}, -- Max changed from 35 to 53 and Max from 305 to 458 - 50% increase
 	experimentalPrecision = {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	experimentalCombineType = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 }
