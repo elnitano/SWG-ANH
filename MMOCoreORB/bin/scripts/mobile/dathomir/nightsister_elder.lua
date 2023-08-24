@@ -43,6 +43,12 @@ nightsister_elder = Creature:new {
 				{group = "melee_weapons", chance = 2000000},
 				{group = "wearables_scarce", chance = 500000}
 			}
+		},
+		{
+			groups = {
+				{group = "nightsister_rare", chance = 10000000},
+			},
+			lootChance = 500000
 		}
 	},
 
