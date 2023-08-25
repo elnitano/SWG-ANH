@@ -238,10 +238,10 @@ void SurveySessionImplementation::startSample(const String& resname) {
 			ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME2);
 		}
 
-		if (System::random(1) == 1)
-			surveyCnodeMinigameSui();
-		else
-			surveyGnodeMinigameSui();
+		//if (System::random(1) == 1)
+		//	surveyCnodeMinigameSui();
+		//else
+		//	surveyGnodeMinigameSui();
 
 	} else {
 
