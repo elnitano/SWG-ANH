@@ -28,7 +28,13 @@ kiin_dray = Creature:new {
 
 	templates = {"object/mobile/gaping_spider_recluse_giant_kiin_dray.iff"},
 	scale = 4.0,
-	lootGroups = {},
+	lootGroups = {
+		{
+			groups = {
+				{group = "fire_breathing_spider", chance = 10000000}
+			}
+		}
+	},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
 	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
