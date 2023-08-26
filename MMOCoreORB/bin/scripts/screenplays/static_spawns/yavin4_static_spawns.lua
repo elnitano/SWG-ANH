@@ -1,4 +1,5 @@
 --This is to be used for static spawns that are NOT part of caves, cities, dungeons, poi's, or other large screenplays.
+--Unless your name is nitan, then you don't care what the text above says.
 Yavin4StaticSpawnsScreenPlay = ScreenPlay:new {
 	screenplayName = "Yavin4StaticSpawnsScreenPlay",
 
@@ -28,6 +29,16 @@ Yavin4StaticSpawnsScreenPlay = ScreenPlay:new {
 		-- Imp base camp outside Massassi Temple POI
 		{"stormtrooper", 360, -3196.7, 69.6, -3139.5, -100, 0},
 		{"stormtrooper", 360, -3195.8, 69.8, -3130.7, -104, 0}
+	},
+
+	wild_acklay_spawn = {
+		{ -6945, 4535},
+		{ -5359, 154},
+		{ -1507, 443},
+		{ 6950, 4130},
+		{ 5105, 466},
+		{ 6400, -2080},
+		{ 528, -4240}
 	}
 }
 
@@ -51,4 +62,36 @@ function Yavin4StaticSpawnsScreenPlay:spawnMobiles()
 			AiAgent(pMobile):addCreatureFlag(AI_STATIC)
 		end
 	end
+
+	self:spawnWildAcklay()
+end
+
+function Yavin4StaticSpawnsScreenPlay:spawnWildAcklay()
+	local wildSpawnLocations = self.wild_acklay_spawn
+	local randomSpawn = math.random(1,#wildSpawnLocations)
+
+	local wildAcklayPos = wildSpawnLocations[randomSpawn]
+
+	local randomXPos = wildAcklayPos[1] + math.random(-500, 500)
+	local randomYPos = wildAcklayPos[2] + math.random(-500, 500)
+
+	local pwildAcklay = spawnMobile(self.planet, "acklay", 0, randomXPos, 0, randomYPos, 0, 0)
+
+	Logger:logEvent("Wild Acklay: Spawned at location: " .. randomSpawn .. " at X: " ..  randomXPos .. " Y: " .. randomYPos, LT_INFO)
+	if (pwildAcklay ~= nil)  then
+		local packlayGuard_1 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos - 5, 0, randomYPos - 5, 0, 0)
+		local packlayGuard_2 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos - 5, 0, randomYPos + 5, 0, 0)
+		local packlayGuard_3 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos + 5, 0, randomYPos - 5, 0, 0)
+		local packlayGuard_4 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos + 5, 0, randomYPos + 5, 0, 0)
+
+		createObserver(OBJECTDESTRUCTION, "Yavin4StaticSpawnsScreenPlay", "wildAcklayKilled", pwildAcklay)
+	end
+end
+
+function Yavin4StaticSpawnsScreenPlay:wildAcklayKilled(pwildAcklay)
+	local randomSpawnTimer = math.random(1800, 5400) * 1000
+	Logger:logEvent("Wild Acklay: Killed, next respawn timer: " ..  randomSpawnTimer/60000 ..  " minutes", LT_INFO)
+	createEvent(randomSpawnTimer, "Yavin4StaticSpawnsScreenPlay", "spawnWildAcklay", nil, "")
+
+	return 1
 end
