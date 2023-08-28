@@ -21,7 +21,7 @@ function HologrindJediManager:getGrindableProfessionList()
 		{ "crafting_architect_master", 		CRAFTING_ARCHITECT_MASTER  }, 		--1
 		{ "crafting_armorsmith_master", 	CRAFTING_ARMORSMITH_MASTER  },  	--2
 		{ "crafting_artisan_master", 		CRAFTING_ARTISAN_MASTER  },		--3
-		{ "outdoors_bio_engineer_master", 	OUTDOORS_BIOENGINEER_MASTER  },		--4
+		{ "outdoors_bio_engineer_master", 	OUTDOORS_BIO_ENGINEER_MASTER  },		--4
 		{ "combat_bountyhunter_master", 	COMBAT_BOUNTYHUNTER_MASTER  },		--5
 		{ "combat_brawler_master", 		COMBAT_BRAWLER_MASTER  },		--6
 		{ "combat_carbine_master", 		COMBAT_CARBINE_MASTER  },		--7
@@ -136,7 +136,13 @@ end
 -- Check if the player has mastered all hologrind professions and send sui window and award skills.
 -- @param pCreatureObject pointer to the creature object of the player to check the jedi progression on.
 function HologrindJediManager:checkIfProgressedToJedi(pCreatureObject)
-	if self:getNumberOfMasteredProfessions(pCreatureObject) >= NUMBEROFPROFESSIONSTOMASTER and not self:isJedi(pCreatureObject) then
+	local AmountOfProfessionsToMaster = NUMBEROFPROFESSIONSTOMASTER
+
+	if(self:fixBE(pCreatureObject)) then
+		AmountOfProfessionsToMaster = AmountOfProfessionsToMaster + 1
+	end
+
+	if self:getNumberOfMasteredProfessions(pCreatureObject) >= AmountOfProfessionsToMaster and not self:isJedi(pCreatureObject) then
 		self:sendSuiWindow(pCreatureObject)
 		self:awardJediStatusAndSkill(pCreatureObject)
 	end
@@ -168,6 +174,18 @@ end
 function HologrindJediManager:onPlayerLoggedIn(pCreatureObject)
 	if (pCreatureObject == nil) then
 		return
+	end
+
+	if(self:fixBE(pCreatureObject)) then
+		local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
+		local skillList = self:getGrindableProfessionList()
+
+		if (pGhost == nil) then
+			return
+		end
+
+		PlayerObject(pGhost):addHologrindProfession(skillList[4][2])
+		Logger:logEvent("HologrindJediManager:: Fixing Bio-Engineer", LT_INFO)
 	end
 
 	self:checkIfProgressedToJedi(pCreatureObject)
@@ -235,6 +253,28 @@ end
 
 function HologrindJediManager:canLearnSkill(pPlayer, skillName)
 	return true
+end
+
+--nitans way to retrofix the BE profession
+--check if they have profession id 0 which is equal to Unknown profession.
+function HologrindJediManager:fixBE(pCreatureObject)
+	if (pCreatureObject == nil) then
+		return false
+	end
+
+	if(self:isJedi(pCreatureObject)) then
+		return false
+	end
+
+	local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
+	local holoProfessions = PlayerObject(pGhost):getHologrindProfessions()
+
+	for i = 1, #holoProfessions, 1 do
+		if(holoProfessions[i] == 0) then
+			return true
+		end
+	end
+	return false
 end
 
 registerScreenPlay("HologrindJediManager", true)
