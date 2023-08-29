@@ -138,7 +138,7 @@ end
 function HologrindJediManager:checkIfProgressedToJedi(pCreatureObject)
 	local AmountOfProfessionsToMaster = NUMBEROFPROFESSIONSTOMASTER
 
-	if(self:fixBE(pCreatureObject)) then
+	if(self:fixBE(pCreatureObject, 0)) then
 		AmountOfProfessionsToMaster = AmountOfProfessionsToMaster + 1
 	end
 
@@ -176,16 +176,18 @@ function HologrindJediManager:onPlayerLoggedIn(pCreatureObject)
 		return
 	end
 
-	if(self:fixBE(pCreatureObject)) then
-		local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
-		local skillList = self:getGrindableProfessionList()
+	if(self:fixBE(pCreatureObject, 0)) then
+		if(not self:fixBE(pCreatureObject, 62)) then
+			local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
+			local skillList = self:getGrindableProfessionList()
 
-		if (pGhost == nil) then
-			return
+			if (pGhost == nil) then
+				return
+			end
+
+			PlayerObject(pGhost):addHologrindProfession(skillList[4][2])
+			Logger:logEvent("HologrindJediManager:: Fixing Bio-Engineer", LT_INFO)
 		end
-
-		PlayerObject(pGhost):addHologrindProfession(skillList[4][2])
-		Logger:logEvent("HologrindJediManager:: Fixing Bio-Engineer", LT_INFO)
 	end
 
 	self:checkIfProgressedToJedi(pCreatureObject)
@@ -256,8 +258,10 @@ function HologrindJediManager:canLearnSkill(pPlayer, skillName)
 end
 
 --nitans way to retrofix the BE profession
---check if they have profession id 0 which is equal to Unknown profession.
-function HologrindJediManager:fixBE(pCreatureObject)
+--check if they have profession id which.
+--id 0 = Unknown Profession
+--id 62 = Bio Engineer
+function HologrindJediManager:fixBE(pCreatureObject, professionId)
 	if (pCreatureObject == nil) then
 		return false
 	end
@@ -270,7 +274,7 @@ function HologrindJediManager:fixBE(pCreatureObject)
 	local holoProfessions = PlayerObject(pGhost):getHologrindProfessions()
 
 	for i = 1, #holoProfessions, 1 do
-		if(holoProfessions[i] == 0) then
+		if(holoProfessions[i] == professionId) then
 			return true
 		end
 	end
