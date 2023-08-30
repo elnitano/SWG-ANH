@@ -70,7 +70,11 @@ object_tangible_wearables_wookiee_wke_hood_s01 = object_tangible_wearables_wooki
 			"object/mobile/vendor/trandoshan_female.iff",
 			"object/mobile/vendor/trandoshan_male.iff",
 			"object/mobile/vendor/zabrak_female.iff",
-			"object/mobile/vendor/zabrak_male.iff" },
+			"object/mobile/vendor/zabrak_male.iff" ,
+			"object/creature/player/wookiee_male.iff",
+			"object/creature/player/wookiee_female.iff",
+			"object/mobile/vendor/wookiee_female.iff",
+			"object/mobile/vendor/wookiee_male.iff" },
 
 	numberExperimentalProperties = {1, 1, 1, 1},
 	experimentalProperties = {"XX", "XX", "XX", "XX"},
