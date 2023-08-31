@@ -75,23 +75,95 @@ function Yavin4StaticSpawnsScreenPlay:spawnWildAcklay()
 	local randomXPos = wildAcklayPos[1] + math.random(-500, 500)
 	local randomYPos = wildAcklayPos[2] + math.random(-500, 500)
 
-	local pwildAcklay = spawnMobile(self.planet, "acklay", 0, randomXPos, 0, randomYPos, 0, 0)
+	local randomSpawnPoint
 
-	Logger:logEvent("Wild Acklay: Spawned at location: " .. randomSpawn .. " at X: " ..  randomXPos .. " Y: " .. randomYPos, LT_INFO)
+	randomSpawnPoint = getSpawnPointInArea(self.planet, randomXPos, randomYPos, 0)
+
+	if(randomSpawnPoint == nil) then
+		randomSpawnPoint = getSpawnPoint(self.planet, randomXPos, randomYPost, 50, 50, true)
+	end
+
+	if(randomSpawnPoint == nil) then
+		randomSpawnPoint = { randomXPos, 0, randomYPos}
+	end
+
+
+	local pwildAcklay = spawnMobile(self.planet, "acklay", 0, randomSpawnPoint[1], randomSpawnPoint[2], randomSpawnPoint[3], 0, 0)
+
+	Logger:logEvent("Wild Acklay: ID " ..SceneObject(pwildAcklay):getObjectID() .. " Spawned at location: " .. randomSpawn .. " at X: " ..  randomXPos .. " Y: " .. randomYPos, LT_INFO)
 	if (pwildAcklay ~= nil)  then
-		local packlayGuard_1 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos - 5, 0, randomYPos - 5, 0, 0)
-		local packlayGuard_2 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos - 5, 0, randomYPos + 5, 0, 0)
-		local packlayGuard_3 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos + 5, 0, randomYPos - 5, 0, 0)
-		local packlayGuard_4 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomXPos + 5, 0, randomYPos + 5, 0, 0)
+		local packlayGuard_1 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomSpawnPoint[1] - 5, randomSpawnPoint[2], randomSpawnPoint[3] - 5, 0, 0)
+		local packlayGuard_2 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomSpawnPoint[1] - 5, randomSpawnPoint[2], randomSpawnPoint[3] + 5, 0, 0)
+		local packlayGuard_3 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomSpawnPoint[1] + 5, randomSpawnPoint[2], randomSpawnPoint[3] - 5, 0, 0)
+		local packlayGuard_4 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomSpawnPoint[1] + 5, randomSpawnPoint[2], randomSpawnPoint[3] + 5, 0, 0)
+
+		AiAgent(pwildAcklay):addCreatureFlag(AI_STATIC)
+
+		if (packlayGuard_1 ~= nil) then
+			writeData("wild_acklay:guard_1", SceneObject(packlayGuard_1):getObjectID())
+			AiAgent(packlayGuard_1):addCreatureFlag(AI_STATIC)
+		end
+		if (packlayGuard_2 ~= nil) then
+			writeData("wild_acklay:guard_2", SceneObject(packlayGuard_2):getObjectID())
+			AiAgent(packlayGuard_2):addCreatureFlag(AI_STATIC)
+		end
+		if (packlayGuard_3 ~= nil) then
+			writeData("wild_acklay:guard_3", SceneObject(packlayGuard_3):getObjectID())
+			AiAgent(packlayGuard_3):addCreatureFlag(AI_STATIC)
+		end
+		if (packlayGuard_4 ~= nil) then
+			writeData("wild_acklay:guard_4", SceneObject(packlayGuard_4):getObjectID())
+			AiAgent(packlayGuard_4):addCreatureFlag(AI_STATIC)
+		end
 
 		createObserver(OBJECTDESTRUCTION, "Yavin4StaticSpawnsScreenPlay", "wildAcklayKilled", pwildAcklay)
 	end
 end
 
 function Yavin4StaticSpawnsScreenPlay:wildAcklayKilled(pwildAcklay)
-	local randomSpawnTimer = math.random(1800, 5400) * 1000
+	local pAcklayGuard1_ID = readData("wild_acklay:guard_1")
+	local pAcklayGuard2_ID = readData("wild_acklay:guard_2")
+	local pAcklayGuard3_ID = readData("wild_acklay:guard_3")
+	local pAcklayGuard4_ID = readData("wild_acklay:guard_4")
+
+	local removeGuardTimer = 600000 -- 10 minutes
+
+	if(pAcklayGuard1_ID ~= 0) then
+		local pAcklayGuard_1 = getSceneObject(pAcklayGuard1_ID)
+		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_1, "")
+		deleteData("wild_acklay:guard_1")
+	end
+
+	if(pAcklayGuard2_ID ~= 0) then
+		local pAcklayGuard_2 = getSceneObject(pAcklayGuard2_ID)
+		createEvent(removeGuardTimer + 1000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_2, "")
+		deleteData("wild_acklay:guard_2")
+	end
+
+	if(pAcklayGuard3_ID ~= 0) then
+		local pAcklayGuard_3 = getSceneObject(pAcklayGuard3_ID)
+		createEvent(removeGuardTimer + 2000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_3, "")
+		deleteData("wild_acklay:guard_3")
+	end
+
+	if(pAcklayGuard4_ID ~= 0) then
+		local pAcklayGuard_4 = getSceneObject(pAcklayGuard4_ID)
+		createEvent(removeGuardTimer + 3000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_4, "")
+		deleteData("wild_acklay:guard_4")
+	end
+
+	local randomSpawnTimer = math.random(1800, 5400) * 1000 -- random 30 to 90 minutes
 	Logger:logEvent("Wild Acklay: Killed, next respawn timer: " ..  randomSpawnTimer/60000 ..  " minutes", LT_INFO)
 	createEvent(randomSpawnTimer, "Yavin4StaticSpawnsScreenPlay", "spawnWildAcklay", nil, "")
+
+	return 1
+end
+
+function Yavin4StaticSpawnsScreenPlay:removeGuards(packlayGuard)
+	if (packlayGuard ~= nil) then
+		SceneObject(packlayGuard):destroyObjectFromWorld()
+		SceneObject(packlayGuard):destroyObjectFromDatabase()
+	end
 
 	return 1
 end
