@@ -124,7 +124,7 @@ function SpiderClanCaveScreenPlay:spawnMobiles()
 	spawnMobile("dathomir", "giant_cavern_spider_recluse", 900, -19.9, -68.7, -107.0, -34, 3695710)
 
 	--Cell[3695711]
-	local pQueen = spawnMobile("dathomir", "reclusive_cavern_spider_queen", 7200, -26.6, -80.0, -149.5, 0, 3695711)
+	local pQueen = spawnMobile("dathomir", "reclusive_cavern_spider_queen", 3600, -26.6, -80.0, -149.5, 0, 3695711, true) -- Randomized
 	createObserver(OBJECTDESTRUCTION, "SpiderClanCaveScreenPlay", "notifyQueenDead", pQueen)
 
 	spawnMobile("dathomir", "reclusive_cavern_spider", 900, -35.5, -80.4, -139.8, 129, 3695711)
