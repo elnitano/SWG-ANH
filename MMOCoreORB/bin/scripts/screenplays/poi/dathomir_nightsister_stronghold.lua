@@ -188,7 +188,13 @@ function NightSisterStrongholdScreenPlay:spawnMobiles()
 	spawnMobile("dathomir", "nightsister_initiate",600,5.27219,-24.4314,-26.0931,2,4115620)
 	spawnMobile("dathomir", "nightsister_initiate",600,2.20982,-11.8595,-2.93477,7,4115619)
 
-	self:respawnAxkvaMin()
+	local initAxkvaTimerSelector = math.random(1,2)
+	local initAxkvaTimer = 3600000 -- 1 Hour in MS
+	if(initAxkvaTimerSelector == 1) then initAxkvaTimer = initAxkvaTimer * 3
+	elseif(initAxkvaTimerSelector == 2) then initAxkvaTimer = initAxkvaTimer * 6 end
+	Logger:logEvent("Axkva Min: Initial spawn in " .. initAxkvaTimer/3600000 .. " hours", LT_INFO)
+
+	createEvent(initAxkvaTimer, "NightSisterStrongholdScreenPlay", "respawnAxkvaMin", nil, "")
 
 	local pTrap = spawnSceneObject("dathomir", "object/static/terrain/corellia/rock_crystl_shrpbush_med.iff", -11.5, -64.6, -202.2, 4115624, 0.707107, 0, 0.707107, 0)
 
@@ -269,6 +275,7 @@ function NightSisterStrongholdScreenPlay:notifyEnteredTrapArea(pActiveArea, pPla
 end
 
 function NightSisterStrongholdScreenPlay:respawnAxkvaMin()
+	Logger:logEvent("Axkva Min: Spawned!", LT_INFO)
 	local pAxkvaMin = spawnMobile("dathomir", "axkva_min", 0, -90.5, -101, -102.2, 172, 4115629)
 
 	if (pAxkvaMin ~= nil) then
@@ -278,7 +285,17 @@ function NightSisterStrongholdScreenPlay:respawnAxkvaMin()
 end
 
 function NightSisterStrongholdScreenPlay:axkvaKilled(pAxkvaMin)
-	createEvent(86400 * 1000, "NightSisterStrongholdScreenPlay", "respawnAxkvaMin", nil, "")
+	local AxkvaRespawnTimeSelector = math.random(1,4)
+	local AxkvaRespawnTimer = 3600000 -- 1 Hour in MS
+
+	if(AxkvaRespawnTimeSelector == 1) then AxkvaRespawnTimer = AxkvaRespawnTimer * 12
+	elseif(AxkvaRespawnTimeSelector == 2) then AxkvaRespawnTimer = AxkvaRespawnTimer * 16
+	elseif(AxkvaRespawnTimeSelector == 3) then AxkvaRespawnTimer = AxkvaRespawnTimer * 20
+	elseif(AxkvaRespawnTimeSelector == 4) then AxkvaRespawnTimer = AxkvaRespawnTimer * 24 end
+
+	Logger:logEvent("Axkva Min: Killed! Respawn in " .. AxkvaRespawnTimer/3600000 .. " hours.", LT_INFO)
+
+	createEvent(AxkvaRespawnTimer, "NightSisterStrongholdScreenPlay", "respawnAxkvaMin", nil, "")
 
 	return 1
 end
