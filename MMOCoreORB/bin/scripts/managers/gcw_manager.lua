@@ -32,7 +32,7 @@ maxBasesPerPlanet = 25
 maxBasesPerPlayer = 3
 
 -- The construction delay when placing a GCW base in seconds
-basePlacementDelay = 10
+basePlacementDelay = 300
 
 -- Allow placement of GCW bases while player is in comabt
 placeInCombat = true
