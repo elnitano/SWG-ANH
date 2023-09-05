@@ -569,7 +569,6 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 				} else if(loot_type == 2){
 					attachmentCustomName = attachmentCustomName + " (Legendary)";
 				}
-				info(true) << "value: " << value << " last: " << last << " key: " << key << " loot_type: " << loot_type;
 			}
 		}
 		prototype->setCustomObjectName(attachmentCustomName,false);
