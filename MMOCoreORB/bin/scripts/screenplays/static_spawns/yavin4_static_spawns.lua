@@ -39,7 +39,7 @@ Yavin4StaticSpawnsScreenPlay = ScreenPlay:new {
 		},
 		{
 			{ 6950, 4130},
-			{ 5105, 466},
+			{ 6666, 1000},
 			{ 6400, -2080}
 		}
 	}
