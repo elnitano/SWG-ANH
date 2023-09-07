@@ -56,8 +56,8 @@ FullAutoArea2Command = {
 
 	combatSpam = "a_auto",
 
-	coneAngle = 30,
-	coneAction = true,
+	areaRange = 15,
+	areaAction = true,
 
 	stateEffects = {
 	  StateEffect( 
