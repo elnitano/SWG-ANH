@@ -50,7 +50,7 @@ object_draft_schematic_structure_city_shuttleport_tatooine = object_draft_schema
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 22,
 	size = 1,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

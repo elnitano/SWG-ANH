@@ -50,7 +50,7 @@ object_draft_schematic_item_item_powerup_weapon_thrown_wiring = object_draft_sch
 	craftingToolTab = 524288, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 5,
 	size = 1,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_electronics.iff",
    
 	xpType = "crafting_general",

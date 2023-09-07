@@ -50,7 +50,7 @@ object_draft_schematic_structure_installation_mining_organic_flora_light = objec
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 18,
 	size = 8,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_general",

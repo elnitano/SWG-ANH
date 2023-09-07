@@ -49,7 +49,7 @@ object_draft_schematic_furniture_bestine_painting_bestine_mattberry = object_dra
 	craftingToolTab = 512, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 15,
 	size = 2,
-	factoryCrateSize = 15,
+	
 	factoryCrateType = "object/factory/factory_crate_furniture.iff",
    
 	xpType = "crafting_structure_general",

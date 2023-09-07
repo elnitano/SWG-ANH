@@ -50,7 +50,7 @@ object_draft_schematic_structure_city_cityhall_naboo = object_draft_schematic_st
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 50,
 	size = 14,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

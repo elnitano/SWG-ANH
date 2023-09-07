@@ -50,7 +50,7 @@ object_draft_schematic_chemistry_medpack_revive = object_draft_schematic_chemist
 	craftingToolTab = 64, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 32,
 	size = 1,
-	factoryCrateSize = 50,
+	
 	factoryCrateType = "object/factory/factory_crate_chemicals.iff",
 
 	xpType = "crafting_medicine_general",

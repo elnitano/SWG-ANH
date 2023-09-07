@@ -50,7 +50,7 @@ object_draft_schematic_structure_merchant_tent = object_draft_schematic_structur
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 13,
 	size = 10,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

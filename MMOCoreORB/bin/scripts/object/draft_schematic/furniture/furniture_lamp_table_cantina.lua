@@ -50,7 +50,7 @@ object_draft_schematic_furniture_furniture_lamp_table_cantina = object_draft_sch
 	craftingToolTab = 512, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 19,
 	size = 1,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_furniture.iff",
    
 	xpType = "crafting_structure_general",

@@ -50,7 +50,7 @@ object_draft_schematic_structure_component_structure_light_power_core_unit = obj
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 15,
 	size = 10,
-	factoryCrateSize = 5,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

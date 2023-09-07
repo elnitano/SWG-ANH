@@ -50,7 +50,7 @@ object_draft_schematic_bio_engineer_utilities_pet_vitapack_b = object_draft_sche
 	craftingToolTab = 128, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 32,
 	size = 3,
-	factoryCrateSize = 50,
+	
 	factoryCrateType = "object/factory/factory_crate_chemicals.iff",
 
 	xpType = "crafting_bio_engineer_creature",

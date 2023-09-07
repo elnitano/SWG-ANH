@@ -50,7 +50,7 @@ object_draft_schematic_furniture_furniture_table_small_tatooine = object_draft_s
 	craftingToolTab = 512, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 14,
 	size = 2,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_furniture.iff",
    
 	xpType = "crafting_structure_general",

@@ -49,7 +49,7 @@ object_draft_schematic_item_theme_park_alderaan_act3_dead_eye_prototype = object
 	craftingToolTab = 64, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 17,
 	size = 3,
-	factoryCrateSize = 50,
+	
 	factoryCrateType = "object/factory/factory_crate_chemicals.iff",
 
 	xpType = "crafting_medicine_general",

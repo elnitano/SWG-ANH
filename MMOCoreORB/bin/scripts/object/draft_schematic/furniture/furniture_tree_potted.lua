@@ -50,7 +50,7 @@ object_draft_schematic_furniture_furniture_tree_potted = object_draft_schematic_
 	craftingToolTab = 512, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 15,
 	size = 1,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_furniture.iff",
    
 	xpType = "crafting_structure_general",

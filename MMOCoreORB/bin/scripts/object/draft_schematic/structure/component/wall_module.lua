@@ -50,7 +50,7 @@ object_draft_schematic_structure_component_wall_module = object_draft_schematic_
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 15,
 	size = 6,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

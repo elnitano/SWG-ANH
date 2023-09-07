@@ -50,7 +50,7 @@ object_draft_schematic_furniture_furniture_armoire_elegant = object_draft_schema
 	craftingToolTab = 512, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 30,
 	size = 1,
-	factoryCrateSize = 10,
+	
 	factoryCrateType = "object/factory/factory_crate_furniture.iff",
    
 	xpType = "crafting_structure_general",

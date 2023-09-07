@@ -48,7 +48,7 @@ templateType = DRAFTSCHEMATIC,
 	craftingToolTab = 64, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 10,
 	size = 3,
-	factoryCrateSize = 50,
+	
 	factoryCrateType = "object/factory/factory_crate_chemicals.iff",
 
 	xpType = "crafting_medicine_general",

@@ -50,7 +50,7 @@ object_draft_schematic_structure_component_structure_ore_mining_unit = object_dr
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 12,
 	size = 1,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",

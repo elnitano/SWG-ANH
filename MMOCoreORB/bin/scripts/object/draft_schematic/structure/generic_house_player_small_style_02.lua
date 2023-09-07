@@ -50,7 +50,7 @@ object_draft_schematic_structure_generic_house_player_small_style_02 = object_dr
 	craftingToolTab = 1024, -- (See DraftSchematicObjectTemplate.h)
 	complexity = 23,
 	size = 10,
-	factoryCrateSize = 1,
+	
 	factoryCrateType = "object/factory/factory_crate_installation.iff",
    
 	xpType = "crafting_structure_general",
