@@ -51,8 +51,8 @@ PointBlankArea2Command = {
 	mindCostMultiplier = 0.5,
 	accuracyBonus = 50,
 
-	coneAngle = 60,
-	coneAction = true,
+	areaRange = 15,
+	areaAction = true,
 
 	animation = "fire_area_no_trails", 
 	animType = GENERATE_INTENSITY,
