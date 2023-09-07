@@ -433,6 +433,12 @@ void FactoryObjectImplementation::handleInsertFactorySchem(CreatureObject* playe
 
 		player->sendSystemMessage(message);
 
+		int ManufLimit = schematic->getManufactureLimit();
+
+		if(ManufLimit == 1000){
+			schematic->setManufactureLimit(10000);
+		}
+
 		player->sendSystemMessage("This schematic limit is: " + String::valueOf(schematic->getManufactureLimit()));
 	} else {
 		trx.abort() << "transferObject failed.";
