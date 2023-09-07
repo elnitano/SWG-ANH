@@ -69,7 +69,7 @@ object_draft_schematic_item_item_powerup_weapon_thrown_explosive = object_draft_
 	ingredientTitleNames = {"resource_one", "resource_two"},
 	ingredientSlotType = {0, 0},
 	resourceTypes = {"mineral", "chemical"},
-	resourceQuantities = {6, 4},
+	resourceQuantities = {30, 20}, -- Default is 6, 4 - because of 500 uses, its increased by x5
 	contribution = {100, 100},
 
 	targetTemplate = "object/tangible/powerup/weapon/thrown_explosive.iff",
