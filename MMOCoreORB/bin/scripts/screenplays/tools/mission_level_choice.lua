@@ -5,15 +5,11 @@ mission_level_choice = ScreenPlay:new {
 
 	levels = {
 		{levelRange = "Reset Level Range", levelSelect = 0},
-		{levelRange = "Easiest", levelSelect = 1},
-		{levelRange = "Mid 1", levelSelect = 2}, 
-		{levelRange = "Mid 2", levelSelect = 12}, 
-		{levelRange = "Mid 3", levelSelect = 25}, 
-		{levelRange = "High 1", levelSelect = 35}, 
-		{levelRange = "High 2", levelSelect = 45}, 
-		{levelRange = "High 3", levelSelect = 60}, 
-		{levelRange = "Hard", levelSelect = 135}, 
-		{levelRange = "Hardest", levelSelect = 200}, 
+		{levelRange = "Level 5-10", levelSelect = 1},
+		{levelRange = "Level 10-20", levelSelect = 5},
+		{levelRange = "Level 20-35", levelSelect = 10},
+		{levelRange = "Level 30-50", levelSelect = 15},
+		{levelRange = "Level 40-55", levelSelect = 20},
 	}
 }
 

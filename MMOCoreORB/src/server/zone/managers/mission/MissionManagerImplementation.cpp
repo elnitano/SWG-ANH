@@ -782,20 +782,23 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     
     int levelChoice = Integer::valueOf(level);
     
-    if(levelChoice > 0){
+	if(levelChoice > 0){
 		diffDisplay += levelChoice;
-	}
-	if (player->isGrouped()) {
-		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
-		Reference<GroupObject*> group = player->getGroup();
+	}else{
+		if (player->isGrouped()) {
+			bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
+			Reference<GroupObject*> group = player->getGroup();
 
-		if (group != nullptr) {
-			Locker locker(group);
-			diffDisplay += group->getGroupLevel(includeFactionPets);
+			if (group != nullptr) {
+				Locker locker(group);
+				diffDisplay += group->getGroupLevel(includeFactionPets);
+			}
+		} else {
+			diffDisplay += playerLevel;
 		}
-	} else {
-		diffDisplay += playerLevel;
 	}
+
+	//info(true) << "playerLevel: " << String::valueOf(playerLevel) << " maxDiff: " << String::valueOf(maxDiff) << " minDiff: " << String::valueOf(minDiff) << " difficultyLevel: " << String::valueOf(difficultyLevel) << " difficulty: " << String::valueOf(difficulty) << " levelChoice: " << String::valueOf(levelChoice);
 
 	String dir = targetGhost->getScreenPlayData("mission_direction_choice", "directionChoice");
     float dirChoise = Float::valueOf(dir);
