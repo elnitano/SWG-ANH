@@ -31,7 +31,7 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
 	}
 		if (terminalType == "general" || terminalType == "imperial" || terminalType == "rebel") {
-        //menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
+        menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
         menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction");
     }
 }
