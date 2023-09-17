@@ -46,7 +46,7 @@ object_tangible_skill_buff_skill_buff_mask_scent = object_tangible_skill_buff_sh
 	objectMenuComponent = "SkillBuffObjectMenuComponent",
 	attributeListComponent = "SkillBuffObjectAttributeListComponent",
 	
-	duration = 300,
+	duration = 1800,
 	useCount = 5,
 	modifiers = { "mask_scent", 10 },
 	buffName = "mask_scent",

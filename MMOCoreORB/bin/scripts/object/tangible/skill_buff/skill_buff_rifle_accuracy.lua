@@ -46,7 +46,7 @@ object_tangible_skill_buff_skill_buff_rifle_accuracy = object_tangible_skill_buf
 	objectMenuComponent = "SkillBuffObjectMenuComponent",
 	attributeListComponent = "SkillBuffObjectAttributeListComponent",
 	
-	duration = 300,
+	duration = 1800,
 	useCount = 5,
 	modifiers = { "rifle_accuracy", 10 },
 	buffName = "rifle_accuracy",

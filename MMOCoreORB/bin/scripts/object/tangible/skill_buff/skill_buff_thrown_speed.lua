@@ -46,7 +46,7 @@ object_tangible_skill_buff_skill_buff_thrown_speed = object_tangible_skill_buff_
 	objectMenuComponent = "SkillBuffObjectMenuComponent",
 	attributeListComponent = "SkillBuffObjectAttributeListComponent",
 	
-	duration = 300,
+	duration = 1800,
 	useCount = 5,
 	modifiers = { "thrown_speed", 10 },
 	buffName = "thrown_speed",

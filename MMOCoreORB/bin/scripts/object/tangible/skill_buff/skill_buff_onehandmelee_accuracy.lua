@@ -46,7 +46,7 @@ object_tangible_skill_buff_skill_buff_onehandmelee_accuracy = object_tangible_sk
 	objectMenuComponent = "SkillBuffObjectMenuComponent",
 	attributeListComponent = "SkillBuffObjectAttributeListComponent",
 	
-	duration = 300,
+	duration = 1800,
 	useCount = 5,
 	modifiers = { "onehandmelee_accuracy", 10 },
 	buffName = "onehandmelee_accuracy",
