@@ -104,27 +104,33 @@ function Yavin4StaticSpawnsScreenPlay:spawnWildAcklay(notused, spawnArea)
 		local packlayGuard_4 = spawnMobile(self.planet, "enhanced_kliknik", 0, randomSpawnPoint[1] + 5, randomSpawnPoint[2], randomSpawnPoint[3] + 5, 0, 0)
 
 		if(wildArea == 1) then
-			writeData("wild_acklay:spawn_1", SceneObject(pwildAcklay):getObjectID())
+			writeData("wild_acklay_1:spawn", SceneObject(pwildAcklay):getObjectID())
+
+			if (packlayGuard_1 ~= nil) then writeData("wild_acklay_1:guard_1", SceneObject(packlayGuard_1):getObjectID()) end
+			if (packlayGuard_2 ~= nil) then	writeData("wild_acklay_1:guard_2", SceneObject(packlayGuard_2):getObjectID())	end
+			if (packlayGuard_3 ~= nil) then	writeData("wild_acklay_1:guard_3", SceneObject(packlayGuard_3):getObjectID())	end
+			if (packlayGuard_4 ~= nil) then	writeData("wild_acklay_1:guard_4", SceneObject(packlayGuard_4):getObjectID())	end
 		elseif(wildArea == 2) then
-			writeData("wild_acklay_spawn_2", SceneObject(pwildAcklay):getObjectID())
+			writeData("wild_acklay_2:spawn", SceneObject(pwildAcklay):getObjectID())
+
+			if (packlayGuard_1 ~= nil) then writeData("wild_acklay_2:guard_1", SceneObject(packlayGuard_1):getObjectID()) end
+			if (packlayGuard_2 ~= nil) then	writeData("wild_acklay_2:guard_2", SceneObject(packlayGuard_2):getObjectID())	end
+			if (packlayGuard_3 ~= nil) then	writeData("wild_acklay_2:guard_3", SceneObject(packlayGuard_3):getObjectID())	end
+			if (packlayGuard_4 ~= nil) then	writeData("wild_acklay_2:guard_4", SceneObject(packlayGuard_4):getObjectID())	end
 		end
 
 		AiAgent(pwildAcklay):addCreatureFlag(AI_STATIC)
 
 		if (packlayGuard_1 ~= nil) then
-			writeData("wild_acklay:guard_1", SceneObject(packlayGuard_1):getObjectID())
 			AiAgent(packlayGuard_1):addCreatureFlag(AI_STATIC)
 		end
-		if (packlayGuard_2 ~= nil) then
-			writeData("wild_acklay:guard_2", SceneObject(packlayGuard_2):getObjectID())
+		if (packlayGuard_1 ~= nil) then
 			AiAgent(packlayGuard_2):addCreatureFlag(AI_STATIC)
 		end
-		if (packlayGuard_3 ~= nil) then
-			writeData("wild_acklay:guard_3", SceneObject(packlayGuard_3):getObjectID())
+		if (packlayGuard_1 ~= nil) then
 			AiAgent(packlayGuard_3):addCreatureFlag(AI_STATIC)
 		end
-		if (packlayGuard_4 ~= nil) then
-			writeData("wild_acklay:guard_4", SceneObject(packlayGuard_4):getObjectID())
+		if (packlayGuard_1 ~= nil) then
 			AiAgent(packlayGuard_4):addCreatureFlag(AI_STATIC)
 		end
 
@@ -133,49 +139,64 @@ function Yavin4StaticSpawnsScreenPlay:spawnWildAcklay(notused, spawnArea)
 end
 
 function Yavin4StaticSpawnsScreenPlay:wildAcklayKilled(pwildAcklay)
-	local pAcklayGuard1_ID = readData("wild_acklay:guard_1")
-	local pAcklayGuard2_ID = readData("wild_acklay:guard_2")
-	local pAcklayGuard3_ID = readData("wild_acklay:guard_3")
-	local pAcklayGuard4_ID = readData("wild_acklay:guard_4")
-
 	local removeGuardTimer = 600000 -- 10 minutes
+	--local removeGuardTimer = 30000 -- 30 seconds
 
-	if(pAcklayGuard1_ID ~= 0) then
-		local pAcklayGuard_1 = getSceneObject(pAcklayGuard1_ID)
-		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_1, "")
-		deleteData("wild_acklay:guard_1")
-	end
-
-	if(pAcklayGuard2_ID ~= 0) then
-		local pAcklayGuard_2 = getSceneObject(pAcklayGuard2_ID)
-		createEvent(removeGuardTimer + 1000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_2, "")
-		deleteData("wild_acklay:guard_2")
-	end
-
-	if(pAcklayGuard3_ID ~= 0) then
-		local pAcklayGuard_3 = getSceneObject(pAcklayGuard3_ID)
-		createEvent(removeGuardTimer + 2000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_3, "")
-		deleteData("wild_acklay:guard_3")
-	end
-
-	if(pAcklayGuard4_ID ~= 0) then
-		local pAcklayGuard_4 = getSceneObject(pAcklayGuard4_ID)
-		createEvent(removeGuardTimer + 3000, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_4, "")
-		deleteData("wild_acklay:guard_4")
-	end
-
-	local pWildAcklay1_ID = readData("wild_acklay:spawn_1")
-	local pWildAcklay2_ID = readData("wild_acklay:spawn_2")
+	local pWildAcklay1_ID = readData("wild_acklay_1:spawn")
+	local pWildAcklay2_ID = readData("wild_acklay_2:spawn")
 
 	local pWildAcklay_ID = SceneObject(pwildAcklay):getObjectID()
 	local pWildAcklayArea = 0
 
+	local pAcklayGuard1_ID = 0
+	local pAcklayGuard2_ID = 0
+	local pAcklayGuard3_ID = 0
+	local pAcklayGuard4_ID = 0
+
 	if(pWildAcklay_ID == pWildAcklay1_ID) then
 		pWildAcklayArea = 1
-		deleteData("wild_acklay:spawn_1")
+		deleteData("wild_acklay_1:spawn")
+
+		pAcklayGuard1_ID = readData("wild_acklay_1:guard_1")
+		pAcklayGuard2_ID = readData("wild_acklay_1:guard_2")
+		pAcklayGuard3_ID = readData("wild_acklay_1:guard_3")
+		pAcklayGuard4_ID = readData("wild_acklay_1:guard_4")
 	elseif(pWildAcklay_ID == pWildAcklay2_ID) then
 		pWildAcklayArea = 2
-		deleteData("wild_acklay:spawn_2")
+		deleteData("wild_acklay_1:spawn")
+
+		pAcklayGuard1_ID = readData("wild_acklay_2:guard_1")
+		pAcklayGuard2_ID = readData("wild_acklay_2:guard_2")
+		pAcklayGuard3_ID = readData("wild_acklay_2:guard_3")
+		pAcklayGuard4_ID = readData("wild_acklay_2:guard_4")
+	end
+
+	if(pAcklayGuard1_ID ~= 0) then
+		local pAcklayGuard_1 = getSceneObject(pAcklayGuard1_ID)
+		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_1, "")
+		if(pWildAcklayArea == 1) then deleteData("wild_acklay_1:guard_1") end
+		if(pWildAcklayArea == 2) then deleteData("wild_acklay_2:guard_1") end
+	end
+
+	if(pAcklayGuard2_ID ~= 0) then
+		local pAcklayGuard_2 = getSceneObject(pAcklayGuard2_ID)
+		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_2, "")
+		if(pWildAcklayArea == 1) then deleteData("wild_acklay_1:guard_2") end
+		if(pWildAcklayArea == 2) then deleteData("wild_acklay_2:guard_2") end
+	end
+
+	if(pAcklayGuard3_ID ~= 0) then
+		local pAcklayGuard_3 = getSceneObject(pAcklayGuard3_ID)
+		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_3, "")
+		if(pWildAcklayArea == 1) then deleteData("wild_acklay_1:guard_3") end
+		if(pWildAcklayArea == 2) then deleteData("wild_acklay_2:guard_3") end
+	end
+
+	if(pAcklayGuard4_ID ~= 0) then
+		local pAcklayGuard_4 = getSceneObject(pAcklayGuard4_ID)
+		createEvent(removeGuardTimer, "Yavin4StaticSpawnsScreenPlay", "removeGuards", pAcklayGuard_4, "")
+		if(pWildAcklayArea == 1) then deleteData("wild_acklay_1:guard_4") end
+		if(pWildAcklayArea == 2) then deleteData("wild_acklay_2:guard_4") end
 	end
 
 	local randomSpawntimer
