@@ -163,7 +163,7 @@ function Yavin4StaticSpawnsScreenPlay:wildAcklayKilled(pwildAcklay)
 		pAcklayGuard4_ID = readData("wild_acklay_1:guard_4")
 	elseif(pWildAcklay_ID == pWildAcklay2_ID) then
 		pWildAcklayArea = 2
-		deleteData("wild_acklay_1:spawn")
+		deleteData("wild_acklay_2:spawn")
 
 		pAcklayGuard1_ID = readData("wild_acklay_2:guard_1")
 		pAcklayGuard2_ID = readData("wild_acklay_2:guard_2")
