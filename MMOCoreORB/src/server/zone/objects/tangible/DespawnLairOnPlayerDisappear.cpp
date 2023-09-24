@@ -37,8 +37,7 @@ void DespawnLairOnPlayerDisappear::run() {
 			strongLair->destroyObjectFromWorld(true);
 		}
 
-	}
-	else if (strongRef->isPoiBuilding()) {
+	} else if (strongRef->isPoiBuilding()) {
 		ManagedReference<PoiBuilding*> strongPoi = strongRef.castTo<PoiBuilding*>();
 
 		Locker locker(strongPoi);
@@ -49,8 +48,7 @@ void DespawnLairOnPlayerDisappear::run() {
 			strongPoi->destroyObjectFromWorld(true);
 		}
 
-	}
-	else if (strongRef->isTheaterObject()) {
+	} else if (strongRef->isTheaterObject()) {
 		ManagedReference<TheaterObject*> strongTheater = strongRef.castTo<TheaterObject*>();
 
 		Locker locker(strongTheater);
@@ -60,6 +58,5 @@ void DespawnLairOnPlayerDisappear::run() {
 		if (strongTheater->getNumberOfPlayersInRange() <= 0) {
 			strongTheater->destroyObjectFromWorld(true);
 		}
-
 	}
 }
