@@ -1,0 +1,11 @@
+/*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+
+package engine.core.util;
+
+import engine.core.ManagedObject;
+
+class ManagedVector extends ManagedObject {
+}

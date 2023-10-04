@@ -1,0 +1,32 @@
+/*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+
+package engine.util;
+
+include engine.core.ManagedObject;
+//import engine.core.ManagedReference;
+
+import engine.log.Logger;
+
+//include engine.util.SessionFacadeType;
+
+@json
+class Facade extends ManagedObject implements Logger {
+	public Facade() {
+		Logger.setLoggingName("Facade");
+	}
+
+	public abstract int initializeSession() {
+		return 0;
+	}
+
+	public abstract int cancelSession() {
+		return 0;
+	}
+
+	public abstract int clearSession() {
+		return 0;
+	}
+}
