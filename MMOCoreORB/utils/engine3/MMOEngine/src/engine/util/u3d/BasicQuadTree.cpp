@@ -477,6 +477,3 @@ int BasicQuadTree::_inRange(BasicQuadTreeNode* node, float x, float y, float ran
 
 	return count;
 }
-
-
-
