@@ -9,21 +9,27 @@
 
 class SetpermissionCommand : public QueueCommand {
 public:
-
-	SetpermissionCommand(const String& name, ZoneProcessServer* server)
-		: QueueCommand(name, server) {
-
+	SetpermissionCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-
 		if (!checkStateMask(creature))
 			return INVALIDSTATE;
 
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (!creature->checkCooldownRecovery("set_permission")) {
+			creature->sendSystemMessage("@healing_response:healing_must_wait"); //You must wait before you can do that.
+			return GENERALERROR;
+		}
+
+		creature->updateCooldownTimer("set_permission", defaultTime * 1000);
+
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
+
+		if (playerManager == nullptr)
+			return GENERALERROR;
 
 		uint64 targetid = creature->getTargetID();
 		ManagedReference<SceneObject*> obj = playerManager->getInRangeStructureWithAdminRights(creature, targetid);
