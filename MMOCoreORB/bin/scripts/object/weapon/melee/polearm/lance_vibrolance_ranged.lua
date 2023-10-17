@@ -41,7 +41,7 @@
 --this exception also makes it possible to release a modified version
 
 
-object_weapon_melee_polearm_lance_vibrolance_ranged = object_weapon_melee_polearm_shared_lance_vibrolance:new {
+object_weapon_melee_polearm_lance_staff_metal_ranged = object_weapon_melee_polearm_shared_lance_staff_metal:new {
 
 	playerRaces = { "object/creature/player/bothan_male.iff",
 				"object/creature/player/bothan_female.iff",
@@ -69,10 +69,10 @@ object_weapon_melee_polearm_lance_vibrolance_ranged = object_weapon_melee_polear
 	attackType = FORCEATTACK,
 
 	-- ENERGY, KINETIC, ELECTRICITY, STUN, BLAST, HEAT, COLD, ACID, LIGHTSABER
-	damageType = ELECTRICITY,
+	damageType = KINETIC,
 
 	-- NONE, LIGHT, MEDIUM, HEAVY
-	armorPiercing = LIGHT,
+	armorPiercing = NONE,
 
 	-- combat_rangedspecialize_bactarifle, combat_rangedspecialize_rifle, combat_rangedspecialize_pistol, combat_rangedspecialize_heavy, combat_rangedspecialize_carbine
 	-- combat_meleespecialize_unarmed, combat_meleespecialize_twohand, combat_meleespecialize_polearm, combat_meleespecialize_onehand, combat_general,
@@ -80,7 +80,7 @@ object_weapon_melee_polearm_lance_vibrolance_ranged = object_weapon_melee_polear
 	xpType = "combat_meleespecialize_polearm",
 
 	-- See http://www.ocdsoft.com/files/certifications.xls
-	certificationsRequired = { "cert_lance_vibrolance" },
+	certificationsRequired = { "cert_lance_staff_metal" },
 	-- See http://www.ocdsoft.com/files/accuracy.xls
 	creatureAccuracyModifiers = { "polearm_accuracy" },
 
@@ -100,36 +100,36 @@ object_weapon_melee_polearm_lance_vibrolance_ranged = object_weapon_melee_polear
 
 
 	-- The values below are the default values.  To be used for blue frog objects primarily
-	healthAttackCost = 52,
-	actionAttackCost = 67,
-	mindAttackCost = 28,
+	healthAttackCost = 51,
+	actionAttackCost = 30,
+	mindAttackCost = 15,
 	forceCost = 0,
 
 	pointBlankRange = 0,
-	pointBlankAccuracy = -15,
+	pointBlankAccuracy = 0,
 
 	idealRange = 3,
-	idealAccuracy = -15,
+	idealAccuracy = 0,
 
 	maxRange = 32,
-	maxRangeAccuracy = -15,
+	maxRangeAccuracy = 0,
 
-	minDamage = 90,
-	maxDamage = 295,
+	minDamage = 80,
+	maxDamage = 110,
 
-	attackSpeed = 4,
+	attackSpeed = 5,
 
-	woundsRatio = 27,
+	woundsRatio = 7,
 
 	numberExperimentalProperties = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	experimentalProperties = {"XX", "XX", "SR", "SR", "SR", "SR", "SR", "SR", "SR", "XX", "SR", "XX", "SR", "SR", "SR"},
+	experimentalProperties = {"XX", "XX", "SR", "SR", "SR", "XX", "SR", "SR", "SR", "XX", "SR", "XX", "SR", "SR", "SR"},
 	experimentalWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "expDamage", "exp_durability", "expRange", "expRange", "null", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
+	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "null", "exp_durability", "expRange", "expRange", "null", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
 	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage", "attackspeed", "woundchance", "hitpoints", "zerorangemod", "maxrangemod", "midrange", "midrangemod", "maxrange", "attackhealthcost", "attackactioncost", "attackmindcost"},
-	experimentalMin = {0, 0, 42, 154, 5.9, 14, 750, -24, -24, 3, -24, 5, 59, 78, 29},
-	experimentalMax = {0, 0, 78, 286, 4, 26, 1500, 0, 0, 3, 0, 5, 32, 43, 15},
+	experimentalMin = {0, 0, 56, 95, 6, 7, 750, -5, -5, 3, -5, 5, 9, 66, 39},
+	experimentalMax = {0, 0, 90, 143, 4.2, 7, 1500, 5, 5, 3, 5, 5, 4, 36, 21},
 	experimentalPrecision = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	experimentalCombineType = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 }
 
-ObjectTemplates:addTemplate(object_weapon_melee_polearm_lance_vibrolance_ranged, "object/weapon/melee/polearm/lance_vibrolance_ranged.iff")
+ObjectTemplates:addTemplate(object_weapon_melee_polearm_lance_staff_metal_ranged, "object/weapon/melee/polearm/lance_staff_metal_ranged.iff")
