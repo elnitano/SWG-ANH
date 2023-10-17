@@ -458,7 +458,7 @@ WeaponObject* AiAgentImplementation::createWeapon(uint32 templateCRC, bool prima
 	if (objectController == nullptr)
 		return nullptr;
 
-	SceneObject* inventory = getSlottedObject("inventory");
+	SceneObject* inventory = asAiAgent()->getSlottedObject("inventory");
 
 	if (inventory == nullptr)
 		return nullptr;
@@ -1711,9 +1711,6 @@ void AiAgentImplementation::respawn(Zone* zone, int level) {
 		zone->transferObject(asAiAgent(), -1, true);
 	}
 
-	loadWeaponTemplateData();
-	setupAttackMaps();
-
 	setNextPosition(homeLocation.getPositionX(), homeLocation.getPositionZ(), homeLocation.getPositionY(), cell);
 	currentFoundPath = nullptr;
 
@@ -1736,7 +1733,6 @@ void AiAgentImplementation::notifyDespawn(Zone* zone) {
 
 	cancelBehaviorEvent();
 	cancelRecoveryEvent();
-	wipeBlackboard();
 
 #ifdef SHOW_NEXT_POSITION
 	for (int i = 0; i < movementMarkers.size(); ++i) {
@@ -1792,7 +1788,7 @@ void AiAgentImplementation::notifyDespawn(Zone* zone) {
 	ManagedReference<SceneObject*> home = homeObject.get();
 
 	// Notify lairspawns that a creature/NPC has been killed and it will handle respawn
-	if (home != nullptr && home->getObserverCount(ObserverEventType::CREATUREDESPAWNED) > 0) {
+	if (home != nullptr) {
 		home->notifyObservers(ObserverEventType::CREATUREDESPAWNED, asAiAgent());
 
 		// info(true) << "notifyDespawn for - " << getDisplayedName() << " ID: " << getObjectID() << " notifying home lair for despawn.";
@@ -1802,58 +1798,42 @@ void AiAgentImplementation::notifyDespawn(Zone* zone) {
 
 	notifyObservers(ObserverEventType::CREATUREDESPAWNED);
 
-	if (respawnTimer > 0) {
-		float respawn = respawnTimer * 1000;
+	//printReferenceHolders();
+	//info(true) << "ID: " << getObjectID() << " Reference Count: " << getReferenceCount();
 
-		if (randomRespawn) {
-			respawn = System::random(respawn) + (respawn / 2.f);
+	if (respawnTimer <= 0) {
+		// info(true) << "notifyDespawn for - " << getDisplayedName() << " ID: " << getObjectID() << " set to not respawn.";
+
+		// Set default weapon null so it is cleaned up by GC
+		setDefaultWeapon(nullptr);
+
+		// Drop imperial chat observer
+		if (faction == Factions::FACTIONIMPERIAL) {
+			SortedVector<ManagedReference<Observer*> > observers = getObservers(ObserverEventType::FACTIONCHAT);
+
+			for (int i = 0; i < observers.size(); i++) {
+				ImperialChatObserver* chatObserver = cast<ImperialChatObserver*>(observers.get(i).get());
+
+				if (chatObserver != nullptr)
+					dropObserver(ObserverEventType::FACTIONCHAT, chatObserver);
+			}
 		}
 
-		Reference<RespawnCreatureTask*> task = new RespawnCreatureTask(asAiAgent(), zone, level);
-		task->schedule(respawn);
-
-		//info(true) << "notifyDespawn for - " << getDisplayedName() << " ID: " << getObjectID() << " scheduled to respawn in " << respawn <<  " ms.";
+		clearBuffs(false, false);
 
 		return;
 	}
 
-	// Agent is not set to respawn
+	float respawn = respawnTimer * 1000;
 
-	// Drop imperial chat observer
-	if (getObserverCount(ObserverEventType::FACTIONCHAT) > 0) {
-		SortedVector<ManagedReference<Observer*> > observers = getObservers(ObserverEventType::FACTIONCHAT);
-
-		for (int i = 0; i < observers.size(); i++) {
-			ImperialChatObserver* chatObserver = cast<ImperialChatObserver*>(observers.get(i).get());
-
-			if (chatObserver != nullptr)
-				dropObserver(ObserverEventType::FACTIONCHAT, chatObserver);
-		}
+	if (randomRespawn) {
+		respawn = System::random(respawn) + (respawn / 2.f);
 	}
 
-	// Drop Squad Observer
-	if (getObserverCount(ObserverEventType::SQUAD) > 0) {
-		SortedVector<ManagedReference<Observer*> > observers = getObservers(ObserverEventType::SQUAD);
+	Reference<RespawnCreatureTask*> task = new RespawnCreatureTask(asAiAgent(), zone, level);
+	task->schedule(respawn);
 
-		for (int i = 0; i < observers.size(); i++) {
-			SquadObserver* squadObserver = cast<SquadObserver*>(observers.get(i).get());
-
-			if (squadObserver != nullptr) {
-				dropObserver(ObserverEventType::SQUAD, squadObserver);
-			}
-		}
-	}
-
-	// Remove any buffs from the Agent
-	clearBuffs(false, false);
-
-	// If the agent is not a pet, destroy all their weapons so they are cleaned up by GC
-	if (!isPet()) {
-		destroyAllWeapons();
-	}
-
-	//info(true) << "ID: " << getObjectID() << " notifyDespawn complete - weapons destroyed";
-	//info(true) << "ID: " << getObjectID() << " Reference Count: " << getReferenceCount();
+	//info(true) << "notifyDespawn for - " << getDisplayedName() << " ID: " << getObjectID() << " scheduled to respawn in " << respawn <<  " ms.";
 }
 
 void AiAgentImplementation::scheduleDespawn(int timeToDespawn, bool force) {
@@ -1874,8 +1854,6 @@ void AiAgentImplementation::scheduleDespawn(int timeToDespawn, bool force) {
 
 		addPendingTask("despawn", despawn, timeToDespawn * 1000);
 	}
-
-	//info(true) << getDisplayedName() << " ID: " << getObjectID() << " despawn task scheduled";
 }
 
 void AiAgentImplementation::notifyDissapear(QuadTreeEntry* entry) {
