@@ -36,19 +36,14 @@ void SpawnAreaImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
 	if (zoneServer != nullptr && (zoneServer->isServerLoading() || zoneServer->isServerShuttingDown()))
 		return;
 
-	if (lastSpawn.miliDifference() < MINSPAWNINTERVAL)
-		return;
-
 #ifdef DEBUG_SPAWNING
 	info(true) << getAreaName() << " --SpawnAreaImplementation::notifyPositionUpdate called";
 #endif // DEBUG_SPAWNING
 
-	CreatureObject* player = sceneObject->asCreatureObject();
-
-	if (player == nullptr || player->isInvisible())
+	if (lastSpawn.miliDifference() < MINSPAWNINTERVAL)
 		return;
 
-	tryToSpawn(player);
+	tryToSpawn(sceneObject->asCreatureObject());
 }
 
 void SpawnAreaImplementation::notifyEnter(SceneObject* sceneO) {
