@@ -186,7 +186,7 @@ int BountyMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* o
 	} else if (eventType == ObserverEventType::DAMAGERECEIVED) {
 		return handleNpcTargetReceivesDamage(arg1);
 	} else if (eventType == ObserverEventType::PLAYERKILLED) {
-		handlePlayerKilled(arg1, arg2);
+		handlePlayerKilled(arg1);
 	}
 
 	return 0;
@@ -569,10 +569,7 @@ int BountyMissionObjectiveImplementation::handleNpcTargetReceivesDamage(ManagedO
 	return 0;
 }
 
-void BountyMissionObjectiveImplementation::handlePlayerKilled(ManagedObject* arg1, uint64 destructedID) {
-	if (completedMission)
-		return;
-
+void BountyMissionObjectiveImplementation::handlePlayerKilled(ManagedObject* arg1) {
 	CreatureObject* creo = cast<CreatureObject*>(arg1);
 
 	if (creo == nullptr)
@@ -585,73 +582,47 @@ void BountyMissionObjectiveImplementation::handlePlayerKilled(ManagedObject* arg
 	else
 		killer = creo;
 
-	if (killer == nullptr)
-		return;
-
-	ManagedReference<MissionObject*> mission = this->mission.get();
+	ManagedReference<MissionObject* > mission = this->mission.get();
 	ManagedReference<CreatureObject*> owner = getPlayerOwner();
 
-	if (mission == nullptr || owner == nullptr)
+	if(mission == nullptr)
 		return;
 
-	uint64 targetID = mission->getTargetObjectId();
-	uint64 ownerID = owner->getObjectID();
-	uint64 killerID = killer->getObjectID();
+	if (owner != nullptr && killer != nullptr && !completedMission) {
+		if (owner->getObjectID() == killer->getObjectID()) {
+			//Target killed by player, complete mission.
+			ZoneServer* zoneServer = owner->getZoneServer();
+			if (zoneServer != nullptr) {
+				ManagedReference<CreatureObject*> target = zoneServer->getObject(mission->getTargetObjectId()).castTo<CreatureObject*>();
+				if (target != nullptr) {
+					int minXpLoss = -50000;
+					int maxXpLoss = -500000;
 
-	// Player died to DoT
-	if (killerID == destructedID)
-		return;
+					VisibilityManager::instance()->clearVisibility(target);
+					int rewardCreds = mission->getRewardCredits() + mission->getBonusCredits();
+					int xpLoss = rewardCreds * -2;
 
-	// info(true) << "BountyMissionObjectiveImplementation::handlePlayerKilled -- Owner: " << ownerID << " Killer: " << killerID << " Mission Target ID: " << targetID << " Destructed ID: " << destructedID;
+					if (xpLoss > minXpLoss)
+						xpLoss = minXpLoss;
+					else if (xpLoss < maxXpLoss)
+						xpLoss = maxXpLoss;
 
-	// Fail Mission if the target killed the owner
-	if (killerID == targetID && ownerID != killerID) {
-		owner->sendSystemMessage("@mission/mission_generic:failed"); // Mission failed
+					owner->getZoneServer()->getPlayerManager()->awardExperience(target, "jedi_general", xpLoss, true);
+					StringIdChatParameter message("base_player","prose_revoke_xp");
+					message.setDI(xpLoss * -1);
+					message.setTO("exp_n", "jedi_general");
+					target->sendSystemMessage(message);
+				}
+			}
 
-		if (killer->isPlayerCreature())
+			complete();
+		} else if (mission->getTargetObjectId() == killer->getObjectID() ||
+				(npcTarget != nullptr && npcTarget->getObjectID() == killer->getObjectID())) {
+
+			owner->sendSystemMessage("@mission/mission_generic:failed"); // Mission failed
 			killer->sendSystemMessage("You have defeated a bounty hunter, ruining his mission against you!");
-
-		fail();
-
-		return;
+			fail();
+		}
 	}
-
-	// Killer must be the mission owner to return succesful
-	if (killerID != ownerID)
-		return;
-
-	// Target killed by player, complete mission.
-	ZoneServer* zoneServer = owner->getZoneServer();
-
-	if (zoneServer == nullptr)
-		return;
-
-	ManagedReference<CreatureObject*> target = zoneServer->getObject(mission->getTargetObjectId()).castTo<CreatureObject*>();
-
-	if (target == nullptr)
-		return;
-
-	int minXpLoss = -50000;
-	int maxXpLoss = -500000;
-
-	VisibilityManager::instance()->clearVisibility(target);
-	int rewardCreds = mission->getRewardCredits() + mission->getBonusCredits();
-	int xpLoss = rewardCreds * -2;
-
-	if (xpLoss > minXpLoss)
-		xpLoss = minXpLoss;
-	else if (xpLoss < maxXpLoss)
-		xpLoss = maxXpLoss;
-
-	auto playerManager = zoneServer->getPlayerManager();
-
-	if (playerManager != nullptr)
-		playerManager->awardExperience(target, "jedi_general", xpLoss, true);
-
-	StringIdChatParameter message("base_player", "prose_revoke_xp");
-	message.setDI(xpLoss * -1);
-	message.setTO("exp_n", "jedi_general");
-	target->sendSystemMessage(message);
-
-	complete();
 }
+
