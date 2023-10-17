@@ -55,13 +55,6 @@ void CreatureManagerImplementation::stop() {
 CreatureObject* CreatureManagerImplementation::spawnCreature(uint32 templateCRC, float x, float z, float y, uint64 parentID) {
 	CreatureObject* creature = createCreature(templateCRC);
 
-	if (creature == nullptr) {
-		error() << "Failed to spawn creature with templateCRC: " << templateCRC;
-		return nullptr;
-	}
-
-	Locker lock(creature);
-
 	placeCreature(creature, x, z, y, parentID);
 
 	return creature;
@@ -295,35 +288,31 @@ CreatureObject* CreatureManagerImplementation::spawnCreatureAsBaby(uint32 templa
 	if (creoTempl == nullptr || creoTempl->getTame() <= 0)
 		return nullptr;
 
-	CreatureObject* creO = nullptr;
+	CreatureObject* creo = nullptr;
 
 	String templateToSpawn = getTemplateToSpawn(templateCRC);
 	uint32 objectCRC = templateToSpawn.hashCode();
 
-	creO = createCreature(objectCRC, false, templateCRC);
+	creo = createCreature(objectCRC, false, templateCRC);
 
-	if (creO == nullptr) {
-		error("could not spawn template " + templateToSpawn + " as baby.");
-		return nullptr;
-	}
-
-	Locker lock(creO);
-
-	if (creO->isCreature()) {
-		Creature* creature = cast<Creature*>(creO);
-
-		if (creature == nullptr) {
-			error("could not spawn template " + templateToSpawn + " as baby with AI.");
-			return nullptr;
-		}
-
+	if (creo != nullptr && creo->isCreature()) {
+		Creature* creature = cast<Creature*>(creo);
 		creature->loadTemplateDataForBaby(creoTempl);
-		creature->setAITemplate();
+	} else {
+		error("could not spawn template " + templateToSpawn + " as baby.");
+		creo = nullptr;
 	}
 
-	placeCreature(creO, x, z, y, parentID);
+	placeCreature(creo, x, z, y, parentID);
 
-	return creO;
+	if (creo != nullptr && creo->isAiAgent())
+		creo->asAiAgent()->setAITemplate();
+	else {
+		error("could not spawn template " + templateToSpawn + " as baby with AI.");
+		creo = nullptr;
+	}
+
+	return creo;
 }
 
 CreatureObject* CreatureManagerImplementation::spawnCreatureAsEventMob(uint32 templateCRC, int level, float x, float z, float y, uint64 parentID) {
@@ -332,42 +321,37 @@ CreatureObject* CreatureManagerImplementation::spawnCreatureAsEventMob(uint32 te
 	if (creoTempl == nullptr)
 		return nullptr;
 
-	CreatureObject* creO = nullptr;
+	CreatureObject* creo = nullptr;
 
 	String templateToSpawn = getTemplateToSpawn(templateCRC);
 	uint32 objectCRC = templateToSpawn.hashCode();
 
-	creO = createCreature(objectCRC, false, templateCRC);
+	creo = createCreature(objectCRC, false, templateCRC);
 
-	if (creO == nullptr) {
-		error("could not spawn template " + templateToSpawn);
-		return nullptr;
-	}
+	if (creo != nullptr && creo->isAiAgent()) {
+		AiAgent* creature = cast<AiAgent*>(creo);
 
-	Locker locker(creO);
+		Locker locker(creature);
 
-	if (creO->isAiAgent()) {
-		AiAgent* agent = creO->asAiAgent();
+		creature->loadTemplateData(creoTempl);
 
-		if (agent != nullptr) {
-			agent->loadTemplateData(creoTempl);
+		UnicodeString eventName;
+		eventName = creature->getDisplayedName() + " (event)";
+		creature->setCustomObjectName(eventName, false);
 
-			UnicodeString eventName;
-
-			eventName = agent->getDisplayedName() + " (event)";
-			agent->setCustomObjectName(eventName, false);
-
-			if (level > 0 && agent->getLevel() != level) {
-				agent->setLevel(level);
-			}
-
-			agent->setAITemplate();
+		if (level > 0 && creature->getLevel() != level) {
+			creature->setLevel(level);
 		}
+	} else if (creo == nullptr) {
+		error("could not spawn template " + templateToSpawn);
 	}
 
-	placeCreature(creO, x, z, y, parentID);
+	placeCreature(creo, x, z, y, parentID);
 
-	return creO;
+	if (creo != nullptr && creo->isAiAgent())
+		creo->asAiAgent()->setAITemplate();
+
+	return creo;
 }
 
 CreatureObject* CreatureManagerImplementation::spawnCreature(uint32 templateCRC, uint32 objectCRC, float x, float z, float y, uint64 parentID, bool persistent, float direction) {
@@ -387,18 +371,11 @@ CreatureObject* CreatureManagerImplementation::spawnCreature(uint32 templateCRC,
 
 	creature = createCreature(objectCRC, persistent, templateCRC);
 
-	if (creature == nullptr) {
+	if (creature != nullptr && creature->isAiAgent()) {
+		AiAgent* npc = cast<AiAgent*>(creature);
+		npc->loadTemplateData(creoTempl);
+	} else if (creature == nullptr) {
 		error("could not spawn template " + templateToSpawn);
-		return nullptr;
-	}
-
-	Locker lock(creature);
-
-	if (creature->isAiAgent()) {
-		AiAgent* agent = creature->asAiAgent();
-
-		if (agent != nullptr)
-			agent->loadTemplateData(creoTempl);
 	}
 
 	placeCreature(creature, x, z, y, parentID, direction);
@@ -451,6 +428,8 @@ void CreatureManagerImplementation::placeCreature(CreatureObject* creature, floa
 	if (parentID != 0) {
 		cellParent = zoneServer->getObject(parentID).castTo<CellObject*>();
 	}
+
+	Locker _locker(creature);
 
 	if (creature->isAiAgent()) {
 		AiAgent* aio = cast<AiAgent*>(creature);
@@ -505,14 +484,8 @@ bool CreatureManagerImplementation::createCreatureChildrenObjects(CreatureObject
 		if (creature->isAiAgent()) {
 			WeaponObject* weap = defaultWeapon.castTo<WeaponObject*>();
 			AiAgent* agent = creature->asAiAgent();
-			if (weap != nullptr && agent != nullptr) {
-				StringBuffer weapName;
-				weapName << "AI_DEFAULT-" << agent->getObjectID();
-				weap->setCustomObjectName(weapName.toString(), false);
-
-				agent->setDefaultWeapon(weap);
-				agent->setCurrentWeapon(weap);
-			}
+			agent->setDefaultWeapon(weap);
+			agent->setCurrentWeapon(weap);
 		}
 	}
 
@@ -648,29 +621,25 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 		WeaponObject* primaryWeap = destructedObject->getPrimaryWeapon();
 
 		if (primaryWeap != nullptr && primaryWeap != destructedObject->getDefaultWeapon()) {
-			Locker locker(primaryWeap, destructedObject);
+			Locker locker(primaryWeap);
 			primaryWeap->destroyObjectFromWorld(true);
 		}
 
 		WeaponObject* secondaryWeap = destructedObject->getSecondaryWeapon();
 
 		if (secondaryWeap != nullptr) {
-			Locker locker(secondaryWeap, destructedObject);
+			Locker locker(secondaryWeap);
 			secondaryWeap->destroyObjectFromWorld(true);
 		}
 
 		WeaponObject* thrownWeap = destructedObject->getThrownWeapon();
 
 		if (thrownWeap != nullptr) {
-			Locker locker(thrownWeap, destructedObject);
+			Locker locker(thrownWeap);
 			thrownWeap->destroyObjectFromWorld(true);
 		}
 
 		destructedObject->nullifyWeapons();
-
-		// Remove any buffs or debuffs from the agent
-		destructedObject->clearBuffs(false, true);
-
 
 		if (creatureInventory != nullptr && player != nullptr && player->isPlayerCreature()) {
 			LootManager* lootManager = zoneServer->getLootManager();
@@ -683,7 +652,7 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 				destructedObject->addCashCredits(credits);
 			}
 
-			Locker invLocker(creatureInventory, destructedObject);
+			Locker locker(creatureInventory);
 
 			TransactionLog trx(TrxCode::NPCLOOT, destructedObject);
 			creatureInventory->setContainerOwnerID(ownerID);

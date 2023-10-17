@@ -36,7 +36,7 @@ void SpawnAreaImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
 	if (zoneServer != nullptr && (zoneServer->isServerLoading() || zoneServer->isServerShuttingDown()))
 		return;
 
-	if (lastSpawn.miliDifference() < ConfigManager::instance()->getMinLairSpawnInterval())
+	if (lastSpawn.miliDifference() < MINSPAWNINTERVAL)
 		return;
 
 #ifdef DEBUG_SPAWNING
@@ -159,7 +159,7 @@ int SpawnAreaImplementation::notifyObserverEvent(unsigned int eventType, Observa
 
 			Locker locker(area);
 
-			area->setRadius(ConfigManager::instance()->getSpawnCheckRange());
+			area->setRadius(64.f);
 			area->addAreaFlag(ActiveArea::NOSPAWNAREA);
 			area->initializePosition(sceneO->getPositionX(), sceneO->getPositionZ(), sceneO->getPositionY());
 
@@ -227,10 +227,8 @@ void SpawnAreaImplementation::tryToSpawn(CreatureObject* player) {
 		return;
 	}
 
-	float checkRange = finalSpawn->getSize() + ConfigManager::instance()->getSpawnCheckRange();
-
 	// Check the spot to see if spawning is allowed
-	if (!planetManager->isSpawningPermittedAt(randomPosition.getX(), randomPosition.getY(), checkRange, isWorldSpawnArea())) {
+	if (!planetManager->isSpawningPermittedAt(randomPosition.getX(), randomPosition.getY(), finalSpawn->getSize() + 64.f, isWorldSpawnArea())) {
 #ifdef DEBUG_SPAWNING
 		info(true) << "tryToSpawn Spawning is not permitted at " << randomPosition.toString();
 #endif // DEBUG_SPAWNING

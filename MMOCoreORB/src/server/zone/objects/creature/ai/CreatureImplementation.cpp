@@ -436,8 +436,6 @@ void CreatureImplementation::setPetLevel(int newLevel) {
 		return;
 	}
 
-	Creature* thisCreature = _this.getReferenceUnsafeStaticCast();
-
 	clearBuffs(false, false);
 
 	int baseLevel = getTemplateLevel();
@@ -445,27 +443,22 @@ void CreatureImplementation::setPetLevel(int newLevel) {
 	float minDmg = calculateAttackMinDamage(baseLevel);
 	float maxDmg = calculateAttackMaxDamage(baseLevel);
 
+	Reference<WeaponObject*> defaultWeapon = asAiAgent()->getDefaultWeapon();
+
 	float ratio = ((float)newLevel) / (float)baseLevel;
 	minDmg *= ratio;
 	maxDmg *= ratio;
 
-	ManagedReference<WeaponObject*> defaultWeap = getDefaultWeapon();
-	ManagedReference<WeaponObject*> primaryWeap = getPrimaryWeapon();
+	if (primaryWeapon != nullptr && primaryWeapon != defaultWeapon) {
+		float mod = 1.f - 0.1f*float(primaryWeapon->getArmorPiercing());
 
-	if (primaryWeap != nullptr && primaryWeap != defaultWeap) {
-		Locker primLock(primaryWeap, thisCreature);
-
-		float mod = 1.f - 0.1f*float(primaryWeap->getArmorPiercing());
-
-		primaryWeap->setMinDamage(minDmg * mod);
-		primaryWeap->setMaxDamage(maxDmg * mod);
+		primaryWeapon->setMinDamage(minDmg * mod);
+		primaryWeapon->setMaxDamage(maxDmg * mod);
 	}
 
-	if (defaultWeap != nullptr) {
-		Locker defLock(defaultWeap, thisCreature);
-
-		defaultWeap->setMinDamage(minDmg);
-		defaultWeap->setMaxDamage(maxDmg);
+	if (defaultWeapon != nullptr) {
+		defaultWeapon->setMinDamage(minDmg);
+		defaultWeapon->setMaxDamage(maxDmg);
 	}
 
 	int ham = 0;

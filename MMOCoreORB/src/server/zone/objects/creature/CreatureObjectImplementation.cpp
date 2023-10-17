@@ -3695,17 +3695,16 @@ float CreatureObjectImplementation::calculateCostAdjustment(uint8 stat, float ba
 }
 
 Reference<WeaponObject*> CreatureObjectImplementation::getWeapon() {
-	Reference<WeaponObject*> retWeapon = weapon;
-
-	if (retWeapon == nullptr) {
-		retWeapon = getDefaultWeapon();
+	Reference<WeaponObject*> retWeap = weapon;
+	if (retWeap == nullptr) {
+		retWeap = asCreatureObject()->getDefaultWeapon();
 	}
 
-	if (retWeapon == nullptr) {
-		info(true) << getDisplayedName() << " ID: " << getObjectID() << "  returning a null weapon - " << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
+	if (retWeap == nullptr) {
+		Logger::console.info(true) << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
 	}
 
-	return retWeapon;
+	return retWeap;
 }
 
 WeaponObject* CreatureObjectImplementation::getDefaultWeapon() {
