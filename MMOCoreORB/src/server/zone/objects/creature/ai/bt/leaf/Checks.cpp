@@ -204,13 +204,7 @@ template<> bool CheckAttackInRange::check(AiAgent* agent) const {
 	float templatePadding = agent->getTemplateRadius() + followCopy->getTemplateRadius();
 	float maxRange = combatCommand->getRange();
 
-	WeaponObject* currWeapon = agent->getCurrentWeapon();
-	float weapMaxRange = maxRange;
-
-	if (currWeapon != nullptr)
-		weapMaxRange = currWeapon->getMaxRange();
-
-	if ((maxRange > 0 && !followCopy->isInRange(agent, maxRange)) || (maxRange <= 0 && !followCopy->isInRange(agent, weapMaxRange + templatePadding))) {
+	if ((maxRange > 0 && !followCopy->isInRange(agent, maxRange)) || (maxRange <= 0 && !followCopy->isInRange(agent, agent->getWeapon()->getMaxRange() + templatePadding))) {
 		return false;
 	}
 
