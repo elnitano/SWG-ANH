@@ -37,10 +37,13 @@ namespace detail {
 	}
 }
 
-class HeightQuadTreeEntry : public QuadTreeEntryInterface {
-	float x, y;
+class HeightTreeEntry : public QuadTreeEntryInterface {
+	float x, y, z;
 public:
-	HeightQuadTreeEntry(float x, float y) : x(x), y(y) {
+	HeightTreeEntry(float x, float y) : x(x), y(y) {
+	}
+
+	HeightTreeEntry(float x, float y, float z) : x(x), y(y), z(z) {
 	}
 
 	int compareTo(const QuadTreeEntryInterfaceBase<BasicQuadTreeNode>* obj) const override {
@@ -80,7 +83,7 @@ public:
 	TerrainCache::lru_value_t run(const float& k, const float& k2) override {
 		float height = terrainData->getUnCachedHeight(k , k2);
 
-		return make_pair(new HeightQuadTreeEntry(k, k2), height);
+		return make_pair(new HeightTreeEntry(k, k2), height);
 	}
 
 	uint64 hash(const float& k, const float& k2) const override {
@@ -162,7 +165,7 @@ void TerrainCache::clear(TerrainGenerator* generator) {
 	clearHeightsCount += quadTree.inRange(centerX, centerY, radius, heightsToDelete);
 
 	for (int i = 0; i < heightsToDelete.size(); ++i) {
-		HeightQuadTreeEntry* entry = static_cast<HeightQuadTreeEntry*>(heightsToDelete.get(i));
+		HeightTreeEntry* entry = static_cast<HeightTreeEntry*>(heightsToDelete.get(i));
 
 		remove(entry->getObjectID());
 

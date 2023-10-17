@@ -5801,7 +5801,7 @@ void PlayerManagerImplementation::disconnectAllPlayers() {
 
 bool PlayerManagerImplementation::shouldRescheduleCorpseDestruction(CreatureObject* player, CreatureObject* ai) {
 	if (player == nullptr || ai == nullptr)
-		return true;
+		return false;
 
 	if (!player->isPlayerCreature()) {
 		return true;

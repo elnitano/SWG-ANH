@@ -13,7 +13,9 @@
 class CreateCreatureCommand : public QueueCommand {
 public:
 
-	CreateCreatureCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
+	CreateCreatureCommand(const String& name, ZoneProcessServer* server)
+		: QueueCommand(name, server) {
+
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
@@ -44,7 +46,7 @@ public:
 			if (tokenizer.hasMoreTokens())
 				tokenizer.getStringToken(tempName);
 
-			if (!tempName.isEmpty() && tempName.toLowerCase() == "checkthreads") {
+			if (!tempName.isEmpty() && tempName == "checkThreads") {
 				creature->sendSystemMessage("Current number of active AiBehaviorEvents: " + String::valueOf(AiMap::instance()->activeBehaviorEvents.get()));
 				creature->sendSystemMessage("Current number of AiAgent Exceptions: " + String::valueOf(AiMap::instance()->countExceptions.get()));
 				creature->sendSystemMessage("Current number of scheduled AiBehaviorEvents: " + String::valueOf(AiMap::instance()->scheduledBehaviorEvents.get()));
@@ -138,9 +140,7 @@ public:
 			if (tokenizer.hasMoreTokens())
 				parID = tokenizer.getLongToken();
 		} else {
-			StringBuffer usage;
-			usage << "Usage: /createCreature <template> [object template | ai template | baby | event [level] [scale] ] [X] [Z] [Y] [planet] [cellID]" << endl << "/createCreature checkthreads";
-			creature->sendSystemMessage(usage.toString());
+			creature->sendSystemMessage("Usage: /createCreature <template> [object template | ai template | baby | event [level] [scale] ] [X] [Z] [Y] [planet] [cellID]");
 			return GENERALERROR;
 		}
 
