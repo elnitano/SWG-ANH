@@ -93,29 +93,24 @@ int DnaManager::addQualityTemplate(lua_State * L) {
 	return 0;
 }
 void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player,int quality) {
-	if (deed == nullptr || player == nullptr)
-		return;
-
 	// We are making a generational sample rules are a little different.
 	// Reduce each stat by lets say 10% as the max to be on par with old docs
 	int cl = deed->getLevel();
-
-	// info(true) << "DnaManager::generationalSample - called";
 
 	int ferocity = 0; // 1 highest 7 lowest
 	int factor = (int)System::random(quality) - 7;
 	int reductionAmount = (factor + 15 + quality);
 
-	int hardiness = reduceByPercent(deed->getHardiness(), reductionAmount);
-	int fortitude = reduceByPercent(deed->getFortitude(), reductionAmount);
-	int dexterity = reduceByPercent(deed->getDexterity(), reductionAmount);
-	int endurance = reduceByPercent(deed->getEndurance(), reductionAmount);
-	int intellect = reduceByPercent(deed->getIntellect(), reductionAmount);
-	int cleverness = reduceByPercent(deed->getCleverness(), reductionAmount);
-	int dependability = reduceByPercent(deed->getDependability(), reductionAmount);
-	int courage = reduceByPercent(deed->getCourage(), reductionAmount);
-	int fierceness = reduceByPercent(deed->getFierceness(), reductionAmount);
-	int power = reduceByPercent(deed->getPower(), reductionAmount);
+	int cle = reduceByPercent(deed->getCleverness(),reductionAmount);
+	int cou = reduceByPercent(deed->getCourage(),reductionAmount);
+	int dep = reduceByPercent(deed->getDependability(),reductionAmount);
+	int dex = reduceByPercent(deed->getDexterity(),reductionAmount);
+	int end = reduceByPercent(deed->getEndurance(),reductionAmount);
+	int fie = reduceByPercent(deed->getFierceness(),reductionAmount);
+	int frt = reduceByPercent(deed->getFortitude(),reductionAmount);
+	int har = reduceByPercent(deed->getHardiness(),reductionAmount);
+	int ite = reduceByPercent(deed->getIntellect(),reductionAmount);
+	int pow = reduceByPercent(deed->getPower(),reductionAmount);
 
 	ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
 
@@ -126,18 +121,8 @@ void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player,int qu
 		return;
 	}
 
-	auto zoneServer = player->getZoneServer();
-
-	if (zoneServer == nullptr)
-		return;
-
-	auto craftingManager = zoneServer->getCraftingManager();
-
-	if (craftingManager == nullptr)
-		return;
-
 	// calculate rest of stats here
-	ManagedReference<DnaComponent*> prototype = zoneServer->createObject(qualityTemplates.get(quality), 1).castTo<DnaComponent*>();
+	ManagedReference<DnaComponent*> prototype = player->getZoneServer()->createObject(qualityTemplates.get(quality), 1).castTo<DnaComponent*>();
 	if (prototype == nullptr) {
 		return;
 	}
@@ -146,15 +131,9 @@ void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player,int qu
 	prototype->setSource(deed->getTemplateName());
 	prototype->setQuality(quality);
 	prototype->setLevel(cl);
-
-	String serial = craftingManager->generateSerial();
-
-	// Set Serial Number
+	String serial = player->getZoneServer()->getCraftingManager()->generateSerial();
 	prototype->setSerialNumber(serial);
-
-	// Set Genetic Stats
-	prototype->setStats(cleverness, endurance, fierceness, power, intellect, courage, dependability, dexterity, fortitude, hardiness);
-
+	prototype->setStats(cle,end,fie,pow,ite,cou,dep,dex,frt,har);
 	prototype->setStun(deed->getStun());
 	prototype->setKinetic(deed->getKinetic());
 	prototype->setEnergy(deed->getEnergy());
@@ -184,11 +163,11 @@ void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player,int qu
 		prototype->setSpecialResist(SharedWeaponObjectTemplate::ELECTRICITY);
 	if (deed->isSpecialResist(SharedWeaponObjectTemplate::ACID))
 		prototype->setSpecialResist(SharedWeaponObjectTemplate::ACID);
-	/*if (deed->isSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER))
-		prototype->setSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER);*/
+	if (deed->isSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER))
+		prototype->setSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER);
 
 	Locker locker(inventory, prototype);
-
+	
 	if (inventory->transferObject(prototype, -1, true, false)) {
 		inventory->broadcastObject(prototype, true);
 	} else {
