@@ -56,7 +56,6 @@ namespace sys {
 		StringBuffer& append(int64 val);
 		StringBuffer& append(uint64 val);
 		StringBuffer& append(float val);
-		StringBuffer& append(float val, int places);
 		StringBuffer& append(double val);
 		StringBuffer& append(bool val);
 		StringBuffer& append(const void* val);
@@ -186,3 +185,6 @@ namespace sys {
 } // namespace sys
 
 using namespace sys::lang;
+
+
+

@@ -186,7 +186,6 @@ namespace sys {
 		static String valueOf(int64 val);
 		static String valueOf(uint64 val);
 		static String valueOf(float val);
-		static String valueOf(float val, int precision);
 		static String valueOf(double val);
 		static String valueOf(const void* val);
 		static String valueOf(const char* val);
@@ -426,3 +425,5 @@ using namespace sys::lang;
 constexpr uint32 operator "" _hashCode(char const* str, std::size_t s) {
 	return String::hashCode(str);
 }
+
+
