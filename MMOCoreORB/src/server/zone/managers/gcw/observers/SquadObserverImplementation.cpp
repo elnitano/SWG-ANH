@@ -10,80 +10,79 @@
 #include "server/zone/objects/tangible/TangibleObject.h"
 
 void SquadObserverImplementation::addMember(AiAgent* member) {
-	if (member == nullptr)
-		return;
-
 	Locker locker(&squadLock);
 	teamMembers.add(member);
 }
 
-AiAgent* SquadObserverImplementation::getMember(int index) {
+int SquadObserverImplementation::size() {
 	Locker locker(&squadLock);
+	return teamMembers.size();
+}
 
-	if (index >= teamMembers.size())
+AiAgent* SquadObserverImplementation::getMember(unsigned int teamMemberIndex) {
+	Locker locker(&squadLock);
+	if (teamMemberIndex < teamMembers.size()) {
+		return teamMembers.get(teamMemberIndex);
+	} else {
 		return nullptr;
+	}
+}
 
-	return teamMembers.get(index);
+void SquadObserverImplementation::removeMember(unsigned int teamMemberIndex) {
+	Locker locker(&squadLock);
+	if (teamMemberIndex < teamMembers.size()) {
+		teamMembers.remove(teamMemberIndex);
+	}
 }
 
 void SquadObserverImplementation::despawnSquad() {
-	Locker lock(&squadLock);
-
 	int size = teamMembers.size();
 
-	for (int i = size - 1; i >= 0; --i) {
-		auto member = teamMembers.get(i);
+	for (int i = 0; i < size; i++) {
+		AiAgent* member = getMember(i);
 
-		if (member == nullptr || member->isInCombat())
+		if (member == nullptr || member->isDead() || member->isInCombat())
 			continue;
 
-		Locker clocker(member, &squadLock);
-
-		member->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
-
-		if (!member->isDead())
-			member->destroyObjectFromWorld(true);
+		Locker lock(member);
+		member->destroyObjectFromWorld(true);
 	}
 }
 
 bool SquadObserverImplementation::despawnMembersCloseToLambdaShuttle(const Vector3& landingPosition, bool forcedCleanup) {
-	Locker lock(&squadLock);
-
+	// Do not lock squadLock in this method to avoid deadlocks. Use the minimal locking methods above.
 	for (int i = size() - 1; i >= 0; i--) {
-		auto member = getMember(i);
+		auto npc = getMember(i);
+		if (npc != nullptr) {
+			Locker npcLock(npc);
+			auto distance = npc->getWorldPosition().squaredDistanceTo(landingPosition);
 
-		if (member == nullptr) {
-			teamMembers.remove(i);
-			continue;
-		}
+			if (npc->isDead()) {
+				npc->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
+				removeMember(i);
+				continue;
+			} else if (!npc->isInCombat()) {
+				npc->getCooldownTimerMap()->updateToCurrentAndAddMili("reaction_chat", 60000);
 
-		Locker cLock(member, &squadLock);
+				npc->eraseBlackboard("formationOffset");
+				npc->setFollowObject(nullptr);
 
-		auto distance = member->getWorldPosition().squaredDistanceTo(landingPosition);
+				npc->clearPatrolPoints();
+				npc->setNextPosition(landingPosition.getX(), landingPosition.getZ(), landingPosition.getY());
 
-		if (member->isDead()) {
-			member->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
+				if (distance < 8 * 8) {
+					npc->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
+					npc->destroyObjectFromWorld(true);
+					removeMember(i);
+				} else if (forcedCleanup) {
+					npc->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
+					npc->destroyObjectFromWorld(true);
+					removeMember(i);
+				}
+			}
+		} else {
 			removeMember(i);
-
-			continue;
 		}
-
-		if (!forcedCleanup && distance > 8 * 8 && !member->isInCombat())
-			continue;
-
-		member->getCooldownTimerMap()->updateToCurrentAndAddMili("reaction_chat", 60000);
-
-		member->eraseBlackboard("formationOffset");
-		member->setFollowObject(nullptr);
-
-		member->clearPatrolPoints();
-		member->setNextPosition(landingPosition.getX(), landingPosition.getZ(), landingPosition.getY());
-
-		member->dropObserver(ObserverEventType::SQUAD, _this.getReferenceUnsafeStaticCast());
-		member->destroyObjectFromWorld(true);
-
-		removeMember(i);
 	}
-
 	return teamMembers.size() == 0;
 }
