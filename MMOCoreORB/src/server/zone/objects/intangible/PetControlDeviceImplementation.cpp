@@ -75,14 +75,11 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	ManagedReference<AiAgent*> pet = cast<AiAgent*>(controlledObject.get());
 	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-	if (ghost == nullptr || ghost->hasActivePet(pet))
+	if (ghost == nullptr)
 		return;
 
-	if (pet->getDefaultWeapon() == nullptr) {
-		pet->createDefaultWeapon();
-		player->sendSystemMessage("This pet does not have a proper default weapon, attempting to create one. Please call your pet again.");
+	if (ghost->hasActivePet(pet))
 		return;
-	}
 
 	FrsManager* frsManager = server->getZoneServer()->getFrsManager();
 
@@ -103,6 +100,8 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 			player->sendSystemMessage("@pet/pet_menu:cant_call"); // cant call pet right now
 		return;
 	}
+
+	E3_ASSERT(pet->isLockedByCurrentThread());
 
 	unsigned int petFaction = pet->getFaction();
 

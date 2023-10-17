@@ -3717,9 +3717,7 @@ Reference<WeaponObject*> CreatureObjectImplementation::getWeapon() {
 
 	if (isAiAgent()) {
 		retWeapon = asAiAgent()->getCurrentWeapon();
-	}
-
-	if (retWeapon == nullptr) {
+	} else if (retWeapon == nullptr) {
 		retWeapon = getDefaultWeapon();
 	}
 
