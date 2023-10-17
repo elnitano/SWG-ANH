@@ -30,19 +30,8 @@ public:
 		if (player == nullptr)
 			return;
 
-		auto zoneServer = server->getZoneServer();
-
-		if (zoneServer == nullptr)
-			return;
-
-		auto playerMan = zoneServer->getPlayerManager();
-
-		if (playerMan == nullptr)
-			return;
-
-		Locker lock(player);
-
-		playerMan->handleVerifyTradeMessage(player);
+		PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
+		playerManager->handleVerifyTradeMessage(player);
 	}
 
 };

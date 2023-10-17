@@ -18,13 +18,14 @@ class ItemDropTradeCallback : public MessageCallback {
 
 	ObjectControllerMessageCallback* objectControllerMain;
 public:
-	ItemDropTradeCallback(ObjectControllerMessageCallback* objectControllerCallback) : MessageCallback(objectControllerCallback->getClient(), objectControllerCallback->getServer()), targetToTrade(0), objectControllerMain(objectControllerCallback) {
+	ItemDropTradeCallback(ObjectControllerMessageCallback* objectControllerCallback) :
+		MessageCallback(objectControllerCallback->getClient(), objectControllerCallback->getServer()),
+		targetToTrade(0), objectControllerMain(objectControllerCallback) {
 
 	}
 
 	void parse(Message* message) {
-		//Logger::console.info(true) << message->toStringData();
-
+		//System::out << message->toStringData() << endl;
 		message->shiftOffset(16);
 		targetToTrade = message->parseLong();
 	}
@@ -32,128 +33,61 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		// Player is not null and player is not in combat
-		if (player == nullptr || player->isInCombat())
+		if (player == nullptr)
 			return;
 
-		uint64 playerID = player->getObjectID();
+		ManagedReference<PlayerObject*> playerObject = player->getPlayerObject();
 
-		// Player is not attempting to trade themselves
-		if (targetToTrade == playerID)
+		if (playerObject == nullptr)
 			return;
 
-		auto zoneServer = server->getZoneServer();
+		bool godMode = false;
 
-		if (zoneServer == nullptr)
-			return;
+		if (playerObject->hasGodMode())
+			godMode = true;
 
-		ManagedReference<SceneObject*> targetObject = zoneServer->getObject(targetToTrade);
+		ManagedReference<SceneObject*> targetObject = server->getZoneServer()->getObject(targetToTrade);
 
-		if (targetObject == nullptr) {
-			StringIdChatParameter stringId("ui_trade", "request_player_unreachable_no_obj"); // "The person you want to trade with is unreachable."
-			player->sendSystemMessage(stringId);
-
+		if (targetObject == nullptr || !targetObject->isPlayerCreature() || targetObject == player) {
+			//player->error("invalid target to trade " + String::valueOf(targetToTrade));
 			return;
 		}
 
-		if (!targetObject->isPlayerCreature()) {
-			StringIdChatParameter stringId("ui_trade", "start_fail_target_not_player"); // "You can only trade with other players."
-			player->sendSystemMessage(stringId);
+		CreatureObject* targetPlayer = cast<CreatureObject*>( targetObject.get());
 
-			return;
-		}
-
-		CreatureObject* targetPlayer = targetObject->asCreatureObject();
-
-		if (targetPlayer == nullptr)
-			return;
-
-		// Check if target to trade is ignoring player
-		auto targetGhost = targetPlayer->getPlayerObject();
-
-		if (targetGhost != nullptr && targetGhost->isIgnoring(player->getFirstName()))
+		if (targetPlayer->getPlayerObject()->isIgnoring(player->getFirstName()) && !godMode)
 			return;
 
 		ManagedReference<TradeSession*> playerTradeContainer = player->getActiveSession(SessionFacadeType::TRADE).castTo<TradeSession*>();
 
-		// Player already has an active trade session
-		if (playerTradeContainer != nullptr && playerTradeContainer->getTradeTargetPlayer() != targetToTrade) {
-			StringIdChatParameter stringIdReq("ui_trade", "start_fail_target_other_prose"); // "You cannot start a trade with %TT while you are trading with %TO."
-			stringIdReq.setTT(targetPlayer->getFirstName());
-
-			CreatureObject* otherTarget = zoneServer->getObject(playerTradeContainer->getTradeTargetPlayer()).castTo<CreatureObject*>();
-
-			if (otherTarget != nullptr) {
-				stringIdReq.setTT(targetPlayer->getFirstName());
-			}
-
-			// Send already trading message
-			player->sendSystemMessage(stringIdReq);
-
+		if (player->isInCombat() || (playerTradeContainer != nullptr && playerTradeContainer->getTradeTargetPlayer() == targetToTrade))
 			return;
-		}
 
-		// Set trade target ID to target creO
-		player->setTradeTargetID(targetToTrade);
-
-		// Send trade message
-		StringIdChatParameter stringIdReq("ui_trade", "requested_prose");
-		stringIdReq.setTU(player->getFirstName());
-
-		targetPlayer->sendSystemMessage(stringIdReq);
-
-		ManagedReference<TradeSession*> targetTradeContainer = targetPlayer->getActiveSession(SessionFacadeType::TRADE).castTo<TradeSession*>();
-
-		// check player's tradeTarget for their tradeTargetID
-		uint64 tradeTargetTradeID = targetPlayer->getTradeTargetID();
-
-		if (playerID != tradeTargetTradeID) {
-			// Player has other trade target
-			if (tradeTargetTradeID > 0 && targetTradeContainer != nullptr) {
-				StringIdChatParameter stringId("ui_trade", "request_player_busy_prose"); // "%TU is already trading with someone else."
-				stringId.setTU(targetPlayer->getFirstName());
-
-				player->sendSystemMessage(stringId);
-			}
-
-			return;
-		}
-
-		// Trade has passed all the checks and each player has each other as a trade target
-		Locker clocker(targetPlayer, player);
-
-		// Setup players trade container
 		if (playerTradeContainer == nullptr) {
 			playerTradeContainer = new TradeSession();
 			player->addActiveSession(SessionFacadeType::TRADE, playerTradeContainer);
-		} else {
-			playerTradeContainer->clearSession();
 		}
 
-		// Set the trade session on the target player
 		playerTradeContainer->setTradeTargetPlayer(targetToTrade);
 
-		// Setup targets trade container
-		if (targetTradeContainer == nullptr) {
-			targetTradeContainer = new TradeSession();
-			targetPlayer->addActiveSession(SessionFacadeType::TRADE, targetTradeContainer);
-		} else {
-			targetTradeContainer->clearSession();
-		}
+		Locker clocker(targetPlayer, player);
 
-		// Set the targetstrade session on the this player
-		targetTradeContainer->setTradeTargetPlayer(playerID);
+		ManagedReference<TradeSession*> targetTradeContainer = targetPlayer->getActiveSession(SessionFacadeType::TRADE).castTo<TradeSession*>();
 
-		BeginTradeMessage* msg = new BeginTradeMessage(targetPlayer->getObjectID());
-
-		if (msg != nullptr)
+		if (targetTradeContainer != nullptr && targetTradeContainer->getTradeTargetPlayer() == player->getObjectID()) {
+			BeginTradeMessage* msg = new BeginTradeMessage(targetPlayer->getObjectID());
 			player->sendMessage(msg);
 
-		BeginTradeMessage* msg2 = new BeginTradeMessage(player->getObjectID());
-
-		if (msg2 != nullptr)
+			BeginTradeMessage* msg2 = new BeginTradeMessage(player->getObjectID());
 			targetPlayer->sendMessage(msg2);
+		} else {
+			StringIdChatParameter stringId("ui_trade", "requested_prose");
+			stringId.setTU(player->getFirstName());
+
+			targetPlayer->sendSystemMessage(stringId);
+		}
 	}
 };
+
 
 #endif /* ITEMDROPTRADECALLBACK_H_ */
