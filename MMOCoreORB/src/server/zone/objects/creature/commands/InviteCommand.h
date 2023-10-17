@@ -14,29 +14,28 @@
 class InviteCommand : public QueueCommand {
 public:
 
-	InviteCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
+	InviteCommand(const String& name, ZoneProcessServer* server)
+		: QueueCommand(name, server) {
+
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
+
 		if (!checkStateMask(creature))
 			return INVALIDSTATE;
 
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		auto ghost = creature->getPlayerObject();
+		auto playerObject = creature->getPlayerObject();
 		bool godMode = false;
 
-		if (ghost != nullptr && ghost->isPrivileged()) {
-			godMode = true;
+		if (playerObject) {
+			if (playerObject->hasGodMode())
+				godMode = true;
 		}
 
-		auto zoneServer = server->getZoneServer();
-
-		if (zoneServer == nullptr)
-			return GENERALERROR;
-
-		auto object = zoneServer->getObject(target);
+		auto object = server->getZoneServer()->getObject(target);
 
 		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
 
@@ -46,6 +45,8 @@ public:
 
 			if (args.hasMoreTokens())
 				args.getStringToken(firstName);
+
+			auto zoneServer = server->getZoneServer();
 
 			if (zoneServer == nullptr)
 				return GENERALERROR;
@@ -60,24 +61,16 @@ public:
 
 		auto groupManager = GroupManager::instance();
 
-		if (object == nullptr || !object->isPlayerCreature() || groupManager == nullptr)
+		if (object == nullptr || groupManager == nullptr)
 			return GENERALERROR;
 
-		auto player = object->asCreatureObject();
 
-		if (player == nullptr)
-			return GENERALERROR;
+		if (object->isPlayerCreature()) {
+			auto player = cast<CreatureObject*>( object.get());
 
-		auto invitedGhost = player->getPlayerObject();
-
-		if (invitedGhost == nullptr)
-			return GENERALERROR;
-
-		// Cannot be invite by a player that they ignore, does not apply to privileged players
-		if (!godMode && invitedGhost->isIgnoring(creature->getFirstName()))
-			return GENERALERROR;
-
-		groupManager->inviteToGroup(creature, player);
+		if (player != nullptr && (!player->getPlayerObject()->isIgnoring(creature->getFirstName()) || godMode))
+			groupManager->inviteToGroup(creature, player);
+		}
 
 		return SUCCESS;
 	}

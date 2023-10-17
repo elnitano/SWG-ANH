@@ -8,11 +8,8 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/Zone.h"
 
-// #define DEBUG_GROUPS
-
-UpdateNearestMissionForGroupTask::UpdateNearestMissionForGroupTask(GroupObject* group, const unsigned int planetCRC) : Task() {
-	setLoggingName("UpdateNearestMissionForGroupTask");
-
+UpdateNearestMissionForGroupTask::UpdateNearestMissionForGroupTask(GroupObject* group, const unsigned int planetCRC)
+	: Task() {
 	this->groupRef = group;
 	this->planetCRC = planetCRC;
 }
@@ -22,10 +19,6 @@ void UpdateNearestMissionForGroupTask::run() {
 	if (group == nullptr) {
 		return;
 	}
-
-#ifdef DEBUG_GROUPS
-	info(true) << "UpdateNearestMissionForGroupTask called for Group ID: " << group->getObjectID();
-#endif
 
 	Locker locker(group);
 
@@ -99,10 +92,10 @@ void UpdateNearestMissionForGroupTask::run() {
 
 	// Finally find the closest mission.
 	Reference<MissionObject*> nearestMission = nullptr;
-
 	if (missionsOnPlanet.size() == 1) {
 		nearestMission = missionsOnPlanet.get(0);
-	} else {
+	}
+	else {
 		float shortestDistanceSoFar = std::numeric_limits<float>::max();
 
 		for (int i = 0; i < missionsOnPlanet.size(); i++) {
@@ -165,10 +158,11 @@ void UpdateNearestMissionForGroupTask::setPlayersNearestMissionForGroupWaypoint(
 		waypoint->setCustomObjectName("@group:groupwaypoint", false); // Nearest mission for group
 		waypoint->setSpecialTypeID(WaypointObject::SPECIALTYPE_NEARESTMISSIONFORGROUP);
 		waypoint->setPlanetCRC(crc);
-		waypoint->setPosition(nearestMissionForGroup->getWaypointToMission()->getPositionX(), nearestMissionForGroup->getWaypointToMission()->getPositionZ(), nearestMissionForGroup->getWaypointToMission()->getPositionY());
+		waypoint->setPosition(nearestMissionForGroup->getWaypointToMission()->getPositionX(),
+			nearestMissionForGroup->getWaypointToMission()->getPositionZ(),
+			nearestMissionForGroup->getWaypointToMission()->getPositionY());
 		waypoint->setColor(WaypointObject::COLOR_YELLOW);
 		waypoint->setActive(true);
-		
 		ghost->addWaypoint(waypoint, false);
 	}
 }

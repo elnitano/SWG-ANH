@@ -58,7 +58,7 @@ namespace server {
 
 using namespace server::zone::objects::creature::ai;
 
-class GroupManager : public Singleton<GroupManager>, public Object, public Logger {
+class GroupManager : public Singleton<GroupManager>, public Object {
 
 public:
 	enum {
@@ -90,10 +90,10 @@ public:
 	void doRandomLoot(GroupObject* group, AiAgent* corpse);
 	void transferLoot(GroupObject* group, CreatureObject* winner, SceneObject* object, bool stillGrouped);
 
-  void createGroup(CreatureObject* leader, CreatureObject* player);
-  void disbandGroup(ManagedReference<GroupObject*> group, CreatureObject* player);
+	void disbandGroup(ManagedReference<GroupObject*> group, CreatureObject* player);
 
-	void joinGroupEntertainingSession(CreatureObject* player);
+	GroupObject* createGroup(CreatureObject* leader);
+
 };
 
 #endif /*GROUPMANAGER_H_*/
