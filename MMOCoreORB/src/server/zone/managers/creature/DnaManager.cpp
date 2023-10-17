@@ -166,8 +166,7 @@ void DnaManager::generationalSample(PetDeed* deed, CreatureObject* player,int qu
 	if (deed->isSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER))
 		prototype->setSpecialResist(SharedWeaponObjectTemplate::LIGHTSABER);
 
-	Locker locker(inventory, prototype);
-	
+	Locker locker(inventory);
 	if (inventory->transferObject(prototype, -1, true, false)) {
 		inventory->broadcastObject(prototype, true);
 	} else {
