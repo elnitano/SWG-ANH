@@ -24,7 +24,7 @@ public:
 
 		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
 
-		if (weapon == nullptr || !weapon->isLightningRifle()) {
+		if (!weapon->isLightningRifle()) {
 			return INVALIDWEAPON;
 		}
 
