@@ -155,10 +155,11 @@ public:
 		float rangeToCheck = range;
 
 		if (weapon == nullptr) {
-			weapon = creature->getWeapon();
-
-			if (weapon == nullptr) {
+			if(creature->getWeapon() == nullptr) {
 				return GENERALERROR;
+			}
+			else {
+				weapon = creature->getWeapon();
 			}
 		}
 

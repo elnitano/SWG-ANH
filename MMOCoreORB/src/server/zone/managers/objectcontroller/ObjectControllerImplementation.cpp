@@ -82,8 +82,6 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 		return 0.f;
 	}
 
-	float commandTime = queueCommand->getCommandDuration(object, arguments);
-
 	/*StringBuffer infoMsg;
 	infoMsg << "activating queue command 0x" << hex << actionCRC << " " << queueCommand->getQueueCommandName() << " arguments='" << arguments.toString() << "'";
 	object->info(infoMsg.toString(), true);*/
@@ -118,11 +116,12 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 
 	if (queueCommand->requiresAdmin()) {
 		try {
-			if (object->isPlayerCreature()) {
-				Reference<PlayerObject*> ghost = object->getSlottedObject("ghost").castTo<PlayerObject*>();
+			if(object->isPlayerCreature()) {
+				Reference<PlayerObject*> ghost =  object->getSlottedObject("ghost").castTo<PlayerObject*>();
 
 				if (ghost == nullptr || !ghost->hasGodMode() || !ghost->hasAbility(queueCommand->getQueueCommandName())) {
-					adminLog.warning() << object->getDisplayedName() << " attempted to use the '/" << queueCommand->getQueueCommandName() << "' command without permissions";
+					adminLog.warning() << object->getDisplayedName() << " attempted to use the '/" << queueCommand->getQueueCommandName()
+							<< "' command without permissions";
 
 					object->sendSystemMessage("@error_message:insufficient_permissions");
 					object->clearQueueAction(actionCount, 0, 2);
@@ -161,7 +160,7 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 		return 0;
 	} else {
 		if (queueCommand->getDefaultPriority() != QueueCommand::IMMEDIATE) {
-			durationTime = commandTime;
+			durationTime = queueCommand->getCommandDuration(object, arguments);
 		}
 
 		queueCommand->onComplete(actionCount, object, durationTime);
@@ -202,5 +201,6 @@ void ObjectControllerImplementation::logAdminCommand(SceneObject* object, const 
 		name = "(null)";
 	}
 
-	adminLog.info() << object->getDisplayedName() << " used '/" << queueCommand->getQueueCommandName() << "' on " << name << " with params '" << arguments.toString() << "'";
+	adminLog.info() << object->getDisplayedName() << " used '/" << queueCommand->getQueueCommandName()
+								<< "' on " << name << " with params '" << arguments.toString() << "'";
 }

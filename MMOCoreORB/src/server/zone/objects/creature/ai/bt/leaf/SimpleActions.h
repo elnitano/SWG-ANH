@@ -250,11 +250,7 @@ public:
 	Behavior::Status execute(AiAgent* agent, unsigned int startIdx = 0) const {
 		//agent->info("SelectAttack::execute", true);
 
-		if (agent->isDead()) {
-			return FAILURE;
-		}
-
-		WeaponObject* weapon = agent->getCurrentWeapon();
+		WeaponObject* weapon = agent->getWeapon();
 
 		if (weapon != nullptr && weapon->getAttackType() ==  SharedWeaponObjectTemplate::FORCEATTACK) {
 			return agent->selectSpecialAttack(-1) ? SUCCESS : FAILURE;
@@ -515,7 +511,7 @@ public:
 			return FAILURE;
 
 		if (System::random(100) > 98 && !agent->isDizzied()) {
-			WeaponObject* weapon = agent->getCurrentWeapon();
+			WeaponObject* weapon = agent->getWeapon();
 
 			if (weapon == nullptr || !weapon->isRangedWeapon())
 				return FAILURE;

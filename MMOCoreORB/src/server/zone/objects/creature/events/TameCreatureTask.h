@@ -256,7 +256,7 @@ public:
 			if (agent == nullptr)
 				return;
 
-			agent->removeCreatureFlag(CreatureFlag::STATIONARY);
+			agent->clearCreatureBit(CreatureFlag::STATIONARY);
 			agent->setAITemplate();
 		}
 	}
