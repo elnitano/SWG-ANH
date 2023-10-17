@@ -64,25 +64,8 @@ void GroupManager::inviteToGroup(CreatureObject* leader, CreatureObject* target)
 			return;
 		}
 
-		// Subtract pets from group size.
-		int groupSize = group->getGroupSize();
-
-		if (groupSize >= 2) {
-			for (int i = 0; i < group->getGroupSize(); i++) {
-				Reference<CreatureObject*> play = group->getGroupMember(i);
-
-				if (play->isPet()) {
-					groupSize = groupSize - 1;
-				}
-			}
-		}
-
-		bool notPet = true;
-		if(target->isPet())
-			notPet = false;
-
 		// can't invite if the group is full
-		if (groupSize >= 20 && notPet) {
+		if (group->getGroupSize() >= 20) {
 			leader->sendSystemMessage("@group:full");
 			return;
 		}
@@ -188,25 +171,7 @@ void GroupManager::joinGroup(CreatureObject* player) {
 
 	Locker clocker2(group, player);
 
-	// Subtract pets from group size.
-	int groupSize = group->getGroupSize();
-
-	if (groupSize >= 2) {
-		for (int i = 0; i < group->getGroupSize(); i++) {
-			Reference<CreatureObject*> play = group->getGroupMember(i);
-
-			if (play->isPet()) {
-				groupSize = groupSize - 1;
-			}
-		}
-	}
-
-	bool notPet = true;
-	if(player->isPet())
-		notPet = false;
-
-	// can't invite if the group is full
-	if (groupSize >= 20 && notPet) {
+	if (group->getGroupSize() >= 20) {
 		clocker.release();
 
 		player->updateGroupInviterID(0);
@@ -851,3 +816,4 @@ void GroupManager::makeLeader(GroupObject* group, CreatureObject* player, Creatu
 		}
 
 	}
+
