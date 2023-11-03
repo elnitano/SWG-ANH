@@ -39,7 +39,7 @@ public:
 		lootChance = lua->getIntField("lootChance");
 
 		if (lootChance == 0) {
-			lootChance = 3000000 + (level * 20000); // 30% + (0.2% * level)
+			lootChance = 4000000 + (level * 20000); // 40% + (0.2% * level)
 		}
 
 		LuaObject luagroups = lua->getObjectField("groups");
