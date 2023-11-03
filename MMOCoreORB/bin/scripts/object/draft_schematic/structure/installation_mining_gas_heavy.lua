@@ -68,7 +68,7 @@ object_draft_schematic_structure_installation_mining_gas_heavy = object_draft_sc
 	ingredientTitleNames = {"load_bearing_frame", "body_shell_and_casing", "structure_foundation", "bore_mechanism", "gas_storage_tank", "boreing_mechanism_buffers_and_bushings", "power_supply_unit", "gas_storage_unit", "resource_handling_system"},
 	ingredientSlotType = {0, 0, 0, 0, 2, 0, 1, 1, 1},
 	resourceTypes = {"steel", "ore", "ore", "metal", "object/tangible/component/structure/shared_wall_module.iff", "chemical", "object/tangible/component/structure/shared_generator_turbine.iff", "object/tangible/component/structure/shared_structure_small_storage_section.iff", "object/tangible/component/structure/shared_turbo_fluidic_drilling_pumping_unit.iff"},
-	resourceQuantities = {400, 600, 1050, 6500, 3, 355, 2, 4, 2},
+	resourceQuantities = {400, 600, 1050, 650, 3, 355, 2, 4, 2},
 	contribution = {100, 100, 100, 100, 100, 100, 100, 100, 100},
 
 	targetTemplate = "object/tangible/deed/harvester_deed/harvester_gas_deed_heavy.iff",
