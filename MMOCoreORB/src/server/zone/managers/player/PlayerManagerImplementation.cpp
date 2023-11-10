@@ -814,7 +814,8 @@ bool PlayerManagerImplementation::checkPlayerName(ClientCreateCharacterCallback*
 	}
 
 	//Check to see if name is valid
-	int res = nm->validateName(name, callback->getSpecies());
+	String namelowercase = name.toLowerCase();
+	int res = nm->validateName(namelowercase, callback->getSpecies());
 
 	if (res != NameManagerResult::ACCEPTED) {
 		switch (res) {
