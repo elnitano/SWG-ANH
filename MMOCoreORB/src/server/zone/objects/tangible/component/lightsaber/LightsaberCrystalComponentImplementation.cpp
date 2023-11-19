@@ -52,6 +52,7 @@ void LightsaberCrystalComponentImplementation::notifyLoadFromDatabase() {
 		woundChance = 0;
 		forceCost = 0;
 		floatForceCost = 0.0;
+		minidamage = 0;
 
 		generateCrystalStats();
 	}
@@ -112,6 +113,8 @@ void LightsaberCrystalComponentImplementation::generateCrystalStats() {
 		maxFloatStat = crystalData->getMaxAttackSpeed();
 
 		attackSpeed = Math::getPrecision(getRandomizedStat(minFloatStat, maxFloatStat, itemLevel), 2);
+
+		minidamage = crystalData->getMinDamage();
 	}
 
 	quality = getCrystalQuality();
@@ -139,6 +142,7 @@ void LightsaberCrystalComponentImplementation::validateCrystalStats() {
 	if (color == 31) {
 		minStat = crystalData->getMinDamage();
 		maxStat = crystalData->getMaxDamage();
+		minidamage = crystalData->getMinDamage();
 
 		if (damage > maxStat || damage < minStat)
 			damage = getRandomizedStat(minStat, maxStat, itemLevel);
@@ -286,6 +290,8 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 		if (ownerID == 0) {
 			StringBuffer str;
 			str << "\\#pcontrast2 UNTUNED";
+			if (minidamage == 10)
+				str << " (Updated)";
 			alm->insertAttribute("crystal_owner", str);
 		} else {
 			alm->insertAttribute("crystal_owner", ownerName);

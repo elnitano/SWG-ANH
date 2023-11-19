@@ -33,6 +33,7 @@ class LightsaberCrystalComponent extends Component {
 	protected int woundChance;
 	protected int itemLevel;
 	protected float floatForceCost;
+	protected int minidamage;
 
 	protected unsigned long ownerID;
 	protected string ownerName;
@@ -207,4 +208,3 @@ class LightsaberCrystalComponent extends Component {
 		return true;
 	}
 }
-
