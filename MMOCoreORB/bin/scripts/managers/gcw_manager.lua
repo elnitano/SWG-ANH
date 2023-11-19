@@ -32,10 +32,10 @@ maxBasesPerPlanet = 25
 maxBasesPerPlayer = 3
 
 -- The construction delay when placing a GCW base in seconds
-basePlacementDelay = 300
+basePlacementDelay = 30
 
 -- Allow placement of GCW bases while player is in comabt
-placeInCombat = true
+placeInCombat = false
 
 -- allow the placement of PvE Faction bases. Setting this false will begin the destruction task for PvE bases when the GCW runs its sanity checks after server loading
 allowPveBases = true
