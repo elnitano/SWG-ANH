@@ -740,8 +740,9 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 	int roll = System::random(100);
 	int chance = 5;
 
-	if (hasPowerup())
-		chance += 10;
+	// Changing the way ANH calculates Weapon Decay.
+	//if (hasPowerup())
+	//	chance += 10;
 
 	if (roll < chance) {
 		Locker locker(_this.getReferenceUnsafeStaticCast());
@@ -761,7 +762,17 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 				}
 			}
 		} else {
-			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, 1, true, true);
+			float weapondamage = 1.0;
+
+			if(hasPowerup()){
+				weapondamage += 0.25;
+			}
+
+			if(isSliced()){
+				weapondamage += 0.25;
+			}
+
+			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, weapondamage, true, true);
 
 			if (((float)conditionDamage - 1 / (float)maxCondition < 0.75) && ((float)conditionDamage / (float)maxCondition > 0.75))
 				user->sendSystemMessage("@combat_effects:weapon_quarter");
