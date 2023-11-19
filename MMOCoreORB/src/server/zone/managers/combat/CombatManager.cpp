@@ -2511,7 +2511,13 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		Locker plocker(psg);
 
-		psg->inflictDamage(psg, 0, damage * 0.2, true, true);
+		float damagepct = 0.1;
+
+		if(psg->isSliced()) {
+			damagepct = 0.125;
+		}
+
+		psg->inflictDamage(psg, 0, damage * damagepct, true, true);
 	}
 
 	// Standard Armor
@@ -2539,7 +2545,13 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 		// inflict condition damage
 		Locker alocker(armor);
 
-		armor->inflictDamage(armor, 0, damage * 0.2, true, true);
+		float damagepct = 0.1;
+
+		if(armor->isSliced()) {
+			damagepct = 0.125;
+		}
+
+		armor->inflictDamage(armor, 0, damage * damagepct, true, true);
 	}
 
 	return damage;
