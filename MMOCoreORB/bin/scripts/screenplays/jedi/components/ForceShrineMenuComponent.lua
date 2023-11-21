@@ -9,6 +9,10 @@ function ForceShrineMenuComponent:fillObjectMenuResponse(pSceneObject, pMenuResp
 
 	if (CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
 		menuResponse:addRadialMenuItem(121, 3, "@force_rank:recover_jedi_items") -- Recover Jedi Items
+		-- Added fix for Jedi Knight Trial which can bug out for certain players!
+		if (JediTrials:isEligibleForKnightTrials(pPlayer)) then
+			menuResponse:addRadialMenuItem(122, 3, "My trial is bugged, fix me sensai! (!Resets Trial!)")
+		end
 	end
 
 end
@@ -26,6 +30,19 @@ function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selec
 		end
 	elseif (selectedID == 121 and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
 		self:recoverRobe(pPlayer)
+	-- If menu is selected it forces a reset to the player!
+	elseif (selectedID == 122 and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
+		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
+			CreatureObject(pPlayer):sendSystemMessage("Well.. You want me to fix this?.. Show me some respect first youngling!") -- Must respect
+		else
+			if (JediTrials:isEligibleForKnightTrials(pPlayer)) then
+				KnightTrials:resetCompletedTrialsToStart(pPlayer)
+				CreatureObject(pPlayer):sendSystemMessage("Your trial data has been reset!")
+				self:doMeditate(pObject, pPlayer)
+			else
+				CreatureObject(pPlayer):sendSystemMessage("You've already completed the Trials, or you're still a youngling!")
+			end
+		end
 	end
 
 	return 0
