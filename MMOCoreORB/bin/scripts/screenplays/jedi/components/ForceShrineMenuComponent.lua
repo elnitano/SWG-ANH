@@ -5,6 +5,7 @@ function ForceShrineMenuComponent:fillObjectMenuResponse(pSceneObject, pMenuResp
 
 	if (CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
 		menuResponse:addRadialMenuItem(120, 3, "@jedi_trials:meditate") -- Meditate
+		menuResponse:addRadialMenuItem(123, 3, "nitan, whats my unlock professions?")
 	end
 
 	if (CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
@@ -43,6 +44,15 @@ function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selec
 				CreatureObject(pPlayer):sendSystemMessage("You've already completed the Trials, or you're still a youngling!")
 			end
 		end
+	elseif (selectedID == 123) then
+		if (CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
+			--local pGhost = CreatureObject(pPlayer):getPlayerObject()
+			HologrindJediManager:showUnlockProfessions(pPlayer)
+		else
+			local suiManager = LuaSuiManager()
+			local playerName = CreatureObject(pPlayer):getFirstName()
+			suiManager:sendMessageBox(pPlayer, pPlayer, "Unlock professions for " .. playerName, "1. Never\n2. Gonna\n3. Give\n4. You\n5. Up!\n6. Never\n7. Gonna\n8. Let\n9. You\n10. Down!!", "@ok", "ForceShrineMenuComponent", "notifyOkPressed")
+		end
 	end
 
 	return 0
@@ -60,7 +70,7 @@ function ForceShrineMenuComponent:doMeditate(pObject, pPlayer)
 		end
 		
 		local suiManager = LuaSuiManager()
-		suiManager:sendMessageBox(pPlayer, pPlayer, "@quest/force_sensitive/intro:force_sensitive", "Your attunement to the force has not gone unnoticed. A strange force lightning struck you, and you're now elegible to train Jedi. Be mindful of your surroundings, you're a target now for certain professions.", "@ok", "HologrindJediManager", "notifyOkPressed")
+		suiManager:sendMessageBox(pPlayer, pPlayer, "@quest/force_sensitive/intro:force_sensitive", "Your attunement to the force has not gone unnoticed. A strange force lightning struck you, and you're now elegible to train Jedi. Be mindful of your surroundings, you're a target now for certain professions.", "@ok", "ForceShrineMenuComponent", "notifyOkPressed")
 		
 		PlayerObject(pGhost):setJediState(2)
 

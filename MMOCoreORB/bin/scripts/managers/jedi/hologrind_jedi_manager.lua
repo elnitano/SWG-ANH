@@ -3,7 +3,7 @@ local ObjectManager = require("managers.object.object_manager")
 
 jediManagerName = "HologrindJediManager"
 
-NUMBEROFPROFESSIONSTOMASTER = 5
+NUMBEROFPROFESSIONSTOMASTER = 10
 MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 0
 
 HologrindJediManager = JediManager:new {
@@ -52,6 +52,43 @@ function HologrindJediManager:getGrindableProfessionList()
 		{ "combat_unarmed_master", 		COMBAT_UNARMED_MASTER  },		--32
 	}
 	return grindableProfessions
+end
+
+function HologrindJediManager:convertProfessionString(professionId)
+	originalProfession = self:getProfessionStringIdFromBadgeNumber(professionId)
+	if (originalProfession == "crafting_architect_master") then return "Master Architect" end
+	if (originalProfession == "crafting_armorsmith_master") then return "Master Armorsmith" end
+	if (originalProfession == "crafting_artisan_master") then return "Master Artisan" end
+	if (originalProfession == "outdoors_bio_engineer_master") then return "Master Bio Engineer" end
+	if (originalProfession == "combat_bountyhunter_master") then return "Master Bounty Hunter" end
+	if (originalProfession == "combat_brawler_master") then return "Master Brawler" end
+	if (originalProfession == "combat_carbine_master") then return "Master Carbineer" end
+	if (originalProfession == "crafting_chef_master") then return "Master Chef" end
+	if (originalProfession == "science_combatmedic_master") then return "Master Combat Medic" end
+	if (originalProfession == "combat_commando_master") then return "Master Commando" end
+	if (originalProfession == "outdoors_creaturehandler_master") then return "Master Creature Handler" end
+	if (originalProfession == "social_dancer_master") then return "Master Dancer" end
+	if (originalProfession == "science_doctor_master") then return "Master Doctor" end
+	if (originalProfession == "crafting_droidengineer_master") then return "Master Droid Engineer" end
+	if (originalProfession == "social_entertainer_master") then return "Master Entertainer" end
+	if (originalProfession == "combat_1hsword_master") then return "Master Fencer" end
+	if (originalProfession == "social_imagedesigner_master") then return "Master Image Designer" end
+	if (originalProfession == "combat_marksman_master") then return "Master Marksman" end
+	if (originalProfession == "science_medic_master") then return "Master Medic" end
+	if (originalProfession == "crafting_merchant_master") then return "Master Merchant" end
+	if (originalProfession == "social_musician_master") then return "Master Musician" end
+	if (originalProfession == "combat_polearm_master") then return "Master Polearm" end
+	if (originalProfession == "combat_pistol_master") then return "Master Pistoleer" end
+	if (originalProfession == "outdoors_ranger_master") then return "Master Ranger" end
+	if (originalProfession == "combat_rifleman_master") then return "Master Rifleman" end
+	if (originalProfession == "outdoors_scout_master") then return "Master Scout" end
+	if (originalProfession == "combat_smuggler_master") then return "Master Smuggler" end
+	if (originalProfession == "outdoors_squadleader_master") then return "Master Squad Leader" end
+	if (originalProfession == "combat_2hsword_master") then return "Master Swordsman" end
+	if (originalProfession == "crafting_tailor_master") then return "Master Tailor" end
+	if (originalProfession == "crafting_weaponsmith_master") then return "Master Weaponsmith" end
+	if (originalProfession == "combat_unarmed_master") then return "Teras Kasi Master" end
+	return "Unknown profession!"
 end
 
 -- Handling of the onPlayerCreated event.
@@ -279,6 +316,26 @@ function HologrindJediManager:fixBE(pCreatureObject, professionId)
 		end
 	end
 	return false
+end
+
+--make SUI to show unlock professions
+function HologrindJediManager:showUnlockProfessions(pPlayer)
+	local playerName = CreatureObject(pPlayer):getFirstName()
+	local suiManager = LuaSuiManager()
+
+	local pGhost = CreatureObject(pPlayer):getPlayerObject()
+	local holoProfessions = PlayerObject(pGhost):getHologrindProfessions()
+	local profCounter = 1
+	local professions = "List of professions:\n"
+
+	for i = 1, #holoProfessions, 1 do
+		if(holoProfessions[i] > 0) then
+			professions = professions .. profCounter .. ": " .. self:convertProfessionString(holoProfessions[i]) .. "\n"
+			profCounter = profCounter + 1
+		end
+	end
+
+	suiManager:sendMessageBox(pPlayer, pPlayer, "Unlock professions for " .. playerName, professions, "@ok", "HologrindJediManager,", "notifyOkPressed")
 end
 
 registerScreenPlay("HologrindJediManager", true)
