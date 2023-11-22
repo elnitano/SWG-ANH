@@ -73,6 +73,9 @@ object_building_poi_scout_camp_s5 = object_building_poi_shared_scout_camp_s5:new
 		{templateFile = "object/tangible/camp/camp_chair_s3.iff", x = -2.22, z = 0, y = 2.33, ox = 0, oy = -0.315, oz = 0, ow = 0.949, cellid = -1, containmentType = -1},
 		{templateFile = "object/tangible/camp/camp_chair_s3.iff", x = -5.13, z = 0, y = 1.07, ox = 0, oy = 0.936, oz = 0, ow = 0.352, cellid = -1, containmentType = -1},
 		{templateFile = "object/tangible/camp/camp_chair_s3.iff", x = -3.11, z = 0, y = -1.06, ox = 0, oy = -0.421, oz = 0, ow = 0.907, cellid = -1, containmentType = -1},
+		{templateFile = "object/tangible/terminal/terminal_mission.iff", x = -13.54, z = 0, y = 3.54, ox = 0, oy = -0.5, oz = 0, ow = 0.5, cellid = -1, containmentType = -1},
+		{templateFile = "object/tangible/terminal/terminal_mission_imperial.iff", x = -7.54, z = 0, y = -2.24, ox = 0, oy = 0.75, oz = 0, ow = -0.25, cellid = -1, containmentType = -1},
+		{templateFile = "object/tangible/terminal/terminal_mission_rebel.iff", x = -1.54, z = 0, y = -4.24, ox = 0, oy = 1, oz = 0, ow = 0, cellid = -1, containmentType = -1},
 	}
 }
 

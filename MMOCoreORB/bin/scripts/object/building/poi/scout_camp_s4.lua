@@ -80,6 +80,7 @@ object_building_poi_scout_camp_s4 = object_building_poi_shared_scout_camp_s4:new
 		{templateFile = "object/tangible/camp/camp_chair_s2.iff", x = -.5, z = 0, y = -1.41, ox = 0, oy = 0.825, oz = 0, ow = 0.565, cellid = -1, containmentType = -1},
 		{templateFile = "object/tangible/camp/camp_chair_s2.iff", x = 2.38, z = 0, y = -1.59, ox = 0, oy = -0.849, oz = 0, ow = 0.528, cellid = -1, containmentType = -1},
 		{templateFile = "object/tangible/camp/camp_chair_s2.iff", x = 2.18, z = 0, y = -3.15, ox = 0, oy = -0.613, oz = 0, ow = 0.790, cellid = -1, containmentType = -1},
+		{templateFile = "object/tangible/terminal/terminal_mission.iff", x = 7.54, z = 0, y = 0.54, ox = 0, oy = 0.5, oz = 0, ow = 0.875, cellid = -1, containmentType = -1},
 	}
 }
 
