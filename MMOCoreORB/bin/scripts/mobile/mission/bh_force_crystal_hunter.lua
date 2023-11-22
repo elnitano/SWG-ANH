@@ -43,7 +43,7 @@ bh_force_crystal_hunter = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5300000
+			lootChance = 7500000
 		},
 		{
 			groups = {
@@ -58,7 +58,7 @@ bh_force_crystal_hunter = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5300000
+			lootChance = 6500000
 		},
 		{
 			groups = {
@@ -74,7 +74,7 @@ bh_force_crystal_hunter = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5300000
+			lootChance = 5000000
 		},
 	},
 

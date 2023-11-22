@@ -41,7 +41,7 @@ bh_tusken_carnage_champion = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5320000
+			lootChance = 8500000
 		},
 		{
 			groups = {
@@ -56,7 +56,7 @@ bh_tusken_carnage_champion = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5320000
+			lootChance = 7500000
 		},
 		{
 			groups = {
@@ -72,7 +72,7 @@ bh_tusken_carnage_champion = Creature:new {
 				{group = "clothing_attachments", chance = 1000000},
 				{group = "armor_attachments", chance = 1000000}
 			},
-			lootChance = 5320000
+			lootChance = 6500000
 		},
 	},
 
@@ -81,7 +81,7 @@ bh_tusken_carnage_champion = Creature:new {
 	primaryWeapon = "tusken_weapons",
 	secondaryWeapon = "unarmed",
 	conversationTemplate = "",
-	
+
 	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
 	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
 	primaryAttacks = merge(marksmanmaster,brawlermaster,fencermaster,riflemanmaster),
