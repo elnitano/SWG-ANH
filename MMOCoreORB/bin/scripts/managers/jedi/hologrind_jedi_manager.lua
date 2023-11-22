@@ -6,6 +6,9 @@ jediManagerName = "HologrindJediManager"
 NUMBEROFPROFESSIONSTOMASTER = 10
 MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 0
 
+USEDHOLOCRON = "used_holocron"
+HOLOCRONCOOLDOWNTIME = 24 * 60 * 60 * 1000 -- 24 hours
+
 HologrindJediManager = JediManager:new {
 	screenplayName = jediManagerName,
 	jediManagerName = jediManagerName,
@@ -280,12 +283,16 @@ function HologrindJediManager:useItem(pSceneObject, itemType, pCreatureObject)
 	end
 
 	if itemType == ITEMHOLOCRON then
-		local isSilent = self:sendHolocronMessage(pCreatureObject)
-		if isSilent then
-			return
+		if CreatureObject(pCreatureObject):hasSkill("force_title_jedi_rank_02") then
+			VillageJediManagerHolocron.useHolocron(pSceneObject, pCreatureObject)
 		else
-			SceneObject(pSceneObject):destroyObjectFromWorld()
-			SceneObject(pSceneObject):destroyObjectFromDatabase()
+			local isSilent = self:sendHolocronMessage(pCreatureObject)
+			if isSilent then
+				return
+			else
+				SceneObject(pSceneObject):destroyObjectFromWorld()
+				SceneObject(pSceneObject):destroyObjectFromDatabase()
+			end
 		end
 	end
 end
