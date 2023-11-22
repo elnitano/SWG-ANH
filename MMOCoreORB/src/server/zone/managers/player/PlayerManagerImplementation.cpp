@@ -2415,7 +2415,11 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 		trx.addState("localMultiplier", localMultiplier);
 		trx.addState("globalExpMultiplier", globalExpMultiplier);
 
-		xp = playerObject->addExperience(trx, xpType, (int) (amount * speciesModifier * buffMultiplier * localMultiplier * globalExpMultiplier));
+		if (amount > 0) {
+			xp = playerObject->addExperience(trx, xpType, (int) (amount * speciesModifier * buffMultiplier * localMultiplier * globalExpMultiplier));
+		} else {
+			xp = playerObject->addExperience(trx, xpType, (int) (amount * speciesModifier * buffMultiplier * localMultiplier));
+		}
 	} else
 		xp = playerObject->addExperience(trx, xpType, (int)amount);
 
