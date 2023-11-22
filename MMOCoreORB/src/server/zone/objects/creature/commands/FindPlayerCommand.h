@@ -9,6 +9,7 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/managers/player/PlayerMap.h"
 
+
 class FindPlayerCommand : public QueueCommand {
 public:
 
@@ -58,7 +59,27 @@ public:
 
 			while (playerMap->hasNext(false)) {
 				ManagedReference<CreatureObject*> player = playerMap->getNextValue(false);
-				String name = player->getDisplayedName();
+				ManagedReference<PlayerObject*> ghostObj = player->getPlayerObject();
+				ManagedReference<Zone*> zone = player->getZone();
+				
+				String name = "\\#ffffff" + player->getDisplayedName();
+				int credits = player->getCashCredits();
+				int bank = player->getBankCredits();
+				String str_credits = String::valueOf(credits);
+				String str_bank = String::valueOf(bank);
+				name = name + " (Credits: \\#4bd44d" + str_credits + " \\#ffffffBank: \\#4bcfd4" + str_bank + "\\#ffffff)";
+				
+				int lots = ghostObj->getLotsRemaining();
+				lots = 10 - lots;
+				if(lots > 0){
+					String str_lots = String::valueOf(lots);
+					name = name + " \\#d4954b(Used Lots: " + str_lots + ")\\#ffffff";
+				}
+				
+				String planet = zone->getZoneName();
+				String pos = player->getWorldPosition().toString();
+				
+				name = name + " (Planet: " + planet + pos;
 
 				if (filter.isEmpty() || name.toLowerCase().contains(filter.toLowerCase())) {
 					findResults->addMenuItem(name, player->getObjectID());
