@@ -2,7 +2,7 @@ tatooine_hard_krayt_ne = {
 	lairSpawns = {
 		{
 			lairTemplateName = "tatooine_canyon_krayt_dragon_pack_neutral_none",
-			spawnLimit = 4,
+			spawnLimit = 5,
 			minDifficulty = 122,
 			maxDifficulty = 276,
 			numberToSpawn = 0,
@@ -11,7 +11,7 @@ tatooine_hard_krayt_ne = {
 		},
 		{
 			lairTemplateName = "tatooine_giant_canyon_krayt_dragon_pack_neutral_none",
-			spawnLimit = 4,
+			spawnLimit = 5,
 			minDifficulty = 275,
 			maxDifficulty = 304,
 			numberToSpawn = 0,
@@ -20,7 +20,7 @@ tatooine_hard_krayt_ne = {
 		},
 		{
 			lairTemplateName = "tatooine_krayt_dragon_grand_neutral_none",
-			spawnLimit = 2,
+			spawnLimit = 4,
 			minDifficulty = 320,
 			maxDifficulty = 350,
 			numberToSpawn = 0,
