@@ -685,7 +685,17 @@ void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 ob
 
 			if (strongRef != nullptr && strongRef->isPlayerCreature()) {
 				ManagedReference<CreatureObject*> strongOwnerRef = cast<CreatureObject*>(strongRef.get());
+				ManagedReference<ChatManager*> cman = zoneServer->getChatManager();
 
+				String mail_sender = "auctioner";
+				String mail_subject = "Item offered to vendor";
+				String mail_itemname = removeColorCodes(item->getItemName());
+				String mail_price = String::valueOf(item->getPrice());
+				String mail_reciever = strongOwnerRef->getFirstName();
+
+				String mail_body = player->getFirstName() + " has offered " + mail_itemname + " to " + vendor->getDisplayedName() + " for " + mail_price + " credits.";
+
+				cman->sendMail(mail_sender, mail_subject, mail_body, mail_reciever);
 				if(strongOwnerRef->isOnline()) {
 					strongOwnerRef->sendSystemMessage(player->getFirstName() + " has offered an item to " + vendor->getDisplayedName());
 				}
