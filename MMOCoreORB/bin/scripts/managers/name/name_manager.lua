@@ -28,6 +28,16 @@ darktrooperPrefixes = { "JLB", "RAR", "KNP", "BCP", "RTZ" };
 swamptrooperPrefixes = { "GL", "TL", "RL", "NL", "CL" };
 
 reservedNames = {
+	{ "health", DECLINED_PROFANE },
+	{ "strength", DECLINED_PROFANE },
+	{ "constitution", DECLINED_PROFANE },
+	{ "action", DECLINED_PROFANE },
+	{ "quickness", DECLINED_PROFANE },
+	{ "stamina", DECLINED_PROFANE },
+	{ "mind", DECLINED_PROFANE },
+	{ "focus", DECLINED_PROFANE },
+	{ "willpower", DECLINED_PROFANE },
+	{ "dump", DECLINED_PROFANE },
 	{ "anal", DECLINED_PROFANE },
 	{ "ass", DECLINED_PROFANE },
 	{ "biatch", DECLINED_PROFANE },
