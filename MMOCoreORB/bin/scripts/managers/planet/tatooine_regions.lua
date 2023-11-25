@@ -210,8 +210,9 @@ tatooine_regions = {
 	{"@tatooine_region_names:mos_taike_easy_newbie", 3835, 2350, {CIRCLE, 600}, SPAWNAREA, {"tatooine_mos_taike_easy_newbie"}, 64},
 	{"@tatooine_region_names:mos_taike_medium_newbie", 3835, 2350, {RING, 600, 1100}, SPAWNAREA, {"tatooine_mos_taike_medium_newbie"}, 64},
 
-	{"@tatooine_region_names:hard_krayt_ne", 7118, 4433, {CIRCLE, 500}, SPAWNAREA + NAVAREA, {"tatooine_hard_krayt_ne"}, 16},
-	{"@tatooine_region_names:north_eastern_krayt_background", 908, 930, {RECTANGLE, 7830, 5357}, SPAWNAREA, {"tatooine_north_eastern_krayt_background"}, 64},
+	{"@tatooine_region_names:hard_krayt_ne", 6515, 4215, {CIRCLE, 500}, SPAWNAREA + NAVAREA, {"tatooine_hard_krayt_ne"}, 32},
+	{"@tatooine_region_names:hard_krayt_sw", -4649, -4364, {CIRCLE, 500}, SPAWNAREA + NAVAREA, {"tatooine_hard_krayt_sw"}, 16},
+	--{"@tatooine_region_names:north_eastern_krayt_background", 908, 930, {RECTANGLE, 7830, 5357}, SPAWNAREA, {"tatooine_north_eastern_krayt_background"}, 256},
 	{"@tatooine_region_names:jundland_waste_1", -3488, 4240, {CIRCLE, 1125}, SPAWNAREA, {"tatooine_jundland_wastes"}, 64},
 	{"@tatooine_region_names:jundland_waste_2", -3296, -1016, {CIRCLE, 1250}, SPAWNAREA, {"tatooine_jundland_wastes"}, 64},
 	{"@tatooine_region_names:eastern_dune_sea", 2320, 784, {RECTANGLE, 8000, 7696}, SPAWNAREA, {"tatooine_hard_dune_sea"}, 256},

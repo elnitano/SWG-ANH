@@ -1,4 +1,4 @@
-tatooine_hard_krayt_ne = {
+tatooine_hard_krayt_sw = {
 	lairSpawns = {
 		{
 			lairTemplateName = "tatooine_canyon_krayt_dragon_pack_neutral_none",
@@ -39,4 +39,4 @@ tatooine_hard_krayt_ne = {
 	}
 }
 
-addSpawnGroup("tatooine_hard_krayt_ne", tatooine_hard_krayt_ne);
+addSpawnGroup("tatooine_hard_krayt_sw", tatooine_hard_krayt_sw);
