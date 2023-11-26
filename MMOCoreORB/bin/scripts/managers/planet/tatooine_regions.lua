@@ -120,7 +120,7 @@ tatooine_regions = {
 	{"@tatooine_region_names:small_grave_marker", 1877, -3029, {CIRCLE, 20}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
 	{"@tatooine_region_names:pile_o_rocks", 871, -1057, {CIRCLE, 20}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
 	{"@tatooine_region_names:single_platform_messed_up_walls", 7059, 7065, {CIRCLE, 150}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
-	{"@tatooine_region_names:4_pillars_connected_at_top", 6526, 5524, {CIRCLE, 75}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
+	--{"@tatooine_region_names:4_pillars_connected_at_top", 6526, 5524, {CIRCLE, 75}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
 	{"@tatooine_region_names:huge_cliff_fortress", 574, 362, {CIRCLE, 250}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
 	{"@tatooine_region_names:destroyed_aircraft_hanger", 359, 6568, {CIRCLE, 100}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
 	{"@tatooine_region_names:single_platform_with_messed_up_pillars", 6399, 208, {CIRCLE, 100}, NOSPAWNAREA + NOBUILDZONEAREA + NAMEDREGION},
