@@ -155,6 +155,7 @@ lok_regions = {
 	{"lok_nyms_stronghold_3", 546, 5081, {CIRCLE, 5}, UNDEFINEDAREA},
 	{"lok_nyms_stronghold_4", 523, 4967, {CIRCLE, 5}, UNDEFINEDAREA},
 	{"lok_nyms_stronghold_nobuild_1", 436, 5120, {CIRCLE, 1000}, CAMPINGAREA + NOBUILDZONEAREA},
+	{"lok_nyms_stronghold_nospawn", 464, 5511, {CIRCLE, 100}, NOSPAWNAREA},
 	{"@lok_region_names:lok_imperial_outpost", -1920, -3084, {CIRCLE, 201}, CITY + NOSPAWNAREA},
 	{"lok_imperial_outpost_nobuild_1", -1920, -3084, {CIRCLE, 402}, CAMPINGAREA + NOBUILDZONEAREA},
 

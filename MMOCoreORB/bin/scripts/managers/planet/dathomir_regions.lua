@@ -34,6 +34,7 @@ dathomir_regions = {
 	{"dathomir_smc_east_side_bridge", -440, 4176, {CIRCLE, 40}, NOBUILDZONEAREA + NOSPAWNAREA},
 	{"dathomir_nightsister_vs_smc_battle_sd", -2523, 1537, {CIRCLE, 250}, NOSPAWNAREA + NOBUILDZONEAREA},
 	{"dathomir_crashed_transport_sd", 5684, 1918, {CIRCLE, 125}, NOSPAWNAREA + NOBUILDZONEAREA},
+	{"dathomir_nightspider_cc_nospawn", -1191, 6248, {CIRCLE, 100}, NOSPAWNAREA},
 	{"@dathomir_region_names:vass_meindras_1", -5088, 5536, {RECTANGLE, -4736, 6080}, NAMEDREGION},
 	{"@dathomir_region_names:vass_meindras_2", -5280, 4928, {RECTANGLE, -4928, 5600}, NAMEDREGION},
 	{"@dathomir_region_names:vass_meindras_3", -5536, 4160, {RECTANGLE, -5216, 49280}, NAMEDREGION},
