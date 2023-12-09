@@ -161,7 +161,7 @@ lootableClothingAttachmentStatMods = {
 	"clothing_experimentation",
 	--"clothing_repair",
 	"combat_bleeding_defense",
-	"combat_healing_ability",
+	--"combat_healing_ability",
 	"combat_medicine_assembly",
 	"combat_medicine_experimentation",
 	"counterattack",
