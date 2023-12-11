@@ -84,6 +84,21 @@ GeonosianLab = ScreenPlay:new {
 		{ template = "object/static/destructible/destructible_tato_cave_rock_med.iff", x = -76.86, z = -22.03, y = -110.16, rot = 3, cell = 1627793 }, -- largecavehall1
 		{ template = "object/static/destructible/destructible_tato_cave_rock_med.iff", x = -76.9, z = -22.06, y = -109.21, rot = 22, cell = 1627793 } -- largecavehall1
 	},
+
+	acklaySpawnLocations = {
+		{115.1, -311.6},
+		{102.1, -311.6},
+		{101.1, -321.6},
+		{87.1, -313.6},
+		{86.1, -348.6}
+	},
+
+	fireSpiderLocations = {
+		{-108, -125.5, 1627793},
+		{-108, -99.5, 1627793},
+		{-118, -109.5, 1627793},
+		{-130, -85, 1627794},
+	}
 }
 
 registerScreenPlay("GeonosianLab", true)
@@ -296,22 +311,22 @@ function GeonosianLab:spawnMobiles()
 	-- intersection2 (1627792)
 
 	-- largecavehall1 (1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-88.3,-21.8,-110.3,210,1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-98,-21.9,-114.7,50,1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-107.3,-22.2,-96.6,180,1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-108,-21.8,-126,0,1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-123,-22,-109.5,80,1627793)
-	spawnMobile("yavin4", "cavern_spider",180,-134.7,-20.9,-112.2,77,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-88.3,-21.8,-110.3,210,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-98,-21.9,-114.7,50,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-107.3,-22.2,-96.6,180,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-108,-21.8,-126,0,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-123,-22,-109.5,80,1627793)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-134.7,-20.9,-112.2,77,1627793)
 
 	-- largecavehall2 (1627794)
 	spawnMobile("yavin4", "biogenic_construction", 1, -134.5, -21.7, -74.8, 90, 1627794)
-	spawnMobile("yavin4", "enhanced_gaping_spider",3600,-130,-22.1,-85,-180,1627794, true) -- Randomized respawn
+	self:spawnFirespider()
 
 	-- hall4 (1627795)
 
 	-- intersection3 (1627796)
 	spawnMobile("yavin4", "alert_droideka",180,-3.8,-30.2,-92,-180,1627796)
-	spawnMobile("yavin4", "cavern_spider",180,-16.8,-30.2,-115.1,22,1627796)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-16.8,-30.2,-115.1,22,1627796)
 
 	-- hall5 (1627797)
 
@@ -324,8 +339,8 @@ function GeonosianLab:spawnMobiles()
 	-- hall6 (1627799)
 
 	-- intersection4 (1627800)
-	spawnMobile("yavin4", "cavern_spider",180,-48,-21.8,-158,0,1627800)
-	spawnMobile("yavin4", "cavern_spider",180,-48,-21.8,-143,0,1627800)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-48,-21.8,-158,0,1627800)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-48,-21.8,-143,0,1627800)
 
 	-- transition4 (1627801)
 	spawnMobile("yavin4", "alert_droideka",180,-34.2,-22,-128,-180,1627801)
@@ -385,14 +400,14 @@ function GeonosianLab:spawnMobiles()
 	spawnMobile("yavin4", "alert_droideka",180,-129.8,-34.0,-267.9,87,1627816)
 
 	-- cavecages2 (1627817)
-	spawnMobile("yavin4", "cavern_spider",180,-128.2,-34.4,-322.4,-30,1627817)
-	spawnMobile("yavin4", "cavern_spider",180,-143.5,-33.5,-321.7,134,1627817)
-	spawnMobile("yavin4", "cavern_spider",180,-131.1,-33.9,-339.0,145,1627817)
-	spawnMobile("yavin4", "cavern_spider",180,-135.5,-33.8,-342.8,-1,1627817)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-128.2,-34.4,-322.4,-30,1627817)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-143.5,-33.5,-321.7,134,1627817)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-131.1,-33.9,-339.0,145,1627817)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-135.5,-33.8,-342.8,-1,1627817)
 
 	-- cavecages3 (1627818)
-	spawnMobile("yavin4", "cavern_spider",180,-118.9,-34.0,-349.2,-98,1627818)
-	spawnMobile("yavin4", "cavern_spider",180,-134.5,-34.0,-373.2,-2,1627818)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-118.9,-34.0,-349.2,-98,1627818)
+	spawnMobile("yavin4", "geo_cavern_spider",180,-134.5,-34.0,-373.2,-2,1627818)
 	spawnMobile("yavin4", "enhanced_kliknik",180,-129.4,-33.6,-384.1,-2,1627818)
 
 	-- cavecages4 (1627819)
@@ -413,22 +428,22 @@ function GeonosianLab:spawnMobiles()
 
 	-- grandcageroom (1627822)
 	spawnMobile("yavin4", "biogenic_scientist_geonosian", 1, 7.4, -22, -333, 180, 1627822)
-	spawnMobile("yavin4", "cavern_spider",180,4.1,-34.0,-402.4,171,1627822)
+	spawnMobile("yavin4", "geo_cavern_spider",180,4.1,-34.0,-402.4,171,1627822)
 	spawnMobile("yavin4", "enhanced_force_kliknik",180,16.5,-34.0,-368.3,161,1627822)
 	spawnMobile("yavin4", "enhanced_kliknik",180,24.0,-34.0,-397.1,117,1627822)
 	spawnMobile("yavin4", "enhanced_force_kliknik",180,22.9,-34.0,-370.1,11,1627822)
-	spawnMobile("yavin4", "cavern_spider",180,24.8,-24.0,-333.8,87,1627822)
-	spawnMobile("yavin4", "cavern_spider",180,13.3,-24.0,-341.6,89,1627822)
-	spawnMobile("yavin4", "cavern_spider",180,13.4,-22.0,-337.3,-179,1627822)
+	spawnMobile("yavin4", "geo_cavern_spider",180,24.8,-24.0,-333.8,87,1627822)
+	spawnMobile("yavin4", "geo_cavern_spider",180,13.3,-24.0,-341.6,89,1627822)
+	spawnMobile("yavin4", "geo_cavern_spider",180,13.4,-22.0,-337.3,-179,1627822)
 
 	-- largeendcave (1627823)
-	spawnMobile("yavin4", "acklay",7200,101.1,-34.3,-321.6,-136,1627823, true) --Randomized respawn
+	self:spawnAcklay()
 	spawnMobile("yavin4", "enhanced_kwi",180,48.0,-34.0,-334.4,0,1627823)
-	spawnMobile("yavin4", "cavern_spider",180,91.2,-33.9,-347.9,5,1627823)
+	spawnMobile("yavin4", "enhanced_force_kliknik",180,91.2,-33.9,-347.9,5,1627823)
 	spawnMobile("yavin4", "enhanced_kliknik",180,98.0,-34.1,-334.4,-53,1627823)
 	spawnMobile("yavin4", "enhanced_kliknik",180,120.2,-33.9,-330.6,-33,1627823)
-	spawnMobile("yavin4", "cavern_spider",180,85.0,-33.8,-309.1,143,1627823)
-	spawnMobile("yavin4", "cavern_spider",180,74.7,-34.1,-329.0,-90,1627823)
+	spawnMobile("yavin4", "enhanced_force_kliknik",180,85.0,-33.8,-309.1,143,1627823)
+	spawnMobile("yavin4", "enhanced_kliknik",180,74.7,-34.1,-329.0,-90,1627823)
 
 	-- spiralhallway (1627824)
 	spawnMobile("yavin4", "enhanced_kwi",180,9.5,-16.0,-27.9,89,1627824)
@@ -445,6 +460,45 @@ function GeonosianLab:spawnMobiles()
 	end
 
 	spawnMobile("yavin4", "herald_biogenic_gardo", 60, -3.8, 0.1, -3.8, 88, 1713374)
+end
+
+function GeonosianLab:spawnAcklay()
+	local acklayLocation = self.acklaySpawnLocations
+
+	local randomSpawn = math.random(1,#acklayLocation)
+
+	local pAcklay = spawnMobile("yavin4", "acklay", 0 , acklayLocation[randomSpawn][1], -34.3, acklayLocation[randomSpawn][2], -136, 1627823)
+
+	createObserver(OBJECTDESTRUCTION, "GeonosianLab", "acklayKilled", pAcklay)
+end
+
+function GeonosianLab:acklayKilled(pAcklay)
+	local randomTimer = math.random(60,180)
+	--local respawnTimer = randomTimer * 100 -- For testing purpose
+	local respawnTimer = randomTimer * 60000
+
+	createEvent(respawnTimer, "GeonosianLab", "spawnAcklay", nil, "")
+
+	return 1
+end
+
+function GeonosianLab:spawnFirespider()
+	local fireSpiderLocation = self.fireSpiderLocations
+
+	local randomSpawn = math.random(1,#fireSpiderLocation)
+	local pFireSpider = spawnMobile("yavin4", "enhanced_gaping_spider", 0 , fireSpiderLocation[randomSpawn][1], -22.1, fireSpiderLocation[randomSpawn][2], -136, fireSpiderLocation[randomSpawn][3])
+
+	createObserver(OBJECTDESTRUCTION, "GeonosianLab", "fireSpiderKilled", pFireSpider)
+end
+
+function GeonosianLab:fireSpiderKilled(pFireSpider)
+	local randomTimer = math.random(30,90)
+	--local respawnTimer = randomTimer * 100 -- For testing purpose
+	local respawnTimer = randomTimer * 60000
+
+	createEvent(respawnTimer, "GeonosianLab", "spawnFirespider", nil, "")
+
+	return 1
 end
 
 function GeonosianLab:turnOnTrap(pTrap)
@@ -840,4 +894,3 @@ function GeonosianLab:hasPermission(pPlayer, permissionGroup)
 
 	return PlayerObject(pGhost):hasPermissionGroup(permissionGroup)
 end
-
