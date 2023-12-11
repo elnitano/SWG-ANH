@@ -27,6 +27,13 @@ LordNyaxCultScreenPlay = ScreenPlay:new {
 		}					
 	},
 	
+	lord_nyax_spawn = { -- x, z, y, cellid
+		{5.0, -13.7584, 11.0, 6036002},
+		{15.0, -13.7584, 14.0, 6036003},
+		{11.8, -11.4, -11.8, 6036004},
+		{19.4, -11.4, -21.1, 6036004},
+	},
+
 	lootContainerRespawn = 1800 -- 30 minutes
 }
 
@@ -62,5 +69,25 @@ function LordNyaxCultScreenPlay:spawnMobiles()
 	spawnMobile("corellia", "fiend_of_lord_nyax", 300, -5.53416, -13.75, -8.46985, 0, 6036001)
 	spawnMobile("corellia", "fiend_of_lord_nyax", 300, 16.6905, -13.7584, 4.76515, 0, 6036003)
 	spawnMobile("corellia", "visionary_of_lord_nyax", 300, 14.4694, -13.7584, 2.8743, 0, 6036003)
-	spawnMobile("corellia", "lord_nyax", 1200, 19.4, -11.4, -21.1, 0, 6036004, true)
+	self:spawnLordNyax()
+end
+
+function LordNyaxCultScreenPlay:spawnLordNyax()
+	local lordNyaxLocation = self.lord_nyax_spawn
+
+	local randomSpawn = math.random(1,#lordNyaxLocation)
+
+	local plordNyax = spawnMobile("corellia", "lord_nyax", 0, lordNyaxLocation[randomSpawn][1], lordNyaxLocation[randomSpawn][2], lordNyaxLocation[randomSpawn][3], 0, lordNyaxLocation[randomSpawn][4])
+
+	createObserver(OBJECTDESTRUCTION, "LordNyaxCultScreenPlay", "lordNyaxKilled", plordNyax)
+end
+
+function LordNyaxCultScreenPlay:lordNyaxKilled(plordNyax)
+	local randomTimer = math.random(10,30)
+	--local respawnTimer = randomTimer * 1000 -- For testing purpose
+	local respawnTimer = randomTimer * 60000
+
+	createEvent(respawnTimer, "LordNyaxCultScreenPlay", "spawnLordNyax", nil, "")
+
+	return 1
 end
