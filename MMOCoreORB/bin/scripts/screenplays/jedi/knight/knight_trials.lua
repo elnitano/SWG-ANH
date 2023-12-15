@@ -478,3 +478,30 @@ function KnightTrials:resetCompletedTrialsToStart(pPlayer)
 	JediTrials:setTrialsCompleted(pPlayer, 0)
 	JediTrials:setCurrentTrial(pPlayer, 0)
 end
+
+function KnightTrials:resetCompletedTrialsToCurrent(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	local curTrial = JediTrials:getCurrentTrial(pPlayer)
+	local compTrial = curTrial - 1
+
+	JediTrials:resetTrialData(pPlayer, "knight")
+	deleteScreenPlayData(pPlayer, "KnightTrials", "completedTrials")
+
+	JediTrials:setStartedTrials(pPlayer)
+	JediTrials:setTrialsCompleted(pPlayer, compTrial)
+	JediTrials:setCurrentTrial(pPlayer, curTrial)
+	dropObserver(KILLEDCREATURE, "KnightTrials", "notifyKilledHuntTarget", pPlayer)
+	createObserver(KILLEDCREATURE, "KnightTrials", "notifyKilledHuntTarget", pPlayer)
+end
+
+function KnightTrials:resetCurrentTrialObservers(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	dropObserver(KILLEDCREATURE, "KnightTrials", "notifyKilledHuntTarget", pPlayer)
+	createObserver(KILLEDCREATURE, "KnightTrials", "notifyKilledHuntTarget", pPlayer)
+end
