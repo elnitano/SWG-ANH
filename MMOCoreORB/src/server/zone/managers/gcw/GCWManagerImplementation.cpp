@@ -2640,11 +2640,6 @@ void GCWManagerImplementation::sendSelectDeedToDonate(BuildingObject* building, 
 
 	Locker lock (building);
 
-	if (!building->checkCooldownRecovery("defense_donation")) {
-		creature->sendSystemMessage("This GCW base cannot have more defenses donated at this time.");
-		return;
-	}
-
 	DestructibleBuildingDataComponent* baseData = getDestructibleBuildingData(building);
 
 	if (baseData == nullptr)
@@ -2773,9 +2768,17 @@ void GCWManagerImplementation::performDefenseDonation(BuildingObject* building, 
 	const int objectType = generatedTemplate->getGameObjectType();
 
 	if (objectType == SceneObjectType::MINEFIELD) {
+		if (!building->checkCooldownRecovery("defense_donation_minefield")) {
+			creature->sendSystemMessage("This GCW base cannot have more minefield donated at this time.");
+			return;
+		}
 		performDonateMinefield(building, creature, deed);
 		return;
 	} else if (objectType == SceneObjectType::COVERTSCANNER) {
+		if (!building->checkCooldownRecovery("defense_donation_scanner")) {
+			creature->sendSystemMessage("This GCW base cannot have more covert donated at this time.");
+			return;
+		}
 		performDonateScanner(building, creature, deed);
 		return;
 	} else if (objectType == SceneObjectType::DESTRUCTIBLE) {
@@ -2859,7 +2862,7 @@ void GCWManagerImplementation::performDonateMinefield(BuildingObject* building, 
 		params.setTO(deed->getObjectNameStringIdFile(), deed->getObjectNameStringIdName());
 		creature->sendSystemMessage(params);
 
-		building->addCooldown("defense_donation", donationCooldown * 1000);
+		building->addCooldown("defense_donation_minefield", donationCooldown * 1000);
 
 		verifyMinefields(building);
 
@@ -2938,7 +2941,7 @@ void GCWManagerImplementation::performDonateScanner(BuildingObject* building, Cr
 		params.setTO(scannerDeed->getObjectNameStringIdFile(), scannerDeed->getObjectNameStringIdName());
 		creature->sendSystemMessage(params);
 
-		building->addCooldown("defense_donation", donationCooldown * 1000);
+		building->addCooldown("defense_donation_scanner", donationCooldown * 1000);
 
 		verifyScanners(building);
 
@@ -2966,7 +2969,7 @@ void GCWManagerImplementation::performDonateTurret(BuildingObject* building, Cre
 	for (nextAvailableTurret = 0; nextAvailableTurret < baseData->getTotalTurretCount(); nextAvailableTurret++) {
 		uint64 turretID = baseData->getTurretID(nextAvailableTurret);
 
-		if (turretID == 0)
+		if (turretID == 0 && building->checkCooldownRecovery("defense_donation_" + String::valueOf(nextAvailableTurret)))
 			break;
 	}
 
@@ -3012,7 +3015,7 @@ void GCWManagerImplementation::performDonateTurret(BuildingObject* building, Cre
 		params.setTO(turretDeed->getObjectNameStringIdFile(), turretDeed->getObjectNameStringIdName());
 		creature->sendSystemMessage(params);
 
-		building->addCooldown("defense_donation", donationCooldown * 1000);
+		building->addCooldown("defense_donation_" + String::valueOf(nextAvailableTurret), donationCooldown * 1000);
 
 		verifyTurrets(building);
 

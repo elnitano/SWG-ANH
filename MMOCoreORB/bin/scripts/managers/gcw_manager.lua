@@ -48,7 +48,7 @@ baseComplexSize = 3
 nearbyBaseDistance = 600
 
 -- Cooldown on dotations to GCW bases in seconds
-donationCooldown = 1
+donationCooldown = 900 -- 15 minutes * 60 seconds
 
 -- time in seconds that a player must be overt before aborting a facility shutdown
 overtCooldown = 300
