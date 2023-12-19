@@ -128,7 +128,7 @@ public:
 			return sendFactionInfo(creature, targetObj);
 		} else if (container == "setscreenplaydata") {
 			if (!args.hasMoreTokens()) {
-				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value] [type]");
+				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value]");
 				return INVALIDPARAMETERS;
 			}
 
@@ -136,14 +136,14 @@ public:
 			args.getStringToken(playName);
 
 			if (!args.hasMoreTokens()) {
-				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value] [type]");
+				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value]");
 				return INVALIDPARAMETERS;
 			}
 
 			args.getStringToken(varScreenplay);
 
 			if (!args.hasMoreTokens()) {
-				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value] [type]");
+				creature->sendSystemMessage("SYNTAX: /snoop [player] setscreenplaydata <screenplay> [variable] [value]");
 				return INVALIDPARAMETERS;
 			}
 
