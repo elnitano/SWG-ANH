@@ -316,7 +316,7 @@ class PlayerObject extends IntangibleObject {
 	public static final int LOGGINGOUT = 5;
 
 	public static final int PVP_RATING_FLOOR = 500;
-	public static final unsigned long PVP_RESET_TIME = 259200000; // 3 days
+	public static final unsigned long PVP_RESET_TIME = 7200000; // 12 hours
 
 	public PlayerObject() {
 		playerLogLevel = 4; // INFO
@@ -2012,7 +2012,7 @@ class PlayerObject extends IntangibleObject {
 
 		victimList.add(0, playerID);
 
-		if (victimList.size() > 20)
+		if (victimList.size() > 5)
 			victimList.remove(victimList.size() - 1);
 
 		lastPvpRatingUpdate.updateToCurrentTime();
