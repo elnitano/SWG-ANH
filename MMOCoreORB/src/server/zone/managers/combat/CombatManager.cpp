@@ -2101,12 +2101,9 @@ int CombatManager::getHitChance(TangibleObject* attacker, CreatureObject* creoDe
 			int attackMask = weapon->getWeaponBitmask();
 			int attackType = weapon->getAttackType();
 
-			if (attackType == SharedWeaponObjectTemplate::RANGEDATTACK && !attacker->isTurret()) {
-				if (attackMask == WeaponType::PISTOLWEAPON || attackMask == WeaponType::CARBINEWEAPON || attackMask == WeaponType::RIFLEWEAPON
-				|| attackMask == WeaponType::LIGHTNINGRIFLEWEAPON || attackMask == WeaponType::HEAVYWEAPON || attackMask == WeaponType::SPECIALHEAVYWEAPON) {
-					evadeTotal = evadeSkill = creoDefender->getSkillMod("saber_block");
-				}
-
+			if ((!attacker->isTurret() || attackMask != WeaponType::THROWNWEAPON) && (attackType == SharedWeaponObjectTemplate::RANGEDATTACK || attackMask == WeaponType::HEAVYWEAPON || attackMask == WeaponType::SPECIALHEAVYWEAPON)) {
+				evadeTotal = evadeSkill = creoDefender->getSkillMod("saber_block");
+			  
 				if (evadeTotal != 0 && System::random(100) <= evadeTotal) {
 					hitResult = HitStatus::RICOCHET;
 				}
