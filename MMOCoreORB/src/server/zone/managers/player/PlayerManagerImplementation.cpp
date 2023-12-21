@@ -6449,7 +6449,8 @@ void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player,
 			attackerCreo->sendSystemMessage(toAttacker);
 		}
 
-		float damageContribution = (float) entry->getTotalDamage() / totalDamage;
+		//float damageContribution = (float) entry->getTotalDamage() / totalDamage;
+		float damageContribution = 1.0f;
 
 		if (frsManager != nullptr && frsManager->isFrsEnabled() && frsManager->isValidFrsBattle(attackerCreo, player)) {
 			int attackerFrsXp = frsManager->calculatePvpExperienceChange(attackerCreo, player, damageContribution, false);
