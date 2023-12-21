@@ -1278,6 +1278,8 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 		return;
 	}
 
+	bool hadMission = false;
+
 	StringIdChatParameter stringId;
 
 	if (!attacker->isPlayerCreature() || !CombatManager::instance()->areInDuel(attacker->asCreatureObject(), player)) {
@@ -1462,8 +1464,10 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 
 				if (!areInDuel) {
 					if (attackerIsHunting) {
+						hadMission = true;
 						type = "fulfilling their Bounty Mission.";
 					} else if (playerIsHunting) {
+						hadMission = true;
 						type = "failing their attempt to collect a bounty.";
 					}
 				}
@@ -1499,7 +1503,7 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 		Core::getTaskManager()->executeTask([=] () {
 			if (playerRef != nullptr) {
 				Locker locker(playerRef);
-				doPvpDeathRatingUpdate(playerRef, copyThreatMap);
+				doPvpDeathRatingUpdate(playerRef, copyThreatMap, hadMission);
 			}
 		}, "PvpDeathRatingUpdateLambda");
 	}
@@ -6353,7 +6357,7 @@ void PlayerManagerImplementation::sendAdminList(CreatureObject* player) {
 	player->sendMessage(listBox->generateMessage());
 }
 
-void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player, ThreatMap* threatMap) {
+void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player, ThreatMap* threatMap, bool hadMission) {
 	PlayerObject* ghost = player->getPlayerObject();
 
 	if (ghost == nullptr)
@@ -6453,8 +6457,8 @@ void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player,
 		float damageContribution = 1.0f;
 
 		if (frsManager != nullptr && frsManager->isFrsEnabled() && frsManager->isValidFrsBattle(attackerCreo, player)) {
-			int attackerFrsXp = frsManager->calculatePvpExperienceChange(attackerCreo, player, damageContribution, false);
-			int victimFrsXp = frsManager->calculatePvpExperienceChange(attackerCreo, player, damageContribution, true);
+			int attackerFrsXp = frsManager->calculatePvpExperienceChange(attackerCreo, player, damageContribution, false, hadMission);
+			int victimFrsXp = frsManager->calculatePvpExperienceChange(attackerCreo, player, damageContribution, true, hadMission);
 			frsXpAdjustment += victimFrsXp;
 
 			ManagedReference<CreatureObject*> attackerRef = attackerCreo;

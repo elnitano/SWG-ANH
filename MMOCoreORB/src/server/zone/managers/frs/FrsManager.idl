@@ -160,7 +160,7 @@ class FrsManager extends ManagedService implements Logger {
 
 	@arg1preLocked
 	public native void validatePlayerData(CreatureObject player, boolean verifyBan = false);
-	
+
 	@arg1preLocked
 	public native boolean isBanned(CreatureObject player);
 
@@ -198,8 +198,8 @@ class FrsManager extends ManagedService implements Logger {
 
 	@arg1preLocked
 	@arg2preLocked
-	public native int calculatePvpExperienceChange(CreatureObject attacker, CreatureObject victim, float contribution, boolean isVictim);
-	public native int getBaseExperienceGain(PlayerObject playerGhost, PlayerObject opponentGhost, boolean playerWon);
+	public native int calculatePvpExperienceChange(CreatureObject attacker, CreatureObject victim, float contribution, boolean isVictim, boolean hadMission);
+	public native int getBaseExperienceGain(PlayerObject playerGhost, PlayerObject opponentGhost, boolean playerWon, boolean hadMission);
 
 	@arg1preLocked
 	public native int getAvailableRankSlots(FrsRank rankInfo);
