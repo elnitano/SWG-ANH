@@ -130,6 +130,8 @@ public:
 			quantityExtracted = int(quantityExtracted * 0.50f);
 		}
 
+		quantityExtracted *= 2;
+
 		TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 		resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
 
