@@ -29,7 +29,7 @@ protected:
 	uint64 attackerID;
 	uint64 type;
 	uint8 attribute;
-	uint32 strength;
+	int strength;
 	uint32 duration;
 
 	SerializableTime applied;
