@@ -1493,6 +1493,10 @@ void PlayerObjectImplementation::notifyOnline() {
 		}
 	}
 
+	if (playerCreature->getFaction() != 0 && playerCreature->getFactionStatus() == FactionStatus::ONLEAVE){
+		playerCreature->setFactionStatus(FactionStatus::COVERT);
+	}
+
 	playerCreature->schedulePersonalEnemyFlagTasks();
 
 	if (ConfigManager::instance()->isPvpBroadcastChannelEnabled() && playerCreature->getFactionStatus() == FactionStatus::OVERT) {
