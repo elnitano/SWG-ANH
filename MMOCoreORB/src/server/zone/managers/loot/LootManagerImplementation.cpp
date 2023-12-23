@@ -310,6 +310,7 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 	setCustomObjectName(prototype, templateObject);
 
 	float excMod = 1.0;
+	bool yellow = false;
 
 	float adjustment = floor((float)(((level > 50) ? level : 50) - 50) / 10.f + 0.5);
 
@@ -339,6 +340,12 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 		prototype->addMagicBit(false);
 
 		exceptionalLooted.increment();
+	} else if (System::random(yellowChance) >= yellowChance - adjustment) {
+		excMod = yellowModifier;
+
+		yellow = true;
+
+		yellowLooted.increment();
 	}
 
 #ifdef DEBUG_LOOT_MAN
@@ -353,7 +360,6 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 	}
 
 	String attribute;
-	bool yellow = false;
 
 	for (int i = 0; i < craftingValues->getTotalExperimentalAttributes(); ++i) {
 		attribute = craftingValues->getAttribute(i);
@@ -448,32 +454,6 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 			maxMod *= -1;
 			min = ((min * level / minMod) + min) / excMod;
 			max = ((max * level / maxMod) + max) * excMod;
-		}
-
-		if (excMod == 1.0 && (yellowChance == 0 || System::random(yellowChance) == 0)) {
-			if (max > min && min >= 0) {
-				min *= yellowModifier;
-				max *= yellowModifier;
-			} else if (max > min && max <= 0) {
-				min /= yellowModifier;
-				max /= yellowModifier;
-			} else if (max > min) {
-				min /= yellowModifier;
-				max *= yellowModifier;
-			} else if (max < min && max >= 0) {
-				min /= yellowModifier;
-				max /= yellowModifier;
-			} else if (max < min && min <= 0) {
-				min *= yellowModifier;
-				max *= yellowModifier;
-			} else {
-				min /= yellowModifier;
-				max *= yellowModifier;
-			}
-
-			yellow = true;
-
-			yellowLooted.increment();
 		}
 
 		craftingValues->setMinValue(attribute, min);
