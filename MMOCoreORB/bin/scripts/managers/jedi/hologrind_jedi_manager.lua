@@ -232,8 +232,6 @@ function HologrindJediManager:onPlayerLoggedIn(pCreatureObject)
 
 	self:checkIfProgressedToJedi(pCreatureObject)
 	self:registerObservers(pCreatureObject)
-
-	JediTrials:onPlayerLoggedIn(pPlayer)
 end
 
 -- Get the profession name from the badge number.
