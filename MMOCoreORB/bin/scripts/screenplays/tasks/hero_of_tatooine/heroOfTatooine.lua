@@ -880,26 +880,26 @@ function HeroOfTatooineScreenPlay:doHonorChange()
 
 	local z = getTerrainHeight(pHermit, spawnPoint[1], spawnPoint[3])
 
-	pLeader = spawnMobile("tatooine", "hero_of_tat_pirate_leader", 0, spawnPoint[1], z, spawnPoint[2], getRandomNumber(360) - 180, 0)
+	pLeader = spawnMobile("tatooine", "hero_of_tat_pirate_leader", 0, spawnPoint[1], z, spawnPoint[3], getRandomNumber(360) - 180, 0)
 
 	if (pLeader == nil) then
 		printLuaError("Failed to create leader in HeroOfTatooineScreenPlay:doHonorChange().")
 		return
 	end
 
-	Logger:logEvent("Hero of Tatooine: doHonorChange - Spawned Pirate Leader at " .. spawnPoint[1] ..  ", " .. spawnPoint[2] .. " Tatooine.", LT_INFO)
+	Logger:logEvent("Hero of Tatooine: doHonorChange - Spawned Pirate Leader at " .. spawnPoint[1] ..  ", " .. spawnPoint[3] .. " Tatooine.", LT_INFO)
 
 	AiAgent(pLeader):setNoAiAggro()
 	writeData("hero_of_tat:honor_leader_id", SceneObject(pLeader):getObjectID())
 
-	pPirate1 = spawnMobile("tatooine", "pirate", 0, spawnPoint[1], z, spawnPoint[2], getRandomNumber(360) - 180, 0)
+	pPirate1 = spawnMobile("tatooine", "pirate", 0, spawnPoint[1], z, spawnPoint[3], getRandomNumber(360) - 180, 0)
 
 	if (pPirate1 ~= nil) then
 		AiAgent(pPirate1):setNoAiAggro()
 		writeData("hero_of_tat:honor_pirate_1_id", SceneObject(pPirate1):getObjectID())
 	end
 
-	pPirate2 = spawnMobile("tatooine", "pirate", 0, spawnPoint[1], z, spawnPoint[2], getRandomNumber(360) - 180, 0)
+	pPirate2 = spawnMobile("tatooine", "pirate", 0, spawnPoint[1], z, spawnPoint[3], getRandomNumber(360) - 180, 0)
 
 	if (pPirate2 ~= nil) then
 		AiAgent(pPirate2):setNoAiAggro()
