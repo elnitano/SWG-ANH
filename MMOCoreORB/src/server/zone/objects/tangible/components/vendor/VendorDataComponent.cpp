@@ -284,13 +284,13 @@ void VendorDataComponent::handlePayMaintanence(int value) {
 			owner->subtractBankCredits(value);
 		} else {
 			TransactionLog trxCash(owner, strongParent, TrxCode::VENDORMAINTANENCE, value - owner->getBankCredits(), true);
-			owner->subtractCashCredits(value - owner->getBankCredits());
 			maintAmount += value - owner->getBankCredits();
+			owner->subtractCashCredits(value - owner->getBankCredits());
 
 			TransactionLog trxBank(owner, strongParent, TrxCode::VENDORMAINTANENCE, owner->getBankCredits(), false);
 			trxBank.groupWith(trxCash);
-			owner->subtractBankCredits(owner->getBankCredits());
 			maintAmount += owner->getBankCredits();
+			owner->subtractBankCredits(owner->getBankCredits());
 		}
 
 		StringIdChatParameter message("@player_structure:vendor_maint_accepted");
