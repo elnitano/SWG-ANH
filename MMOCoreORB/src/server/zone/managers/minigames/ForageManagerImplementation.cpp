@@ -180,6 +180,8 @@ void ForageManagerImplementation::finishForaging(CreatureObject* player, int for
 	default:
 		// Use foraging to increase chance of shellfishing
 		skillMod = player->getSkillMod("foraging");
+		if (skillMod < 24)
+			skillMod = 24;
 		chance = (int)(15 + (skillMod * 0.5));
 		break;
 	}
