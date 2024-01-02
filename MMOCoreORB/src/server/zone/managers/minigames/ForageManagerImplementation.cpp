@@ -178,8 +178,9 @@ void ForageManagerImplementation::finishForaging(CreatureObject* player, int for
 		chance = (int)(15 + (skillMod * 0.6));
 		break;
 	default:
-		skillMod = 20;
-		chance = (int)(15 + (skillMod * 0.6));
+		// Use foraging to increase chance of shellfishing
+		skillMod = player->getSkillMod("foraging");
+		chance = (int)(15 + (skillMod * 0.5));
 		break;
 	}
 
@@ -401,8 +402,13 @@ bool ForageManagerImplementation::forageGiveResource(TransactionLog& trx, Creatu
 			return false;
 		}
 	}
+	// Increase yield if player has foraging skill mod.
+	int foragingMod = player->getSkillMod("foraging");
+	int quantity = System::random(30) + foragingMod;
+	if (foragingMod < 10) {
+		quantity = System::random(30) + 10;
+	}
 
-	int quantity = System::random(30) + 10;
 	resourceManager->harvestResourceToPlayer(trx, player, resource, quantity);
 	return true;
 }
