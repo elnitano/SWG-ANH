@@ -70,7 +70,7 @@ object_weapon_melee_special_blacksun_razor = object_weapon_melee_special_shared_
 	weaponType = UNARMEDWEAPON,
 	
 	-- ENERGY, KINETIC, ELECTRICITY, STUN, BLAST, HEAT, COLD, ACID, LIGHTSABER
-	damageType = HEAT,
+	damageType = BLAST,
 	
 	-- NONE, LIGHT, MEDIUM, HEAVY
 	armorPiercing = LIGHT,
