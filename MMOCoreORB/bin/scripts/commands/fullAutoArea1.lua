@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 FullAutoArea1Command = {
-        name = "fullautoarea1",
+	name = "fullautoarea1",
 
-	damageMultiplier = 1.5,
-	speedMultiplier = 1.5,
+	damageMultiplier = 3.5,
+	speedMultiplier = 2.0,
 	healthCostMultiplier = 1.75,
 	actionCostMultiplier = 2.5,
 	mindCostMultiplier = 0.5,

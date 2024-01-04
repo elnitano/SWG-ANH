@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 ActionShot2Command = {
-        name = "actionshot2",
+	name = "actionshot2",
 
-	damageMultiplier = 2.0,
-	speedMultiplier = 2.0,
+	damageMultiplier = 3.0,
+	speedMultiplier = 1.7,
 	healthCostMultiplier = 2.0,
 	actionCostMultiplier = 1.25,
 	mindCostMultiplier = 0.5,

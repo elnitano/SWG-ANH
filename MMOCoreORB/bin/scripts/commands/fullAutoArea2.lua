@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 FullAutoArea2Command = {
-        name = "fullautoarea2",
+	name = "fullautoarea2",
 
-	damageMultiplier = 2.0,
-	speedMultiplier = 1.5,
+	damageMultiplier = 4.5,
+	speedMultiplier = 2.5,
 	healthCostMultiplier = 2.5,
 	actionCostMultiplier = 2.5,
 	mindCostMultiplier = 0.5,
@@ -56,8 +56,8 @@ FullAutoArea2Command = {
 
 	combatSpam = "a_auto",
 
-	areaRange = 15,
-	areaAction = true,
+	coneAngle = 30,
+	coneAction = true,
 
 	stateEffects = {
 	  StateEffect( 

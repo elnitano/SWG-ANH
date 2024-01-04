@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 FullAutoSingle2Command = {
-        name = "fullautosingle2",
+	name = "fullautosingle2",
 
-	damageMultiplier = 3.5,
-	speedMultiplier = 1.5,
+	damageMultiplier = 5.5,
+	speedMultiplier = 1.7,
 	healthCostMultiplier = 2.0,
 	actionCostMultiplier = 2.5,
 	mindCostMultiplier = 0.5,

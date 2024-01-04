@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 ChargeShot2Command = {
-        name = "chargeshot2",
+	name = "chargeshot2",
 
-	damageMultiplier = 2.5,
-	speedMultiplier = 2.0,
+	damageMultiplier = 3.7,
+	speedMultiplier = 3.0,
 	healthCostMultiplier = 0.5,
 	actionCostMultiplier = 1.5,
 	mindCostMultiplier = 0.5,

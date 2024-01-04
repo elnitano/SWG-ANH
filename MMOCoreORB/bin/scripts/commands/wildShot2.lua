@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 WildShot2Command = {
-        name = "wildshot2",
+	name = "wildshot2",
 
-	damageMultiplier = 3.0,
-	speedMultiplier = 2.0,
+	damageMultiplier = 4.5,
+	speedMultiplier = 2.5,
 	healthCostMultiplier = 2.0,
 	actionCostMultiplier = 1.25,
 	mindCostMultiplier = 0.5,

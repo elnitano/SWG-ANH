@@ -42,13 +42,13 @@
 --true = 1, false = 0
 
 KnockdownFireCommand = {
-        name = "knockdownfire",
+	name = "knockdownfire",
 
 	damageMultiplier = 2.5,
 	speedMultiplier = 2.0,
-	healthCostMultiplier = 1,
-	actionCostMultiplier = 1,
-	mindCostMultiplier = 1,
+	healthCostMultiplier = 2.25,
+	actionCostMultiplier = 1.25,
+	mindCostMultiplier = 0.5,
 
 	stateEffects = {
 	  StateEffect( 

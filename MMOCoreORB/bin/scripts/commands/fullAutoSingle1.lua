@@ -42,7 +42,7 @@
 --true = 1, false = 0
 
 FullAutoSingle1Command = {
-        name = "fullautosingle1",
+	name = "fullautosingle1",
 
 	damageMultiplier = 2,
 	speedMultiplier = 1.5,

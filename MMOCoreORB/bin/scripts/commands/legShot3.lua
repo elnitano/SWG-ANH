@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 LegShot3Command = {
-        name = "legshot3",
+	name = "legshot3",
 
-	damageMultiplier = 2.0,
-	speedMultiplier = 2.0,
+	damageMultiplier = 3.0,
+	speedMultiplier = 1.5,
 	healthCostMultiplier = 0.5,
 	actionCostMultiplier = 2.0,
 	mindCostMultiplier = 2.0,

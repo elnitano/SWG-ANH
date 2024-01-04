@@ -42,10 +42,10 @@
 --true = 1, false = 0
 
 ScatterShot2Command = {
-        name = "scattershot2",
+	name = "scattershot2",
 
-	damageMultiplier = 5.0,
-	speedMultiplier = 2.0,
+	damageMultiplier = 7.5,
+	speedMultiplier = 2.5,
 	healthCostMultiplier = 2.0,
 	actionCostMultiplier = 1.25,
 	mindCostMultiplier = 0.5,
