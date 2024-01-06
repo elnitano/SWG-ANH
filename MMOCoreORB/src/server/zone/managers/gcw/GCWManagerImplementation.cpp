@@ -1471,7 +1471,7 @@ void GCWManagerImplementation::sendJamUplinkMenu(CreatureObject* creature, Build
 	if (!isBaseVulnerable(building))
 		return;
 
-	if (creature->getFactionStatus() > FactionStatus::COVERT){
+	if (creature->getFactionStatus() < FactionStatus::OVERT){
 		creature->sendSystemMessage("You must be OVERT to Jam this terminal");
 		return;
 	}
