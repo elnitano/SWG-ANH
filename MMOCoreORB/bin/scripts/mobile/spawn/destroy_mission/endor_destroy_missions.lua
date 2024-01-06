@@ -9,6 +9,12 @@ endor_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "naboo_fanned_rawl_lair_neutral_small_boss_01",
+			minDifficulty = 7,
+			maxDifficulty = 11,
+			size = 25,
+		},
+		{
 			lairTemplateName = "endor_pouncing_jax_lair_neutral_small_boss_01",
 			minDifficulty = 11,
 			maxDifficulty = 15,
@@ -18,6 +24,12 @@ endor_destroy_missions = {
 			lairTemplateName = "endor_gurreck_cowardly_lair_neutral_small",
 			minDifficulty = 13,
 			maxDifficulty = 17,
+			size = 25,
+		},
+		{
+			lairTemplateName = "talus_giant_dalyrake_lair_neutral_medium",
+			minDifficulty = 14,
+			maxDifficulty = 20,
 			size = 25,
 		},
 		{
@@ -73,6 +85,12 @@ endor_destroy_missions = {
 			minDifficulty = 18,
 			maxDifficulty = 22,
 			size = 25,
+		},
+		{
+			lairTemplateName = "dathomir_reptilian_mature_flyer_lair_neutral_large",
+			minDifficulty = 18,
+			maxDifficulty = 22,
+			size = 30,
 		},
 		{
 			lairTemplateName = "endor_lantern_bird_neutral_small",
@@ -162,6 +180,12 @@ endor_destroy_missions = {
 			lairTemplateName = "endor_borgle_fierce_neutral_small",
 			minDifficulty = 30,
 			maxDifficulty = 34,
+			size = 25,
+		},
+		{
+			lairTemplateName = "yavin4_mawgax_lair_neutral_medium",
+			minDifficulty = 30,
+			maxDifficulty = 37,
 			size = 25,
 		},
 		{

@@ -21,6 +21,18 @@ lok_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "tatooine_cu_pa_lair_neutral_medium",
+			minDifficulty = 10,
+			maxDifficulty = 14,
+			size = 25,
+		},
+		{
+			lairTemplateName = "dathomir_brackaset_pigmy_neutral_small",
+			minDifficulty = 10,
+			maxDifficulty = 14,
+			size = 25,
+		},
+		{
 			lairTemplateName = "lok_perlek_lair_neutral_medium",
 			minDifficulty = 12,
 			maxDifficulty = 16,
@@ -36,6 +48,12 @@ lok_destroy_missions = {
 			lairTemplateName = "lok_langlatch_lair_neutral_medium",
 			minDifficulty = 13,
 			maxDifficulty = 17,
+			size = 25,
+		},
+		{
+			lairTemplateName = "talus_giant_dalyrake_lair_neutral_medium",
+			minDifficulty = 14,
+			maxDifficulty = 20,
 			size = 25,
 		},
 		{
@@ -64,6 +82,12 @@ lok_destroy_missions = {
 		},
 		{
 			lairTemplateName = "lok_blood_razor_camp_neutral_easy_theater",
+			minDifficulty = 19,
+			maxDifficulty = 23,
+			size = 25,
+		},
+		{
+			lairTemplateName = "tatooine_bull_bantha_lair_neutral_large",
 			minDifficulty = 19,
 			maxDifficulty = 23,
 			size = 25,
@@ -108,6 +132,12 @@ lok_destroy_missions = {
 			lairTemplateName = "lok_nym_base_neutral_large_theater",
 			minDifficulty = 29,
 			maxDifficulty = 33,
+			size = 25,
+		},
+		{
+			lairTemplateName = "yavin4_mawgax_lair_neutral_medium",
+			minDifficulty = 30,
+			maxDifficulty = 37,
 			size = 25,
 		},
 		{

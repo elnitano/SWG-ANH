@@ -183,6 +183,18 @@ corellia_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "talus_guf_drolg_lair_neutral_medium",
+			minDifficulty = 12,
+			maxDifficulty = 16,
+			size = 30,
+		},
+		{
+			lairTemplateName = "yavin4_mamien_lair_neutral_small_01",
+			minDifficulty = 13,
+			maxDifficulty = 19,
+			size = 25,
+		},
+		{
 			lairTemplateName = "corellia_hidden_daggers_outpost_neutral_medium_theater",
 			minDifficulty = 13,
 			maxDifficulty = 18,

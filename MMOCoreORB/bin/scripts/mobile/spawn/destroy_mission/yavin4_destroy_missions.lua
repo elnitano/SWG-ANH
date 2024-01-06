@@ -15,6 +15,12 @@ yavin4_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "naboo_fanned_rawl_lair_neutral_small_boss_01",
+			minDifficulty = 10,
+			maxDifficulty = 14,
+			size = 25,
+		},
+		{
 			lairTemplateName = "yavin4_spined_puc_lair_neutral_medium",
 			minDifficulty = 12,
 			maxDifficulty = 16,
@@ -36,6 +42,12 @@ yavin4_destroy_missions = {
 			lairTemplateName = "yavin4_whisper_bird_male_neutral_medium_boss_01",
 			minDifficulty = 14,
 			maxDifficulty = 18,
+			size = 25,
+		},
+		{
+			lairTemplateName = "talus_giant_dalyrake_lair_neutral_medium",
+			minDifficulty = 14,
+			maxDifficulty = 20,
 			size = 25,
 		},
 		{

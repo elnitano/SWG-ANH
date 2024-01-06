@@ -99,6 +99,12 @@ rori_destroy_missions = {
 			size = 20,
 		},
 		{
+			lairTemplateName = "naboo_fanned_rawl_lair_neutral_small_boss_01",
+			minDifficulty = 10,
+			maxDifficulty = 14,
+			size = 25,
+		},
+		{
 			lairTemplateName = "rori_nudfuh_lair_neutral_medium",
 			minDifficulty = 11,
 			maxDifficulty = 15,

@@ -207,6 +207,12 @@ talus_destroy_missions = {
 			size = 30,
 		},
 		{
+			lairTemplateName = "yavin4_mamien_lair_neutral_small_01",
+			minDifficulty = 17,
+			maxDifficulty = 21,
+			size = 30,
+		},
+		{
 			lairTemplateName = "talus_binayre_chief_camp_neutral_large_theater",
 			minDifficulty = 19,
 			maxDifficulty = 23,

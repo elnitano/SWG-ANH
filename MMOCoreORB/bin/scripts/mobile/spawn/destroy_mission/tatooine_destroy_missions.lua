@@ -123,6 +123,12 @@ tatooine_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "dathomir_brackaset_pigmy_neutral_small",
+			minDifficulty = 10,
+			maxDifficulty = 14,
+			size = 25,
+		},
+		{
 			lairTemplateName = "tatooine_worrt_giant_neutral_medium_boss_01",
 			minDifficulty = 11,
 			maxDifficulty = 15,
@@ -136,6 +142,12 @@ tatooine_destroy_missions = {
 		},
 		{
 			lairTemplateName = "tatooine_mutant_womprat_lair_neutral_small",
+			minDifficulty = 12,
+			maxDifficulty = 16,
+			size = 25,
+		},
+		{
+			lairTemplateName = "lok_perlek_lair_neutral_medium",
 			minDifficulty = 12,
 			maxDifficulty = 16,
 			size = 25,
@@ -168,6 +180,12 @@ tatooine_destroy_missions = {
 			lairTemplateName = "tatooine_valarian_assasin_neutral_large_theater",
 			minDifficulty = 14,
 			maxDifficulty = 18,
+			size = 25,
+		},
+		{
+			lairTemplateName = "talus_giant_dalyrake_lair_neutral_medium",
+			minDifficulty = 14,
+			maxDifficulty = 20,
 			size = 25,
 		},
 		{

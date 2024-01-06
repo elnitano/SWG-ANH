@@ -9,6 +9,24 @@ dantooine_destroy_missions = {
 			size = 25,
 		},
 		{
+			lairTemplateName = "lok_pharple_lair_neutral_medium",
+			minDifficulty = 8,
+			maxDifficulty = 12,
+			size = 25,
+		},
+		{
+			lairTemplateName = "tatooine_bocatt_lair_neutral_medium",
+			minDifficulty = 11,
+			maxDifficulty = 17,
+			size = 25,
+		},
+		{
+			lairTemplateName = "talus_giant_dalyrake_lair_neutral_medium",
+			minDifficulty = 14,
+			maxDifficulty = 20,
+			size = 25,
+		},
+		{
 			lairTemplateName = "dantooine_voritor_lair_neutral_medium",
 			minDifficulty = 20,
 			maxDifficulty = 24,
@@ -73,6 +91,12 @@ dantooine_destroy_missions = {
 			minDifficulty = 30,
 			maxDifficulty = 37,
 			size = 30,
+		},
+		{
+			lairTemplateName = "yavin4_mawgax_lair_neutral_medium",
+			minDifficulty = 30,
+			maxDifficulty = 37,
+			size = 25,
 		},
 		{
 			lairTemplateName = "dantooine_quenker_bile_drenched_lair_neutral_medium",
