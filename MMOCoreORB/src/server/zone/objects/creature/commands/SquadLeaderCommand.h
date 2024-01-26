@@ -10,7 +10,6 @@
 
 #include "CombatQueueCommand.h"
 #include "server/zone/objects/group/GroupObject.h"
-#include "server/zone/managers/collision/CollisionManager.h"
 
 class SquadLeaderCommand : public CombatQueueCommand {
 protected:
@@ -70,20 +69,6 @@ public:
 			return true;
 
 		if (leader->getZone() != target->getZone())
-			return false;
-
-		PlayerObject* tarGhost = target->getPlayerObject();
-
-		if (tarGhost->hasBhTef())
-			return false;
-
-		//Squadleader not able to buff Overt targets more than 200m away, or if target is not in Line of Sight
-		const Vector3& targetPosition = target->getWorldPosition();
-		const Vector3& leaderPosition = leader->getWorldPosition();
-
-		float distance = leaderPosition.distanceTo(targetPosition);
-
-		if (target->getFactionStatus() == FactionStatus::OVERT && (!CollisionManager::checkLineOfSight(leader, target) || distance > 200.f))
 			return false;
 
 		CreatureObject* targetCreo = target;
